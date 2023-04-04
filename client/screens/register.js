@@ -15,6 +15,10 @@ import { Feather } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { ScrollView } from 'react-native-gesture-handler';
 
+
+import Button from '../components/auth/button';
+import Header from '../components/auth/header';
+
 export default function Register({ navigation }) {
     return (
         <SafeAreaView style={styles.safeAreaView}>
@@ -23,20 +27,8 @@ export default function Register({ navigation }) {
                 showsVerticalScrollIndicator={false}
             >
                 <View style={styles.viewContainer}>
-                    <View style={styles.header}>
-                        <View>
-                            <TouchableOpacity
-                                onPress={() => navigation.navigate('TakePart')}
-                            >
-                                <AntDesign
-                                    name="arrowleft"
-                                    size={30}
-                                    color="black"
-                                />
-                            </TouchableOpacity>
-                        </View>
-                        <Text style={styles.headerRegister}>Register</Text>
-                    </View>
+                    <Header title='Register' direct='Onboard' navigation={navigation}/>
+
 
                     <View style={styles.formItem}>
                         <View
@@ -163,13 +155,8 @@ export default function Register({ navigation }) {
                             </View>
                         </View>
 
-                        <TouchableOpacity>
-                            <View style={styles.viewRegister}>
-                                <Text style={styles.textRegister}>
-                                    Register
-                                </Text>
-                            </View>
-                        </TouchableOpacity>
+                        <Button title={'Register'} direct={'Register'} navigation={navigation}/>
+
                     </View>
                 </View>
             </ScrollView>
@@ -190,7 +177,6 @@ const styles = StyleSheet.create({
 
     viewContainer: {
         width: '100%',
-        // justifyContent: 'space-around',
         alignItems: 'center',
         gap: 10,
     },

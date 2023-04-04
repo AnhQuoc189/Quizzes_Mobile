@@ -7,138 +7,91 @@ import {
     View,
     Image,
     StyleSheet,
+    ScrollView,
 } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
+
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { MaterialIcons } from '@expo/vector-icons';
+
 import google from '../assets/images/google.png';
 import Divider from 'react-native-divider';
 
+import Header from '../components/auth/header';
+import Button from '../components/auth/button';
+import FormTextInput from '../components/auth/input';
 export default function Login({ navigation }) {
-    const [showPass, setShowPass] = useState(false);
+
+
     return (
         <SafeAreaView style={styles.safeAreaView}>
-            <View style={styles.header}>
-                <View style={{ left: 20 }}>
-                    <TouchableOpacity
-                        onPress={() => navigation.navigate('TakePart')}
-                    >
-                        <AntDesign name="arrowleft" size={30} color="black" />
-                    </TouchableOpacity>
-                </View>
-                <Text style={styles.headerLogin}>Login</Text>
-            </View>
-            <View style={styles.formSignUp}>
-                <View style={styles.formItem}>
-                    <Text style={{ left: 25 }}>Email Address</Text>
-                    <View style={styles.viewItem}>
-                        <View style={styles.viewTextInput}>
-                            <MaterialCommunityIcons
-                                name="email-outline"
-                                size={24}
-                                color="#865DFF"
-                            />
-                            <TextInput
-                                style={{ width: '80%' }}
-                                placeholder="Your email address"
-                            />
+            <ScrollView style={{width:'90%'}} showsVerticalScrollIndicator={false}>       
+                <View style={{width:'100%',justifyContent:'center',alignItems:'center'}}>  
+                    <Header title='Login' direct='Onboard' navigation={navigation}/>
+                    <View style={styles.formSignUp}>
+                        <FormTextInput lable='Email Addresss'/>
+                        <FormTextInput lable='Password' eye={true}/>
+
+                        <View style={styles.viewFormfooter}>
+
+                            <Button title='Login'  navigation={navigation}/>
+                            
+
+                            <View style={styles.viewForgot}>
+                                <TouchableOpacity
+                                    onPress={() => navigation.navigate('Reset')}
+                                >
+                                    <Text style={styles.textForgot}>
+                                        Forgot password?
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+
+                            <View style={styles.viewNote}>
+                                <View style={{ flexDirection: 'row' }}>
+                                    <Text style={styles.textNoteGray}>
+                                        By continuing, you agree to the
+                                    </Text>
+                                    <Text style={styles.textNoteBlack}>
+                                        Term of Services
+                                    </Text>
+                                </View>
+
+                                <View style={{ flexDirection: 'row' }}>
+                                    <Text style={styles.textNoteGray}>&</Text>
+                                    <Text style={styles.textNoteBlack}>
+                                        Privcacy Policy
+                                    </Text>
+                                </View>
+                            </View>
                         </View>
                     </View>
-                </View>
 
-                <View style={styles.formItem}>
-                    <Text style={{ left: 25 }}>Password</Text>
-                    <View style={styles.viewItem}>
-                        <View style={styles.viewTextInput}>
-                            <MaterialIcons
-                                name="lock-outline"
-                                size={24}
-                                color="#865DFF"
-                            />
-                            <TextInput
-                                style={{ width: '70%' }}
-                                placeholder="Your password"
-                                secureTextEntry={!showPass ? true : false}
-                            />
-                            <TouchableOpacity
-                                onPress={() => setShowPass(!showPass)}
-                            >
+                    <Divider borderColor="gray" color="gray" orientation="center">
+                        OR
+                    </Divider>
+
+                    <View style={styles.viewLoginAnother}>
+                        <TouchableOpacity>
+                            <View style={styles.viewLoginwithFB}>
                                 <MaterialCommunityIcons
-                                    name={
-                                        !showPass
-                                            ? 'eye-off-outline'
-                                            : 'eye-outline'
-                                    }
+                                    name="facebook"
                                     size={24}
-                                    color="#865DFF"
+                                    color="white"
                                 />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </View>
 
-                <View style={styles.viewFormfooter}>
-                    <TouchableOpacity>
-                        <View style={styles.viewLogin}>
-                            <Text style={styles.textLogin}>Login</Text>
-                        </View>
-                    </TouchableOpacity>
+                                <Text style={styles.textFB}>Login with Facebook</Text>
+                            </View>
+                        </TouchableOpacity>
 
-                    <View style={styles.viewForgot}>
-                        <TouchableOpacity
-                            onPress={() => navigation.navigate('Reset')}
-                        >
-                            <Text style={styles.textForgot}>
-                                Forgot password?
-                            </Text>
+                        <TouchableOpacity>
+                            <View style={styles.viewLoginwithGG}>
+                                <Image source={google} />
+
+                                <Text style={styles.textGG}>Login with Google</Text>
+                            </View>
                         </TouchableOpacity>
                     </View>
-
-                    <View style={styles.viewNote}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={styles.textNoteGray}>
-                                By continuing, you agree to the
-                            </Text>
-                            <Text style={styles.textNoteBlack}>
-                                Term of Services
-                            </Text>
-                        </View>
-
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={styles.textNoteGray}>&</Text>
-                            <Text style={styles.textNoteBlack}>
-                                Privcacy Policy
-                            </Text>
-                        </View>
-                    </View>
                 </View>
-            </View>
-
-            <Divider borderColor="gray" color="gray" orientation="center">
-                OR
-            </Divider>
-
-            <View style={styles.viewLoginAnother}>
-                <TouchableOpacity>
-                    <View style={styles.viewLoginwithFB}>
-                        <MaterialCommunityIcons
-                            name="facebook"
-                            size={24}
-                            color="white"
-                        />
-
-                        <Text style={styles.textFB}>Login with Facebook</Text>
-                    </View>
-                </TouchableOpacity>
-
-                <TouchableOpacity>
-                    <View style={styles.viewLoginwithGG}>
-                        <Image source={google} />
-
-                        <Text style={styles.textGG}>Login with Google</Text>
-                    </View>
-                </TouchableOpacity>
-            </View>
+            </ScrollView>
         </SafeAreaView>
     );
 }
@@ -150,19 +103,7 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%',
         gap: 10,
-    },
-
-    header: {
-        flexDirection: 'row',
-        marginTop: 60,
-        alignItems: 'center',
-        gap: 120,
-    },
-
-    headerLogin: {
-        fontSize: 30,
-        textAlign: 'center',
-        fontWeight: 700,
+        alignItems:'center'
     },
 
     formSignUp: {
@@ -183,7 +124,7 @@ const styles = StyleSheet.create({
     },
 
     viewTextInput: {
-        width: 310,
+        width: '100%',
         height: 50,
         backgroundColor: 'white',
         borderRadius: 20,

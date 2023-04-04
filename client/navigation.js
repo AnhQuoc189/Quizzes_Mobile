@@ -2,8 +2,8 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 
-import Intro from './screens/Intro';
-import TakePart from './screens/takepart';
+import Splash from './screens/splash';
+import Onboard from './screens/onboard';
 import Login from './screens/login';
 import Register from './screens/register';
 import Reset from './screens/reset';
@@ -20,8 +20,8 @@ export default function RootNavigation() {
                 initialRouteName="Intro"
                 screenOptions={screenOptions}
             >
-                <Stack.Screen name="Intro" component={Intro} />
-                <Stack.Screen name="TakePart" component={TakePart} />
+                <Stack.Screen name="Splash" component={Splash} />
+                <Stack.Screen name="Onboard" component={Onboard} />
                 <Stack.Screen name="Login" component={Login} />
                 <Stack.Screen name="Register" component={Register} />
                 <Stack.Screen name="Reset" component={Reset} />

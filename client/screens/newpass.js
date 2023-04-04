@@ -10,25 +10,14 @@ import {
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
+import Button from '../components/auth/button';
+import Header from '../components/auth/header';
 
 export default function Newpass({ navigation }) {
     return (
         <SafeAreaView style={styles.safeAreaView}>
             <View style={styles.viewAll}>
-                <View style={styles.header}>
-                    <View>
-                        <TouchableOpacity
-                            onPress={() => navigation.navigate('Reset')}
-                        >
-                            <AntDesign
-                                name="arrowleft"
-                                size={30}
-                                color="black"
-                            />
-                        </TouchableOpacity>
-                    </View>
-                    <Text style={styles.headerReset}>New Password</Text>
-                </View>
+            <Header title='Reset Password' direct='Login' navigation={navigation}/>
 
                 <View style={styles.textNode}>
                     <Text style={{ fontSize: 16, color: 'gray' }}>
@@ -87,11 +76,7 @@ export default function Newpass({ navigation }) {
                     </View>
                 </View>
 
-                <TouchableOpacity>
-                    <View style={styles.viewReset}>
-                        <Text style={styles.textReset}>Reset Password</Text>
-                    </View>
-                </TouchableOpacity>
+                <Button title='Reset Password' navigation={navigation}/>
             </View>
         </SafeAreaView>
     );
@@ -110,6 +95,8 @@ const styles = StyleSheet.create({
     viewAll: {
         width: '90%',
         gap: 20,
+        justifyContent:'center',
+        alignItems:'center'
     },
 
     header: {
@@ -120,7 +107,6 @@ const styles = StyleSheet.create({
     },
 
     textNode: {
-        width: '100%',
         alignSelf: 'center',
         justifyContent: 'center',
     },

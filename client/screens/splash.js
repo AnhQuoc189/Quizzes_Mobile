@@ -8,9 +8,10 @@ import {
 import background from '../assets/images/background.png';
 import logo from '../assets/images/logo.png';
 
-export default function Intro({ navigation }) {
+export default function Splash({ navigation }) {
+    
     setTimeout(() => {
-        navigation.navigate('TakePart');
+        navigation.navigate('Onboard');
     }, 5000);
 
     return (

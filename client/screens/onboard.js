@@ -10,8 +10,9 @@ import {
     TouchableOpacity,
 } from 'react-native';
 import connect from '../assets/images/connect.png';
+import Button from '../components/auth/button';
 
-export default function TakePart({ navigation }) {
+export default function Onboard({ navigation }) {
     return (
         <SafeAreaView>
             <ImageBackground style={styles.backgroundImage} source={background}>
@@ -24,32 +25,15 @@ export default function TakePart({ navigation }) {
                         <Text style={styles.textTakenpart}>
                             Take part in challenges with friends
                         </Text>
-                        <TouchableOpacity
-                            onPress={() => navigation.navigate('Register')}
-                        >
-                            <View
-                                style={{
-                                    width: 280,
-                                    height: 50,
-                                    backgroundColor: '#865DFF',
-                                    borderRadius: 20,
-                                    justifyContent: 'center',
-                                }}
-                            >
-                                <Text style={styles.textSignUp}>SignUp</Text>
-                            </View>
-                        </TouchableOpacity>
 
+                        <Button title={'SignUp'} direct={'Register'} navigation={navigation}/>
                         <View style={{ flexDirection: 'row' }}>
                             <Text>Already have an account? </Text>
                             <TouchableOpacity
                                 onPressIn={() => navigation.navigate('Login')}
                             >
                                 <Text
-                                    style={{
-                                        color: '#865DFF',
-                                        fontWeight: 700,
-                                    }}
+                                    style={styles.textLogin}
                                 >
                                     Login
                                 </Text>
@@ -95,17 +79,13 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
 
-    viewSignUp: {
-        width: '85%',
-        height: '25%',
-        backgroundColor: '#865DFF',
-        borderRadius: 20,
-        justifyContent: 'center',
-    },
-
     textSignUp: {
         textAlign: 'center',
         color: 'white',
         fontWeight: 600,
     },
+    textLogin:{
+        color: '#865DFF',
+        fontWeight: 700,
+    }
 });
