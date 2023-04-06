@@ -8,10 +8,11 @@ import {
     TextInput,
 } from 'react-native';
 
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-
 import Button from '../components/auth/button';
 import Header from '../components/auth/header';
+import FormTextInput from '../components/auth/input';
+
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 export default function Reset({ navigation }) {
     return (
@@ -23,34 +24,25 @@ export default function Reset({ navigation }) {
                     navigation={navigation}
                 />
 
-                <View
-                    style={{
-                        alignSelf: 'center',
-                        justifyContent: 'center',
-                    }}
-                >
+                <View style={styles.viewTextInput}>
                     <Text style={{ fontSize: 16 }}>
                         Enter your email and we will send you a link to reset
                         your password.
                     </Text>
                 </View>
 
-                <View style={styles.formItem}>
-                    <Text>Email Address</Text>
-                    <View style={styles.viewItem}>
-                        <View style={styles.viewTextInput}>
-                            <MaterialCommunityIcons
-                                name="email-outline"
-                                size={24}
-                                color="#865DFF"
-                            />
-                            <TextInput
-                                style={{ width: '80%' }}
-                                placeholder="Your email address"
-                            />
-                        </View>
-                    </View>
-                </View>
+                <FormTextInput
+                    lable="Email Address"
+                    place="Your email address"
+                    icon={
+                        <MaterialCommunityIcons
+                            name="email-outline"
+                            size={24}
+                            color="#865DFF"
+                        />
+                    }
+                />
+
                 <Button
                     title="Reset Password"
                     direct={'Newpass'}
@@ -78,40 +70,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
 
-    formItem: {
-        flexDirection: 'column',
-        gap: 10,
-    },
-
-    viewItem: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-
     viewTextInput: {
-        width: '100%',
-        height: 50,
-        backgroundColor: 'white',
-        borderRadius: 20,
-        flexDirection: 'row',
+        alignSelf: 'center',
         justifyContent: 'center',
-        alignItems: 'center',
-        gap: 10,
-    },
-
-    viewReset: {
-        backgroundColor: '#865DFF',
-        width: '100%',
-        height: 50,
-        borderRadius: 20,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginBottom: 100,
-    },
-
-    textReset: {
-        color: 'white',
-        fontWeight: 800,
     },
 });

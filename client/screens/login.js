@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 
 import google from '../assets/images/google.png';
 import Divider from 'react-native-divider';
@@ -18,22 +19,62 @@ import Divider from 'react-native-divider';
 import Header from '../components/auth/header';
 import Button from '../components/auth/button';
 import FormTextInput from '../components/auth/input';
-export default function Login({ navigation }) {
 
+const InitLogin = { userName: '', password: '' };
+
+export default function Login({ navigation }) {
+    const [formData, seFormData] = useState(InitLogin);
+
+    const handleChange = (e, name) => {
+        seFormData({ ...formData, [name]: e.nativeEvent.text });
+    };
 
     return (
         <SafeAreaView style={styles.safeAreaView}>
-            <ScrollView style={{width:'90%'}} showsVerticalScrollIndicator={false}>       
-                <View style={{width:'100%',justifyContent:'center',alignItems:'center'}}>  
-                    <Header title='Login' direct='Onboard' navigation={navigation}/>
+            <ScrollView
+                style={{ width: '90%' }}
+                showsVerticalScrollIndicator={false}
+            >
+                <View style={styles.viewAll}>
+                    <Header
+                        title="Login"
+                        direct="Onboard"
+                        navigation={navigation}
+                    />
                     <View style={styles.formSignUp}>
-                        <FormTextInput lable='Email Addresss'/>
-                        <FormTextInput lable='Password' eye={true}/>
+                        <FormTextInput
+                            lable="Email Address"
+                            place="Your email address"
+                            icon={
+                                <MaterialCommunityIcons
+                                    name="email-outline"
+                                    size={24}
+                                    color="#865DFF"
+                                />
+                            }
+                            value={formData.userName}
+                            handleChange={(e) => handleChange(e, 'userName')}
+                        />
+                        <FormTextInput
+                            lable="Password"
+                            place="Your Password"
+                            icon={
+                                <MaterialIcons
+                                    name="lock-outline"
+                                    size={24}
+                                    color="#865DFF"
+                                />
+                            }
+                            value={formData.password}
+                            handleChange={(e) => handleChange(e, 'password')}
+                        />
 
                         <View style={styles.viewFormfooter}>
-
-                            <Button title='Login'  navigation={navigation}/>
-                            
+                            <Button
+                                title="Login"
+                                navigation={navigation}
+                                direct="Settings"
+                            />
 
                             <View style={styles.viewForgot}>
                                 <TouchableOpacity
@@ -65,7 +106,11 @@ export default function Login({ navigation }) {
                         </View>
                     </View>
 
-                    <Divider borderColor="gray" color="gray" orientation="center">
+                    <Divider
+                        borderColor="gray"
+                        color="gray"
+                        orientation="center"
+                    >
                         OR
                     </Divider>
 
@@ -78,7 +123,9 @@ export default function Login({ navigation }) {
                                     color="white"
                                 />
 
-                                <Text style={styles.textFB}>Login with Facebook</Text>
+                                <Text style={styles.textFB}>
+                                    Login with Facebook
+                                </Text>
                             </View>
                         </TouchableOpacity>
 
@@ -86,7 +133,9 @@ export default function Login({ navigation }) {
                             <View style={styles.viewLoginwithGG}>
                                 <Image source={google} />
 
-                                <Text style={styles.textGG}>Login with Google</Text>
+                                <Text style={styles.textGG}>
+                                    Login with Google
+                                </Text>
                             </View>
                         </TouchableOpacity>
                     </View>
@@ -103,35 +152,18 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%',
         gap: 10,
-        alignItems:'center'
+        alignItems: 'center',
     },
 
+    viewAll: {
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     formSignUp: {
         flexDirection: 'column',
         marginTop: 20,
         gap: 20,
-    },
-
-    formItem: {
-        flexDirection: 'column',
-        gap: 10,
-    },
-
-    viewItem: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-
-    viewTextInput: {
-        width: '100%',
-        height: 50,
-        backgroundColor: 'white',
-        borderRadius: 20,
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        gap: 10,
     },
 
     viewFormfooter: {
@@ -139,20 +171,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         gap: 20,
-    },
-
-    viewLogin: {
-        backgroundColor: '#865DFF',
-        width: 310,
-        height: 50,
-        borderRadius: 20,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-
-    textLogin: {
-        color: 'white',
-        fontWeight: 800,
     },
 
     viewForgot: {

@@ -8,6 +8,7 @@ import Login from './screens/login';
 import Register from './screens/register';
 import Reset from './screens/reset';
 import Newpass from './screens/newpass';
+import Settings from './screens/settings';
 
 export default function RootNavigation() {
     const Stack = createStackNavigator();
@@ -26,6 +27,7 @@ export default function RootNavigation() {
                 <Stack.Screen name="Register" component={Register} />
                 <Stack.Screen name="Reset" component={Reset} />
                 <Stack.Screen name="Newpass" component={Newpass} />
+                <Stack.Screen name="Settings" component={Settings} />
             </Stack.Navigator>
         </NavigationContainer>
     );

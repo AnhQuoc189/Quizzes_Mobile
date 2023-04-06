@@ -1,46 +1,38 @@
-import React from 'react'
-import { View,TouchableOpacity,Text,StyleSheet } from 'react-native'
+import React from 'react';
+import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 
-export default function Header({navigation,...props}) {
-
-  return (
-    <View style={styles.header}>
-    
-            <View >
+export default function Header({ navigation, ...props }) {
+    return (
+        <View style={styles.header}>
+            <View>
                 <Text style={styles.headerTitle}>{props.title}</Text>
             </View>
-            <View style={{bottom:36,right:144}}>
+            <View style={{ bottom: 33, right: 150 }}>
                 <TouchableOpacity
-                        onPress={() => navigation.navigate(props.direct)}
-                    >
-                    <AntDesign
-                        name="arrowleft"
-                        size={30}
-                        color="black"
-                    />
+                    onPress={() => navigation.navigate(props.direct)}
+                >
+                    <AntDesign name="arrowleft" size={30} color="black" />
                 </TouchableOpacity>
             </View>
-      
-     </View>
-     
-  )
+        </View>
+    );
 }
 
-const styles=StyleSheet.create({
+const styles = StyleSheet.create({
     header: {
-        width:'100%',
-        height:60,
-        display:'flex',
+        width: '100%',
+        height: 60,
+        display: 'flex',
         marginTop: 30,
-        alignItems:'center', 
-        display:'flex',
-        top:24
+        alignItems: 'center',
+        display: 'flex',
+        top: 24,
     },
     headerTitle: {
-        fontSize: 30,
+        fontSize: 28,
         textAlign: 'center',
         fontWeight: 700,
-        alignItems:'center'
+        alignItems: 'center',
     },
-})
+});

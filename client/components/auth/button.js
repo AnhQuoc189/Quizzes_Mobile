@@ -1,22 +1,18 @@
-import React from "react";
-import { TouchableOpacity, StyleSheet,View,Text} from "react-native";
+import React from 'react';
+import { TouchableOpacity, StyleSheet, View, Text } from 'react-native';
 
-export default function Button({navigation,...props}){
+export default function Button({ navigation, ...props }) {
     return (
-        <TouchableOpacity
-        onPress={() => navigation.navigate(props.direct)}
-        >
-        <View
-            style={styles.viewButon}
-        >
-            <Text style={styles.textTitle}>{props.title}</Text>
-        </View>
+        <TouchableOpacity onPress={() => navigation.navigate(props.direct)}>
+            <View style={styles.viewButon}>
+                <Text style={styles.textTitle}>{props.title}</Text>
+            </View>
         </TouchableOpacity>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
-    viewButon:{
+    viewButon: {
         width: 310,
         height: 50,
         backgroundColor: '#865DFF',
@@ -29,4 +25,4 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: 600,
     },
-})
+});

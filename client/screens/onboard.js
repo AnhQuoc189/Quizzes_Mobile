@@ -26,17 +26,17 @@ export default function Onboard({ navigation }) {
                             Take part in challenges with friends
                         </Text>
 
-                        <Button title={'SignUp'} direct={'Register'} navigation={navigation}/>
+                        <Button
+                            title={'SignUp'}
+                            direct={'Register'}
+                            navigation={navigation}
+                        />
                         <View style={{ flexDirection: 'row' }}>
                             <Text>Already have an account? </Text>
                             <TouchableOpacity
                                 onPressIn={() => navigation.navigate('Login')}
                             >
-                                <Text
-                                    style={styles.textLogin}
-                                >
-                                    Login
-                                </Text>
+                                <Text style={styles.textLogin}>Login</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -84,8 +84,8 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: 600,
     },
-    textLogin:{
+    textLogin: {
         color: '#865DFF',
         fontWeight: 700,
-    }
+    },
 });

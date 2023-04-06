@@ -9,9 +9,8 @@ import background from '../assets/images/background.png';
 import logo from '../assets/images/logo.png';
 
 export default function Splash({ navigation }) {
-    
     setTimeout(() => {
-        navigation.navigate('Onboard');
+        navigation.navigate('AuthNavigator');
     }, 5000);
 
     return (

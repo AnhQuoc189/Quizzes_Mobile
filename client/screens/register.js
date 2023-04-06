@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     SafeAreaView,
     Text,
@@ -15,148 +15,174 @@ import { Feather } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { ScrollView } from 'react-native-gesture-handler';
 
-
 import Button from '../components/auth/button';
 import Header from '../components/auth/header';
+import FormTextInput from '../components/auth/input';
 
+const InitRegister = {
+    firstName: '',
+    lastName: '',
+    userType: '',
+    userName: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+};
 export default function Register({ navigation }) {
+    const [formData, seFormData] = useState(InitRegister);
+
+    const handleChange = (e, name) => {
+        seFormData({ ...formData, [name]: e.nativeEvent.text });
+    };
+
+    console.log(formData);
+
     return (
         <SafeAreaView style={styles.safeAreaView}>
             <ScrollView
-                style={{ width: '90%' }}
+                style={{ width: '100%' }}
                 showsVerticalScrollIndicator={false}
             >
                 <View style={styles.viewContainer}>
-                    <Header title='Register' direct='Onboard' navigation={navigation}/>
+                    <Header
+                        title="Register"
+                        direct="Onboard"
+                        navigation={navigation}
+                    />
 
+                    <View
+                        style={{
+                            marginTop: 30,
+                            width: '100%',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <View style={styles.formItem}>
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    justifyContent: 'space-between',
+                                }}
+                            >
+                                <View style={styles.viewItem}>
+                                    <View style={styles.viewTextSmall}>
+                                        <Feather
+                                            name="user"
+                                            size={24}
+                                            color="#865DFF"
+                                        />
+                                        <TextInput
+                                            style={{ width: '60%' }}
+                                            placeholder="FirstName"
+                                            value={formData.firstName}
+                                            onChange={(e) =>
+                                                handleChange(e, 'firstName')
+                                            }
+                                        />
+                                    </View>
+                                </View>
+                                <View style={styles.viewItem}>
+                                    <View style={styles.viewTextSmall}>
+                                        <Feather
+                                            name="user"
+                                            size={24}
+                                            color="#865DFF"
+                                        />
+                                        <TextInput
+                                            style={{ width: '60%' }}
+                                            placeholder="LastName"
+                                            value={formData.lastName}
+                                            onChange={(e) =>
+                                                handleChange(e, 'lastName')
+                                            }
+                                        />
+                                    </View>
+                                </View>
+                            </View>
 
-                    <View style={styles.formItem}>
-                        <View
-                            style={{
-                                flexDirection: 'row',
-                                justifyContent: 'space-between',
-                            }}
-                        >
-                            <View style={styles.viewItem}>
-                                <View style={styles.viewTextSmall}>
+                            <FormTextInput
+                                lable="UserType"
+                                place="UserType"
+                                icon={
+                                    <Ionicons
+                                        name="ios-options"
+                                        size={24}
+                                        color="#865DFF"
+                                    />
+                                }
+                                value={formData.userType}
+                                handleChange={(e) =>
+                                    handleChange(e, 'userType')
+                                }
+                            />
+
+                            <FormTextInput
+                                lable="UserName"
+                                place="UserName"
+                                icon={
                                     <Feather
                                         name="user"
                                         size={24}
                                         color="#865DFF"
                                     />
-                                    <TextInput
-                                        style={{ width: '60%' }}
-                                        placeholder="FirstName"
-                                    />
-                                </View>
-                            </View>
-                            <View style={styles.viewItem}>
-                                <View style={styles.viewTextSmall}>
-                                    <Feather
-                                        name="user"
-                                        size={24}
-                                        color="#865DFF"
-                                    />
-                                    <TextInput
-                                        style={{ width: '60%' }}
-                                        placeholder="LastName"
-                                    />
-                                </View>
-                            </View>
-                        </View>
-                        <View style={styles.viewItem}>
-                            <Text style>UserType</Text>
+                                }
+                                value={formData.userName}
+                                handleChange={(e) =>
+                                    handleChange(e, 'userName')
+                                }
+                            />
 
-                            <View style={styles.viewTextInput}>
-                                <Ionicons
-                                    name="ios-options"
-                                    size={24}
-                                    color="#865DFF"
-                                />
-                                <TextInput
-                                    style={{ width: '80%' }}
-                                    placeholder="Your password"
-                                />
-                            </View>
-                        </View>
-                        <View style={styles.viewItem}>
-                            <Text style>UserName</Text>
-
-                            <View style={styles.viewTextInput}>
-                                <Feather
-                                    name="user"
-                                    size={24}
-                                    color="#865DFF"
-                                />
-                                <TextInput
-                                    style={{ width: '80%' }}
-                                    placeholder="UserName"
-                                />
-                            </View>
-                        </View>
-                        <View style={styles.viewItem}>
-                            <Text style>Email</Text>
-
-                            <View style={styles.viewTextInput}>
-                                <MaterialCommunityIcons
-                                    name="email-outline"
-                                    size={24}
-                                    color="#865DFF"
-                                />
-                                <TextInput
-                                    style={{ width: '80%' }}
-                                    placeholder="Your Email"
-                                />
-                            </View>
-                        </View>
-                        <View style={styles.viewItem}>
-                            <Text style>Password</Text>
-
-                            <View style={styles.viewTextInput}>
-                                <MaterialIcons
-                                    name="lock-outline"
-                                    size={24}
-                                    color="#865DFF"
-                                />
-                                <TextInput
-                                    style={{ width: '70%' }}
-                                    placeholder="Your password"
-                                    secureTextEntry={true}
-                                />
-                                <TouchableOpacity>
+                            <FormTextInput
+                                lable="Email"
+                                place="Your Email"
+                                icon={
                                     <MaterialCommunityIcons
-                                        name="eye-off-outline"
+                                        name="email-outline"
                                         size={24}
                                         color="#865DFF"
                                     />
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                        <View style={styles.viewItem}>
-                            <Text style>Confirm Password</Text>
-                            <View style={styles.viewTextInput}>
-                                <MaterialIcons
-                                    name="lock-outline"
-                                    size={24}
-                                    color="#865DFF"
-                                />
-                                <TextInput
-                                    style={{ width: '70%' }}
-                                    placeholder="Confirm Password"
-                                    secureTextEntry={true}
-                                />
-                                <TouchableOpacity>
-                                    <MaterialCommunityIcons
-                                        name="eye-off-outline"
+                                }
+                                value={formData.email}
+                                handleChange={(e) => handleChange(e, 'email')}
+                            />
+
+                            <FormTextInput
+                                lable="Password"
+                                place="Confirm Password"
+                                icon={
+                                    <MaterialIcons
+                                        name="lock-outline"
                                         size={24}
                                         color="#865DFF"
                                     />
-                                </TouchableOpacity>
-                            </View>
+                                }
+                                value={formData.password}
+                                handleChange={(e) =>
+                                    handleChange(e, 'password')
+                                }
+                            />
+                            <FormTextInput
+                                lable="Confirm Password"
+                                place="Your Password"
+                                icon={
+                                    <MaterialIcons
+                                        name="lock-outline"
+                                        size={24}
+                                        color="#865DFF"
+                                    />
+                                }
+                                value={formData.confirmPassword}
+                                handleChange={(e) =>
+                                    handleChange(e, 'confirmPassword')
+                                }
+                            />
+
+                            <Button
+                                title={'Register'}
+                                direct={'Register'}
+                                navigation={navigation}
+                            />
                         </View>
-
-                        <Button title={'Register'} direct={'Register'} navigation={navigation}/>
-
                     </View>
                 </View>
             </ScrollView>
@@ -168,7 +194,6 @@ const styles = StyleSheet.create({
     safeAreaView: {
         backgroundColor: '#E3DFFD',
         display: 'flex',
-        // flex: 1,
         width: '100%',
         height: '100%',
         justifyContent: 'center',
@@ -176,45 +201,16 @@ const styles = StyleSheet.create({
     },
 
     viewContainer: {
-        width: '100%',
-        alignItems: 'center',
+        width: '90%',
+        flexDirection: 'column',
+        alignSelf: 'center',
+        justifyContent: 'center',
         gap: 10,
     },
 
-    header: {
-        width: '100%',
-        flexDirection: 'row',
-        marginTop: 60,
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        gap: 80,
-        marginBottom: 20,
-    },
-
-    headerRegister: {
-        fontSize: 30,
-        textAlign: 'center',
-        fontWeight: 700,
-    },
     formItem: {
         flexDirection: 'column',
         gap: 20,
-    },
-
-    viewItem: {
-        display: 'flex',
-        justifyContent: 'center',
-    },
-
-    viewTextInput: {
-        width: 310,
-        height: 50,
-        backgroundColor: 'white',
-        borderRadius: 20,
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        gap: 10,
     },
 
     viewTextSmall: {
@@ -226,20 +222,5 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         gap: 10,
-    },
-
-    viewRegister: {
-        backgroundColor: '#865DFF',
-        width: '100%',
-        height: 50,
-        borderRadius: 20,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 10,
-    },
-
-    textRegister: {
-        color: 'white',
-        fontWeight: 800,
     },
 });
