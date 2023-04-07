@@ -1,11 +1,13 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import Onboard from '../screens/onboard';
-import Login from '../screens/login';
-import Register from '../screens/register';
-import Reset from '../screens/reset';
-import Newpass from '../screens/newpass';
-import Settings from '../screens/settings';
+
+import Onboard from '../screens/auth/Onboard';
+import Login from '../screens/auth/Login';
+import Register from '../screens/auth/Register';
+import Reset from '../screens/auth/Reset';
+import Newpass from '../screens/auth/Newpass';
+import Settings from '../screens/auth/Settings';
+import Home from '../screens/app/Home';
 
 const AuthStack = createStackNavigator();
 

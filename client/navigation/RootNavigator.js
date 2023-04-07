@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import IntroNavigator from './IntroNavigator';
 import AuthNavigator from './AuthNavigator';
+import AppNavigator from './AppNavigator';
 const RootStack = createStackNavigator();
 
 export default function RootNavigator(props) {
@@ -19,6 +20,10 @@ export default function RootNavigator(props) {
                 <RootStack.Screen
                     name="AuthNavigator"
                     component={AuthNavigator}
+                />
+                <RootStack.Screen
+                    name="AppNavigator"
+                    component={AppNavigator}
                 />
             </RootStack.Navigator>
         </NavigationContainer>
