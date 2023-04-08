@@ -7,7 +7,7 @@ import Register from '../screens/auth/Register';
 import Reset from '../screens/auth/Reset';
 import Newpass from '../screens/auth/Newpass';
 import Settings from '../screens/auth/Settings';
-import Home from '../screens/app/Home';
+import Home from '../screens/app/Home/Home';
 
 const AuthStack = createStackNavigator();
 

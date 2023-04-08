@@ -3,11 +3,11 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 
 import { NavigationContainer } from '@react-navigation/native';
-import Home from '../screens/app/Home';
-import Discover from '../screens/app/Discover';
-import AddQuizes from '../screens/app/AddQuizes';
-import LeaderBoard from '../screens/app/LeaderBoard';
-import Profile from '../screens/app/Profile';
+import Home from '../screens/app/Home/Home';
+import Discover from '../screens/app/Discover/Discover';
+import AddQuizes from '../screens/app/AddQuizes/AddQuizes';
+import LeaderBoard from '../screens/app/LeaderBoard/LeaderBoard';
+import Profile from '../screens/app/Profile/Profile';
 
 import { View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
