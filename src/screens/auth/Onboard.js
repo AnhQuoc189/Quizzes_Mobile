@@ -1,5 +1,5 @@
 import React from 'react';
-import background from '../../assets/images/background.png';
+import background from 'src/assets/images/background.png';
 import {
     ImageBackground,
     SafeAreaView,
@@ -9,8 +9,8 @@ import {
     Text,
     TouchableOpacity,
 } from 'react-native';
-import connect from '../../assets/images/connect.png';
-import Button from '../../components/auth/Button';
+import connect from 'src/assets/images/connect.png';
+import Button from 'src/components/auth/Button';
 
 export default function Onboard({ navigation }) {
     return (
