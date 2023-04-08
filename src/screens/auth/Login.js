@@ -13,13 +13,13 @@ import {
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 
-import google from '../../assets/images/google.png';
+import google from 'src/assets/images/google.png';
 
 import Divider from 'react-native-divider';
 
-import Header from '../../components/auth/Header';
-import Button from '../../components/auth/Button';
-import FormTextInput from '../../components/auth/Input';
+import Header from 'src/components/auth/Header';
+import Button from 'src/components/auth/Button';
+import FormTextInput from 'src/components/auth/Input';
 
 const InitLogin = { userName: '', password: '' };
 

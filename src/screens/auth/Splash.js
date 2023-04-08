@@ -5,8 +5,8 @@ import {
     ImageBackground,
     SafeAreaView,
 } from 'react-native';
-import background from '../../assets/images/background.png';
-import logo from '../../assets/images/logo.png';
+import background from 'src/assets/images/background.png';
+import logo from 'src/assets/images/logo.png';
 
 export default function Splash({ navigation }) {
     setTimeout(() => {

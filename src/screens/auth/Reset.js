@@ -8,45 +8,35 @@ import {
     TextInput,
 } from 'react-native';
 
-import Button from '../../components/auth/Button';
-import Header from '../../components/auth/Header';
-import FormTextInput from '../../components/auth/Input';
-import { MaterialIcons } from '@expo/vector-icons';
-export default function Newpass({ navigation }) {
+import Button from 'src/components/auth/Button';
+import Header from 'src/components/auth/Header';
+import FormTextInput from 'src/components/auth/Input';
+
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+
+export default function Reset({ navigation }) {
     return (
         <SafeAreaView style={styles.safeAreaView}>
-            <View style={styles.viewAll}>
+            <View style={styles.viewContainer}>
                 <Header
                     title="Reset Password"
                     direct="Login"
                     navigation={navigation}
                 />
 
-                <View style={styles.textNode}>
-                    <Text style={{ fontSize: 16, color: 'gray' }}>
-                        Your new password must be different from previous used
-                        password
+                <View style={styles.viewTextInput}>
+                    <Text style={{ fontSize: 16 }}>
+                        Enter your email and we will send you a link to reset
+                        your password.
                     </Text>
                 </View>
 
                 <FormTextInput
-                    lable="Password"
-                    place="Your new Password"
+                    lable="Email Address"
+                    place="Your email address"
                     icon={
-                        <MaterialIcons
-                            name="lock-outline"
-                            size={24}
-                            color="#865DFF"
-                        />
-                    }
-                />
-
-                <FormTextInput
-                    lable="Confirm Password"
-                    place="Confirm Password"
-                    icon={
-                        <MaterialIcons
-                            name="lock-outline"
+                        <MaterialCommunityIcons
+                            name="email-outline"
                             size={24}
                             color="#865DFF"
                         />
@@ -55,7 +45,7 @@ export default function Newpass({ navigation }) {
 
                 <Button
                     title="Reset Password"
-                    direct="Settings"
+                    direct={'Newpass'}
                     navigation={navigation}
                 />
             </View>
@@ -73,14 +63,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
 
-    viewAll: {
+    viewContainer: {
         width: '90%',
         gap: 20,
         justifyContent: 'center',
         alignItems: 'center',
     },
 
-    textNode: {
+    viewTextInput: {
         alignSelf: 'center',
         justifyContent: 'center',
     },

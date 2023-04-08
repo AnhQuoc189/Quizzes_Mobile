@@ -14,9 +14,9 @@ import { Feather } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { ScrollView } from 'react-native-gesture-handler';
 
-import Button from '../../components/auth/Button';
-import Header from '../../components/auth/Header';
-import FormTextInput from '../../components/auth/Input';
+import Button from 'src/components/auth/Button';
+import Header from 'src/components/auth/Header';
+import FormTextInput from 'src/components/auth/Input';
 
 const InitRegister = {
     firstName: '',

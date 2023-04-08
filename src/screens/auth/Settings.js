@@ -7,8 +7,8 @@ import {
     Text,
     TouchableOpacity,
 } from 'react-native';
-import Header from '../../components/auth/Header';
-import Item from '../../components/auth/Item';
+import Header from 'src/components/auth/Header';
+import Item from 'src/components/auth/Item';
 
 import { Feather } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
