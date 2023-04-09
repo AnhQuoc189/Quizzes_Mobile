@@ -1,21 +1,18 @@
-import React, { useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 
-import { NavigationContainer } from '@react-navigation/native';
 import Home from '../screens/app/Home/Home';
 import Discover from '../screens/app/Discover/Discover';
-import AddQuizes from '../screens/app/AddQuizes/AddQuizes';
 import LeaderBoard from '../screens/app/LeaderBoard/LeaderBoard';
 import Profile from '../screens/app/Profile/Profile';
 
 import { View } from 'react-native';
-import Svg, { Path } from 'react-native-svg';
+import { Path } from 'react-native-svg';
 
 import { Entypo } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
+import CreatorNavigator from './CreatorNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -55,7 +52,7 @@ export default function BottomNavigator() {
                                 </View>
                             );
 
-                        case 'AddQuizes':
+                        case 'CreatorNavigator':
                             return (
                                 <View
                                     style={{
@@ -116,7 +113,11 @@ export default function BottomNavigator() {
         >
             <Tab.Screen name="Home" component={Home} />
             <Tab.Screen name="Discover" component={Discover} />
-            <Tab.Screen name="AddQuizes" component={AddQuizes} />
+            <Tab.Screen
+                name="CreatorNavigator"
+                component={CreatorNavigator}
+                options={{ tabBarStyle: { display: 'none' } }}
+            />
             <Tab.Screen name="LeaderBoard" component={LeaderBoard} />
             <Tab.Screen name="Profile" component={Profile} />
         </Tab.Navigator>
