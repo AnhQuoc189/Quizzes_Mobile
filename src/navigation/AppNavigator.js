@@ -1,7 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import BottomNavigator from './BottomNavigation';
+import BottomNavigator from './BottomNavigator';
 
 const AppStack = createStackNavigator();
 
