@@ -17,6 +17,7 @@ const AddQuestion = ({ navigation }) => {
                     style={styles.header}
                     navigation={navigation}
                     direct="Creator"
+                    hasOption
                 />
             }
         >

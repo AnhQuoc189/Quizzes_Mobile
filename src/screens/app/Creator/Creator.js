@@ -7,19 +7,49 @@ import {
     TextInput,
     ScrollView,
 } from 'react-native';
+import { useState } from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 // Layout
 import MainLayout from 'src/layouts/MainLayout';
 
 // Color
-import { colors, bgColor } from 'src/styles/color';
+import { colors, bgColors } from 'src/styles/color';
 
 // Component
 import Button from 'src/components/creator/Button';
 import Header from 'src/components/creator/Header';
 
+const intialState = {
+    title: '',
+    category: '',
+    description: '',
+};
+
 export default function Creator({ navigation }) {
+    const [quizData, setQuizData] = useState(intialState);
+
+    const handleChangeTitle = (value) => {
+        setQuizData((prevState) => ({
+            ...prevState,
+            title: value,
+        }));
+    };
+
+    const handleChangeCategory = (category) => {
+        setQuizData((prevState) => ({
+            ...prevState,
+            category: category,
+        }));
+    };
+
+    const handleChangeDescription = (value) => {
+        setQuizData((prevState) => ({
+            ...prevState,
+            description: value,
+        }));
+    };
+
     return (
         <MainLayout
             navigation={navigation}
@@ -29,6 +59,7 @@ export default function Creator({ navigation }) {
                     style={styles.header}
                     navigation={navigation}
                     direct="Home"
+                    hasOption
                 />
             }
         >
@@ -60,6 +91,7 @@ export default function Creator({ navigation }) {
                     <TextInput
                         style={styles.inputTitle}
                         placeholder="Enter quiz title"
+                        onChangeText={handleChangeTitle}
                     />
                 </View>
 
@@ -68,7 +100,12 @@ export default function Creator({ navigation }) {
                     <Text style={styles.label}>Category</Text>
                     <TouchableOpacity
                         style={styles.chooseCategory}
-                        onPress={() => navigation.navigate('ChooseCategory')}
+                        onPress={() => {
+                            navigation.navigate('ChooseCategory', {
+                                handleChangeCategory,
+                                currentCategory: quizData.category,
+                            });
+                        }}
                     >
                         <Text
                             style={{
@@ -76,7 +113,7 @@ export default function Creator({ navigation }) {
                                 fontSize: 18,
                             }}
                         >
-                            Choose category
+                            {quizData.category || 'Choose category'}
                         </Text>
                         <Ionicons
                             name="chevron-forward"
@@ -94,6 +131,7 @@ export default function Creator({ navigation }) {
                         placeholder="Enter quiz description"
                         multiline={true}
                         numberOfLines={4}
+                        onChangeText={handleChangeDescription}
                     />
                 </View>
             </ScrollView>
@@ -118,7 +156,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: bgColor.lightPurple,
+        backgroundColor: bgColors.lightPurple,
         paddingVertical: 70,
         borderRadius: 25,
     },
