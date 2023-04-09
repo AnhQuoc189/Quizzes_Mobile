@@ -1,12 +1,160 @@
 import React from 'react';
+import { StyleSheet } from 'react-native';
 import { SafeAreaView, View, Text } from 'react-native';
 
-export default function Discover() {
+import { Ionicons, SimpleLineIcons } from '@expo/vector-icons';
+import { TextInput } from 'react-native-paper';
+import { bgColor, colors } from 'src/styles/color';
+import Header from 'src/components/auth/Header';
+import { ScrollView } from 'react-native-gesture-handler';
+import BoxUser from 'src/components/BoxUser';
+
+export default function Discover({ navigation }) {
     return (
-        <SafeAreaView>
-            <View style={{ marginTop: 100 }}>
-                <Text>Discover</Text>
-            </View>
+        <SafeAreaView style={styles.container}>
+            <ScrollView>
+                <View style={styles.fisrtSection}>
+                    <Header
+                        title="Discover"
+                        direct="Home"
+                        color="white"
+                        navigation={navigation}
+                    />
+                    <View style={styles.searchBar}>
+                        <SimpleLineIcons
+                            name="magnifier"
+                            size={24}
+                            color="white"
+                        />
+                        <TextInput
+                            placeholderTextColor="gray"
+                            textColor="gray"
+                            activeUnderlineColor="transparent"
+                            underlineColor="transparent"
+                            placeholder="Quiz, categories, friends"
+                            style={styles.textInput}
+                        />
+                    </View>
+                    {/* Top picks */}
+                    <View style={styles.boxTopPick}>
+                        <View style={styles.box}>
+                            <Text
+                                style={{ ...styles.textHeader, fontSize: 14 }}
+                            >
+                                TOP PICKS
+                            </Text>
+                        </View>
+                        <View
+                            style={{
+                                alignItems: 'center',
+                                display: 'flex',
+                                justifyContent: 'flex-start',
+                                alignSelf: 'baseline',
+                            }}
+                        >
+                            <Text style={styles.textName}>
+                                Travel Trivia Quiz
+                            </Text>
+                            <Text style={styles.textSub}>
+                                Music . 5 Quizzes
+                            </Text>
+                        </View>
+                    </View>
+                    {/* Main Content */}
+                </View>
+                <View style={styles.mainContent}>
+                    <Text style={[styles.textName, styles.textTitle]}>
+                        Top rank of the week
+                    </Text>
+
+                    <BoxUser number={true} />
+                </View>
+            </ScrollView>
         </SafeAreaView>
     );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        paddingTop: 30,
+        backgroundColor: colors.primary,
+    },
+    fisrtSection: {
+        paddingHorizontal: 20,
+        width: '100%',
+    },
+    header: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        display: 'flex',
+        justifyContent: 'space-between',
+    },
+    textHeader: {
+        fontSize: 24,
+        color: 'white',
+        fontWeight: 'bold',
+        alignItems: 'center',
+    },
+    searchBar: {
+        width: '100%',
+        marginTop: 20,
+        height: 50,
+        backgroundColor: '#5B4EC3',
+        borderRadius: 15,
+        paddingHorizontal: 15,
+        alignItems: 'center',
+        flexDirection: 'row',
+    },
+    textInput: {
+        width: '100%',
+        backgroundColor: 'transparent',
+    },
+    boxTopPick: {
+        width: '100%',
+        height: 180,
+        marginTop: 30,
+        paddingVertical: 20,
+        paddingHorizontal: 30,
+        backgroundColor: '#FFE0E6',
+        borderRadius: 20,
+        display: 'flex',
+        justifyContent: 'space-between',
+    },
+    box: {
+        height: 35,
+        backgroundColor: colors.pink,
+        borderRadius: 10,
+        alignItems: 'center',
+        padding: 10,
+        justifyContent: 'center',
+        alignSelf: 'baseline',
+    },
+    textName: {
+        fontSize: 17,
+        color: '#660012',
+        fontWeight: '900',
+        alignItems: 'center',
+    },
+    textSub: {
+        fontSize: 12,
+        color: '#660012',
+        fontWeight: '500',
+        alignItems: 'center',
+    },
+    mainContent: {
+        display: 'flex',
+        width: '100%',
+        backgroundColor: 'white',
+        flex: 1,
+        marginTop: 30,
+        height: 2000,
+        paddingVertical: 30,
+        paddingHorizontal: 20,
+        borderRadius: 35,
+    },
+    textTitle: {
+        fontSize: 20,
+        color: 'black',
+    },
+});

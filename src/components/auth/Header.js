@@ -6,13 +6,15 @@ export default function Header({ navigation, ...props }) {
     return (
         <View style={styles.header}>
             <View>
-                <Text style={styles.headerTitle}>{props.title}</Text>
+                <Text style={{ ...styles.headerTitle, color: props.color }}>
+                    {props.title}
+                </Text>
             </View>
             <View style={{ bottom: 33, right: 150 }}>
                 <TouchableOpacity
                     onPress={() => navigation.navigate(props.direct)}
                 >
-                    <AntDesign name="arrowleft" size={30} color="black" />
+                    <AntDesign name="arrowleft" size={30} color={props.color} />
                 </TouchableOpacity>
             </View>
         </View>
