@@ -1,17 +1,24 @@
-import { TouchableOpacity } from 'react-native';
-import { StyleSheet, Text, View } from 'react-native';
+// Library
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+
+// Color
 import { colors } from 'src/styles/color';
-const Button = (props) => {
+
+const Button = ({ navigation, value = null, title, handlePress, direct }) => {
+    const handleOnPress = () => {
+        value && handlePress(value);
+        navigation.navigate(direct);
+    };
+
     return (
-        <TouchableOpacity
-            style={styles.container}
-            onPress={() => props.navigation.navigate(props.direct)}
-        >
-            <Text style={styles.text}>{props.title}</Text>
+        <TouchableOpacity style={styles.container} onPress={handleOnPress}>
+            <Text style={styles.text}>{title}</Text>
         </TouchableOpacity>
     );
 };
+
 export default Button;
+
 const styles = StyleSheet.create({
     container: {
         display: 'flex',
@@ -19,7 +26,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '100%',
         backgroundColor: colors.lightPurple,
-        paddingVertical: 10,
+        paddingVertical: 14,
         borderRadius: 20,
     },
     text: {

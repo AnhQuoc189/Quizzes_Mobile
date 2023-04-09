@@ -1,7 +1,7 @@
 import { TouchableOpacity, Text, View } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const Header = ({ title, style, navigation, direct }) => {
+const Header = ({ title, style, navigation, direct, hasOption = false }) => {
     return (
         <View style={style}>
             <TouchableOpacity onPress={() => navigation.navigate(direct)}>
@@ -24,15 +24,19 @@ const Header = ({ title, style, navigation, direct }) => {
                 {title}
             </Text>
 
-            <TouchableOpacity>
-                <Ionicons
-                    name="ellipsis-horizontal"
-                    size={25}
-                    style={{
-                        color: '#fff',
-                    }}
-                />
-            </TouchableOpacity>
+            {hasOption ? (
+                <TouchableOpacity>
+                    <Ionicons
+                        name="ellipsis-horizontal"
+                        size={25}
+                        style={{
+                            color: '#fff',
+                        }}
+                    />
+                </TouchableOpacity>
+            ) : (
+                <View />
+            )}
         </View>
     );
 };
