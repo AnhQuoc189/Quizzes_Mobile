@@ -1,13 +1,23 @@
-import React from 'react';
-import { StyleSheet } from 'react-native';
-import { SafeAreaView, View, Text } from 'react-native';
-
+// Library
+import {
+    SafeAreaView,
+    View,
+    Text,
+    StyleSheet,
+    TouchableOpacity,
+} from 'react-native';
 import { Ionicons, SimpleLineIcons } from '@expo/vector-icons';
 import { TextInput } from 'react-native-paper';
-import { bgColor, colors } from 'src/styles/color';
-import Header from 'src/components/auth/Header';
 import { ScrollView } from 'react-native-gesture-handler';
-import BoxUser from 'src/components/BoxUser';
+
+//component
+import Header from 'src/components/auth/Header';
+import { BoxUser, CategoryCard } from 'src/components';
+
+//styles
+import { bgColor, colors } from 'src/styles/color';
+import { categories } from 'src/constants/category.constant';
+import { FlatList } from 'react-native';
 
 export default function Discover({ navigation }) {
     return (
@@ -36,7 +46,7 @@ export default function Discover({ navigation }) {
                         />
                     </View>
                     {/* Top picks */}
-                    <View style={styles.boxTopPick}>
+                    <TouchableOpacity style={styles.boxTopPick}>
                         <View style={styles.box}>
                             <Text
                                 style={{ ...styles.textHeader, fontSize: 14 }}
@@ -44,6 +54,7 @@ export default function Discover({ navigation }) {
                                 TOP PICKS
                             </Text>
                         </View>
+
                         <View
                             style={{
                                 alignItems: 'center',
@@ -59,7 +70,7 @@ export default function Discover({ navigation }) {
                                 Music . 5 Quizzes
                             </Text>
                         </View>
-                    </View>
+                    </TouchableOpacity>
                     {/* Main Content */}
                 </View>
                 <View style={styles.mainContent}>
@@ -68,6 +79,20 @@ export default function Discover({ navigation }) {
                     </Text>
 
                     <BoxUser number={true} />
+
+                    <View style={styles.categoryContain}>
+                        {categories.map((category) => (
+                            <CategoryCard
+                                width="45%"
+                                key={category.name}
+                                category={category}
+                                activeCategory={true}
+                                setActiveCategory={() => {
+                                    console.log('math');
+                                }}
+                            />
+                        ))}
+                    </View>
                 </View>
             </ScrollView>
         </SafeAreaView>
@@ -148,13 +173,22 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         flex: 1,
         marginTop: 30,
-        height: 2000,
         paddingVertical: 30,
         paddingHorizontal: 20,
         borderRadius: 35,
+        paddingBottom: 100,
     },
     textTitle: {
         fontSize: 20,
         color: 'black',
+    },
+    categoryContain: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        paddingTop: 20,
+        gap: 15,
     },
 });
