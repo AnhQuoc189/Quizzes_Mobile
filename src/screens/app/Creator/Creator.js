@@ -11,23 +11,47 @@ import { useState } from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 // Layout
-import MainLayout from 'src/layouts/MainLayout';
-
-// Color
-import { colors, bgColors } from 'src/styles/color';
+import { MainLayout } from 'src/layouts';
 
 // Component
-import Button from 'src/components/creator/Button';
-import Header from 'src/components/creator/Header';
+import { Header, Button, CoverImage } from 'src/components/creator';
 
-const intialState = {
+const intialQuizData = {
     title: '',
     category: '',
     description: '',
+    numberOfQuestion: 1,
+    isPublic: true,
+    questionList: [
+        {
+            index: 0,
+            question: '',
+            type: 'pool',
+            timeLimit: 5,
+            answerList: [
+                {
+                    answer: '',
+                    isCorrect: false,
+                },
+                {
+                    answer: '',
+                    isCorrect: false,
+                },
+                {
+                    answer: '',
+                    isCorrect: false,
+                },
+                {
+                    answer: '',
+                    isCorrect: false,
+                },
+            ],
+        },
+    ],
 };
 
 export default function Creator({ navigation }) {
-    const [quizData, setQuizData] = useState(intialState);
+    const [quizData, setQuizData] = useState(intialQuizData);
 
     const handleChangeTitle = (value) => {
         setQuizData((prevState) => ({
@@ -59,31 +83,13 @@ export default function Creator({ navigation }) {
                     style={styles.header}
                     navigation={navigation}
                     direct="Home"
-                    hasOption
+                    options={() => {}}
                 />
             }
         >
             <ScrollView contentContainerStyle={{ paddingBottom: 15 }}>
-                {/* Add Cover Image */}
-                <TouchableOpacity style={styles.coverImage}>
-                    <Ionicons
-                        name="image-outline"
-                        size={50}
-                        style={{
-                            color: colors.lightPurple,
-                        }}
-                    />
-                    <Text
-                        style={{
-                            color: colors.lightPurple,
-                            fontSize: 20,
-                            marginTop: 5,
-                            fontWeight: 600,
-                        }}
-                    >
-                        Add Cover Image
-                    </Text>
-                </TouchableOpacity>
+                {/* Add Cover Image Quiz*/}
+                <CoverImage />
 
                 {/* Input Title */}
                 <View style={{ marginTop: 10 }}>
@@ -137,9 +143,13 @@ export default function Creator({ navigation }) {
             </ScrollView>
 
             <Button
-                title="Add question"
+                title="Library question"
                 navigation={navigation}
-                direct="AddQuestion"
+                direct={'AddQuestion'}
+                params={{
+                    quizDataCreator: quizData,
+                    setQuizDataCreator: setQuizData,
+                }}
             />
         </MainLayout>
     );
@@ -151,14 +161,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-    },
-    coverImage: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: bgColors.lightPurple,
-        paddingVertical: 70,
-        borderRadius: 25,
     },
     label: {
         fontSize: 20,

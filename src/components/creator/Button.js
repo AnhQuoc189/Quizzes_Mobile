@@ -4,10 +4,18 @@ import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 // Color
 import { colors } from 'src/styles/color';
 
-const Button = ({ navigation, value = null, title, handlePress, direct }) => {
+const Button = ({
+    navigation = null,
+    value = null,
+    title,
+    handlePress,
+    direct,
+    params,
+}) => {
     const handleOnPress = () => {
+        handlePress && !value && handlePress();
         value && handlePress(value);
-        navigation.navigate(direct);
+        navigation && navigation.navigate(direct, params);
     };
 
     return (
