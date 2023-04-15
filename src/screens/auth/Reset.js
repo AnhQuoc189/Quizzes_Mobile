@@ -1,27 +1,19 @@
 import React, { useState } from 'react';
-import {
-    SafeAreaView,
-    StyleSheet,
-    View,
-    TouchableOpacity,
-    Text,
-    TextInput,
-} from 'react-native';
+import { SafeAreaView, StyleSheet, View, Text } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useDispatch } from 'react-redux';
-import { generateOTP } from 'src/actions/auth';
+import { generateOTP } from 'src/redux/authSlice';
 
 import Button from 'src/components/auth/Button';
 import Header from 'src/components/auth/Header';
 import FormTextInput from 'src/components/auth/Input';
-
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 export default function Reset({ navigation }) {
     const [email, setEmail] = useState('');
     const dispatch = useDispatch();
 
     const handleReset = () => {
-        dispatch(generateOTP(email, navigation));
+        dispatch(generateOTP({ email, navigation }));
     };
 
     return (

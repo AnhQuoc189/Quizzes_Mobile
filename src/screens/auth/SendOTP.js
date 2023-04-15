@@ -3,7 +3,7 @@ import { TouchableOpacity, View, Text, TextInput } from 'react-native';
 import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native';
 import { useDispatch } from 'react-redux';
-import { verifyOTP } from 'src/actions/auth';
+import { verifyOTP } from 'src/redux/authSlice';
 
 import Header from 'src/components/auth/Header';
 import Button from 'src/components/auth/Button';
@@ -22,7 +22,7 @@ export default function SendOTP({ navigation, ...props }) {
 
     const handelSubmitOTP = () => {
         const OTPnumber = OTP[1] + OTP[2] + OTP[3] + OTP[4];
-        dispatch(verifyOTP({ email, code: OTPnumber }, navigation));
+        dispatch(verifyOTP({ email, code: OTPnumber, navigation }));
     };
 
     return (

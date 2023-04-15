@@ -1,4 +1,6 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React from 'react';
+import { useEffect } from 'react';
 import {
     SafeAreaView,
     View,
@@ -11,7 +13,14 @@ import {
 // import Profile from './Profile';
 
 export default function Home({ navigation }) {
-    console.log('Anh Quoc');
+    useEffect(() => {
+        const getUser = async () => {
+            const AuthStore = await AsyncStorage.getItem('profile');
+            const AuthStoreJS = JSON.parse(AuthStore);
+            console.log(AuthStoreJS?.data.user.userName);
+        };
+        getUser();
+    }, []);
     return (
         <SafeAreaView>
             <View
