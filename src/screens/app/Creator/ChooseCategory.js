@@ -1,18 +1,16 @@
 // Library
 import { useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import { LogBox } from 'react-native';
+import { ScrollView, StyleSheet, View, LogBox } from 'react-native';
 
 // Layout
-import MainLayout from 'src/layouts/MainLayout';
+import { MainLayout } from 'src/layouts';
 
 // Constant
 import { categories } from 'src/constants/category.constant';
 
 // Component
-import Header from 'src/components/creator/Header';
-import CategoryCard from 'src/components/creator/CategoryCard';
-import Button from 'src/components/creator/Button';
+import { CategoryCard } from 'src/components';
+import { Header, Button } from 'src/components/creator';
 
 LogBox.ignoreLogs([
     'Non-serializable values were found in the navigation state',
@@ -42,6 +40,7 @@ const ChooseCategory = ({ navigation, route }) => {
                         category={category}
                         activeCategory={category.name === activeCategory}
                         setActiveCategory={setActiveCategory}
+                        width="47%"
                     />
                 ))}
             </ScrollView>
@@ -75,4 +74,5 @@ const styles = StyleSheet.create({
         gap: 15,
     },
 });
+
 export default ChooseCategory;

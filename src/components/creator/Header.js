@@ -1,9 +1,10 @@
 import { TouchableOpacity, Text, View } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const Header = ({ title, style, navigation, direct, hasOption = false }) => {
+const Header = ({ title, style, navigation, direct, options }) => {
     return (
         <View style={style}>
+            {/* Back button */}
             <TouchableOpacity onPress={() => navigation.navigate(direct)}>
                 <Ionicons
                     name="arrow-back-outline"
@@ -14,6 +15,7 @@ const Header = ({ title, style, navigation, direct, hasOption = false }) => {
                 />
             </TouchableOpacity>
 
+            {/* Header Title */}
             <Text
                 style={{
                     fontSize: 25,
@@ -24,8 +26,9 @@ const Header = ({ title, style, navigation, direct, hasOption = false }) => {
                 {title}
             </Text>
 
-            {hasOption ? (
-                <TouchableOpacity>
+            {/* Options */}
+            {options ? (
+                <TouchableOpacity onPress={options}>
                     <Ionicons
                         name="ellipsis-horizontal"
                         size={25}
