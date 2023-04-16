@@ -1,9 +1,13 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { TouchableOpacity, View, Text, TextInput } from 'react-native';
 import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native';
 import { useDispatch } from 'react-redux';
-import { verifyOTP } from 'src/redux/authSlice';
+import { verifyOTP } from 'src/slices/authSlice';
+import {
+    useRegisterMailOtpQuery,
+    useVerifyOtpMutation,
+} from 'src/services/authApi';
 
 import Header from 'src/components/auth/Header';
 import Button from 'src/components/auth/Button';
@@ -14,15 +18,35 @@ export default function SendOTP({ navigation, ...props }) {
     const thirdInput = useRef();
     const fourthInput = useRef();
     const [OTP, setOTP] = useState({ 1: '', 2: '', 3: '', 4: '' });
-    console.log(OTP);
     const dispatch = useDispatch();
+    const email = props.route.params.userEmail;
 
-    const email = props.route.params;
-    console.log(email);
+    const OtpMail = props.route.params;
+    useRegisterMailOtpQuery(OtpMail);
+
+    const [generateOTP, { data, isError, error }] = useVerifyOtpMutation();
+
+    useEffect(() => {
+        if (data) {
+            setTimeout(() => {
+                navigation.navigate('Newpass', email);
+            }, 1500);
+        } else {
+            const errorText = error?.data?.message;
+            switch (errorText) {
+                case 'Invalid OTP':
+                    console.log('Sai OTP roi thang ngu');
+                    break;
+                default:
+                    break;
+            }
+        }
+    }, [data, isError]);
 
     const handelSubmitOTP = () => {
         const OTPnumber = OTP[1] + OTP[2] + OTP[3] + OTP[4];
-        dispatch(verifyOTP({ email, code: OTPnumber, navigation }));
+
+        generateOTP({ email, code: OTPnumber });
     };
 
     return (
