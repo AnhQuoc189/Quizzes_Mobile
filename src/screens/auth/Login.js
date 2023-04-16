@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
     SafeAreaView,
     Text,
-    TextInput,
     TouchableOpacity,
     View,
     Image,
@@ -11,14 +10,13 @@ import {
 } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { ActivityIndicator } from 'react-native';
-import { SignIn } from 'src/actions/auth';
+import { loginUser } from 'src/redux/authSlice';
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 
 import google from 'src/assets/images/google.png';
-
 import Divider from 'react-native-divider';
 
 import Header from 'src/components/auth/Header';
@@ -40,9 +38,9 @@ export default function Login({ navigation }) {
         SetLoaDing(value);
     };
 
-    // const handleLogin = () => {
-    //     dispatch(SignIn(formData, navigation, handleLoading));
-    // };
+    const handleLogin = () => {
+        dispatch(loginUser({ formData, navigation, handleLoading }));
+    };
 
     return loadDing ? (
         <View style={styles.viewLoading}>
@@ -92,10 +90,10 @@ export default function Login({ navigation }) {
                             <Button
                                 title="Login"
                                 navigation={navigation}
-                                // onPress={handleLogin}
-                                onPress={() =>
-                                    navigation.navigate('AppNavigator')
-                                }
+                                onPress={handleLogin}
+                                // onPress={() =>
+                                //     navigation.navigate('AppNavigator')
+                                // }
                             />
 
                             <View style={styles.viewForgot}>

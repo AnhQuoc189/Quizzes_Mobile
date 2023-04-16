@@ -1,20 +1,12 @@
 import React, { useState } from 'react';
-import {
-    SafeAreaView,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
-    Image,
-    StyleSheet,
-} from 'react-native';
+import { SafeAreaView, TextInput, View, StyleSheet } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch } from 'react-redux';
-import { register } from 'src/actions/auth';
+import { regiserUser } from 'src/redux/authSlice';
 
 import Button from 'src/components/auth/Button';
 import Header from 'src/components/auth/Header';
@@ -42,9 +34,9 @@ export default function Register({ navigation }) {
         });
     };
 
+    console.log(formData);
     const handleRegister = () => {
-        console.log();
-        dispatch(register(formData, navigation));
+        dispatch(regiserUser({ formData, navigation }));
     };
 
     return (

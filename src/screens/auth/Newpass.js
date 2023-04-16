@@ -8,8 +8,8 @@ import {
     TextInput,
 } from 'react-native';
 import { useDispatch } from 'react-redux';
-import { resetPassword } from 'src/actions/auth';
-
+// import { resetPassword } from 'src/actions/auth';
+import { resetPassword } from 'src/redux/authSlice';
 import Button from 'src/components/auth/Button';
 import Header from 'src/components/auth/Header';
 import FormTextInput from 'src/components/auth/Input';
@@ -33,7 +33,7 @@ export default function Newpass({ navigation, ...props }) {
         if (formData.newPass === formData.confirmNewPass) {
             let password = formData.newPass;
             console.log(password);
-            dispatch(resetPassword({ email, password }, navigation));
+            dispatch(resetPassword({ email, password, navigation }));
         } else {
             console.log('Sai roi kia thang ng u');
         }
