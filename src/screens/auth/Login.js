@@ -181,7 +181,9 @@ export default function Login({ navigation }) {
                     </Divider>
 
                     <View style={styles.viewLoginAnother}>
-                        <TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate('AppNavigator')}
+                        >
                             <View style={styles.viewLoginwithFB}>
                                 <MaterialCommunityIcons
                                     name="facebook"

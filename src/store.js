@@ -1,13 +1,17 @@
+// Library
 import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/dist/query';
 
-import authSlice from 'src/slices/authSlice';
-import { apiAuth } from 'src/services/authApi';
+// Slices
+import authSlice from './slices/authSlice';
+import { apiAuth } from './services/authApi';
+import creatorReducer from './slices/creatorSlice';
 
 const store = configureStore({
     reducer: {
         auths: authSlice.reducer,
         [apiAuth.reducerPath]: apiAuth.reducer,
+        creator: creatorReducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware().concat(apiAuth.middleware),

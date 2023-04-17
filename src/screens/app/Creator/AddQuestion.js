@@ -1,16 +1,16 @@
 // Library
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
     StyleSheet,
     Text,
     View,
     ScrollView,
     TouchableOpacity,
-    LogBox,
     Modal,
     TextInput,
     Pressable,
 } from 'react-native';
+import { useSelector } from 'react-redux';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 // Layout
@@ -18,30 +18,23 @@ import { MainLayout } from 'src/layouts';
 
 // Constant
 import { timeLimit } from 'src/constants/time.constant';
+import { questionTypes } from 'src/constants/questionTypes.constant';
+
+// Actions
 
 // Component
 import { Button, CoverImage, Header } from 'src/components/creator';
 import { bgColors, colors } from 'src/styles/color';
-import { questionTypes } from 'src/constants/questionTypes.constant';
 
-LogBox.ignoreLogs([
-    'Non-serializable values were found in the navigation state',
-]);
-
-const AddQuestion = ({ navigation, route }) => {
-    const { quizDataCreator, setQuizDataCreator } = route.params;
-
-    const [quizData, setQuizData] = useState(quizDataCreator);
-
-    const [activeQuestion, setActiveQuestion] = useState(
-        quizData.questionList[0],
+const AddQuestion = ({ navigation }) => {
+    const questionList = useSelector(
+        (state) => state.creator.quizData.questionList,
     );
-
-    const [activeTimeLimit, setActiveTimeLimit] = useState(
-        activeQuestion.timeLimit,
+    const activeQuestion = useSelector((state) => state.creator.activeQuestion);
+    const activeTimeLimit = useSelector(
+        (state) => state.creator.activeTimeLimit,
     );
-
-    const [activeType, setActiveType] = useState(activeQuestion.type);
+    const activeType = useSelector((state) => state.creator.activeType);
 
     // Modal Visible State
     const [optionsModalVisible, setOptionsModalVisible] = useState(false);
@@ -54,127 +47,127 @@ const AddQuestion = ({ navigation, route }) => {
         setOptionsModalVisible(true);
     };
 
-    const handlePressQuestionIndex = (question) => {
-        setActiveQuestion(question);
-        setActiveTimeLimit(question.timeLimit);
-        setActiveType(question.type);
-    };
+    // const handlePressQuestionIndex = (question) => {
+    //     setActiveQuestion(question);
+    //     setActiveTimeLimit(question.timeLimit);
+    //     setActiveType(question.type);
+    // };
 
-    const handlePressSaveQuestion = (activeQuestion) => {
-        setQuizData((prevState) => ({
-            ...prevState,
-            questionList: [
-                ...prevState.questionList.slice(0, activeQuestion.index),
-                activeQuestion,
-                ...prevState.questionList.slice(
-                    activeQuestion.index + 1,
-                    prevState.questionList.length,
-                ),
-            ],
-        }));
+    // const handlePressSaveQuestion = (activeQuestion) => {
+    //     setQuizData((prevState) => ({
+    //         ...prevState,
+    //         questionList: [
+    //             ...prevState.questionList.slice(0, activeQuestion.index),
+    //             activeQuestion,
+    //             ...prevState.questionList.slice(
+    //                 activeQuestion.index + 1,
+    //                 prevState.questionList.length,
+    //             ),
+    //         ],
+    //     }));
 
-        setQuizDataCreator((prevState) => ({
-            ...prevState,
-            questionList: [
-                ...prevState.questionList.slice(0, activeQuestion.index),
-                activeQuestion,
-                ...prevState.questionList.slice(
-                    activeQuestion.index + 1,
-                    prevState.questionList.length,
-                ),
-            ],
-        }));
+    //     setQuizDataCreator((prevState) => ({
+    //         ...prevState,
+    //         questionList: [
+    //             ...prevState.questionList.slice(0, activeQuestion.index),
+    //             activeQuestion,
+    //             ...prevState.questionList.slice(
+    //                 activeQuestion.index + 1,
+    //                 prevState.questionList.length,
+    //             ),
+    //         ],
+    //     }));
 
-        alert('Save successfully!');
-    };
+    //     alert('Save successfully!');
+    // };
 
-    const handlePressAddQuestion = () => {
-        const newQuestion = {
-            index: quizData.numberOfQuestion,
-            question: '',
-            type: 'pool',
-            timeLimit: 5,
-            answerList: [
-                {
-                    answer: '',
-                    isCorrect: false,
-                },
-                {
-                    answer: '',
-                    isCorrect: false,
-                },
-                {
-                    answer: '',
-                    isCorrect: false,
-                },
-                {
-                    answer: '',
-                    isCorrect: false,
-                },
-            ],
-        };
+    // const handlePressAddQuestion = () => {
+    //     const newQuestion = {
+    //         index: quizData.numberOfQuestion,
+    //         question: '',
+    //         type: 'pool',
+    //         timeLimit: 5,
+    //         answerList: [
+    //             {
+    //                 answer: '',
+    //                 isCorrect: false,
+    //             },
+    //             {
+    //                 answer: '',
+    //                 isCorrect: false,
+    //             },
+    //             {
+    //                 answer: '',
+    //                 isCorrect: false,
+    //             },
+    //             {
+    //                 answer: '',
+    //                 isCorrect: false,
+    //             },
+    //         ],
+    //     };
 
-        setQuizData((prevState) => ({
-            ...prevState,
-            questionList: [...prevState.questionList, newQuestion],
-            numberOfQuestion: prevState.numberOfQuestion + 1,
-        }));
+    //     setQuizData((prevState) => ({
+    //         ...prevState,
+    //         questionList: [...prevState.questionList, newQuestion],
+    //         numberOfQuestion: prevState.numberOfQuestion + 1,
+    //     }));
 
-        setQuizDataCreator((prevState) => ({
-            ...prevState,
-            questionList: [...prevState.questionList, newQuestion],
-            numberOfQuestion: prevState.numberOfQuestion + 1,
-        }));
+    //     setQuizDataCreator((prevState) => ({
+    //         ...prevState,
+    //         questionList: [...prevState.questionList, newQuestion],
+    //         numberOfQuestion: prevState.numberOfQuestion + 1,
+    //     }));
 
-        setActiveQuestion(newQuestion);
+    //     setActiveQuestion(newQuestion);
 
-        alert('Add successfully!');
-    };
+    //     alert('Add successfully!');
+    // };
 
-    const handlePressDeleteQuestion = () => {
-        // Prevent empty quiz
-        if (quizData.numberOfQuestion === 1) {
-            alert('Quiz can not be empty!');
-            setOptionsModalVisible(false);
-            return;
-        }
+    // const handlePressDeleteQuestion = () => {
+    //     // Prevent empty quiz
+    //     if (quizData.numberOfQuestion === 1) {
+    //         alert('Quiz can not be empty!');
+    //         setOptionsModalVisible(false);
+    //         return;
+    //     }
 
-        setQuizData((prevState) => ({
-            ...prevState,
-            questionList: prevState.questionList
-                .filter((question) => question.index !== activeQuestion.index)
-                .map((question, index) => ({
-                    ...question,
-                    index: index,
-                })),
-            numberOfQuestion: prevState.numberOfQuestion - 1,
-        }));
+    //     setQuizData((prevState) => ({
+    //         ...prevState,
+    //         questionList: prevState.questionList
+    //             .filter((question) => question.index !== activeQuestion.index)
+    //             .map((question, index) => ({
+    //                 ...question,
+    //                 index: index,
+    //             })),
+    //         numberOfQuestion: prevState.numberOfQuestion - 1,
+    //     }));
 
-        setQuizDataCreator((prevState) => ({
-            ...prevState,
-            questionList: prevState.questionList
-                .filter((question) => question.index !== activeQuestion.index)
-                .map((question, index) => ({
-                    ...question,
-                    index: index,
-                })),
-            numberOfQuestion: prevState.numberOfQuestion - 1,
-        }));
+    //     setQuizDataCreator((prevState) => ({
+    //         ...prevState,
+    //         questionList: prevState.questionList
+    //             .filter((question) => question.index !== activeQuestion.index)
+    //             .map((question, index) => ({
+    //                 ...question,
+    //                 index: index,
+    //             })),
+    //         numberOfQuestion: prevState.numberOfQuestion - 1,
+    //     }));
 
-        // Reset
-        if (activeQuestion.index === quizData.numberOfQuestion - 1) {
-            handlePressQuestionIndex(
-                quizData.questionList[activeQuestion.index - 1],
-            );
-        } else {
-            // Bug không update lại state ***
-            handlePressQuestionIndex(
-                quizData.questionList[activeQuestion.index],
-            );
-        }
+    //     // Reset
+    //     if (activeQuestion.index === quizData.numberOfQuestion - 1) {
+    //         handlePressQuestionIndex(
+    //             quizData.questionList[activeQuestion.index - 1],
+    //         );
+    //     } else {
+    //         // Bug không update lại state ***
+    //         handlePressQuestionIndex(
+    //             quizData.questionList[activeQuestion.index],
+    //         );
+    //     }
 
-        setOptionsModalVisible(false);
-    };
+    //     setOptionsModalVisible(false);
+    // };
 
     return (
         <MainLayout
@@ -194,7 +187,7 @@ const AddQuestion = ({ navigation, route }) => {
                 contentContainerStyle={styles.pagination}
                 horizontal={true}
             >
-                {quizData.questionList.map((question) => (
+                {questionList.map((question) => (
                     <TouchableOpacity
                         key={question.index}
                         style={{
@@ -204,7 +197,7 @@ const AddQuestion = ({ navigation, route }) => {
                                     ? '#000'
                                     : '#fff',
                         }}
-                        onPress={() => handlePressQuestionIndex(question)}
+                        // onPress={() => handlePressQuestionIndex(question)}
                     >
                         <Text
                             style={{
@@ -253,7 +246,7 @@ const AddQuestion = ({ navigation, route }) => {
                             borderWidth: 0,
                             backgroundColor: colors.primary,
                         }}
-                        onPress={handlePressAddQuestion}
+                        // onPress={handlePressAddQuestion}
                     >
                         <MaterialCommunityIcons
                             name="plus"
@@ -332,9 +325,9 @@ const AddQuestion = ({ navigation, route }) => {
                                                         ? colors.pink
                                                         : bgColors.lightPurple,
                                             }}
-                                            onPress={() =>
-                                                setActiveTimeLimit(time)
-                                            }
+                                            // onPress={() =>
+                                            //     setActiveTimeLimit(time)
+                                            // }
                                         >
                                             <Text
                                                 style={{
@@ -358,10 +351,6 @@ const AddQuestion = ({ navigation, route }) => {
                                             setTimeModalVisible(
                                                 !timeModalVisible,
                                             );
-                                            setActiveQuestion((prevState) => ({
-                                                ...prevState,
-                                                timeLimit: activeTimeLimit,
-                                            }));
                                         }}
                                     />
                                 </View>
@@ -410,7 +399,6 @@ const AddQuestion = ({ navigation, route }) => {
                                                         : bgColors.lightPurple,
                                                 width: '45%',
                                             }}
-                                            onPress={() => setActiveType(type)}
                                         >
                                             <Text
                                                 style={{
@@ -434,10 +422,6 @@ const AddQuestion = ({ navigation, route }) => {
                                             setQuestionTypeModalVisible(
                                                 !questionTypeModalVisible,
                                             );
-                                            setActiveQuestion((prevState) => ({
-                                                ...prevState,
-                                                type: activeType,
-                                            }));
                                         }}
                                     />
                                 </View>
@@ -479,8 +463,8 @@ const AddQuestion = ({ navigation, route }) => {
                 {/* Save Button */}
                 <Button
                     title="Save question"
-                    handlePress={handlePressSaveQuestion}
-                    value={activeQuestion}
+                    // handlePress={handlePressSaveQuestion}
+                    // value={activeQuestion}
                 />
             </ScrollView>
 
@@ -510,7 +494,7 @@ const AddQuestion = ({ navigation, route }) => {
                         {/* Delete Button */}
                         <TouchableOpacity
                             style={{ ...styles.optionsBtn, marginTop: 10 }}
-                            onPress={handlePressDeleteQuestion}
+                            // onPress={handlePressDeleteQuestion}
                         >
                             <MaterialCommunityIcons
                                 name="trash-can-outline"
