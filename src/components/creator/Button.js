@@ -6,7 +6,7 @@ import { colors } from 'src/styles/color';
 
 const Button = ({
     navigation = null,
-    value = null,
+    value,
     title,
     handlePress,
     direct,

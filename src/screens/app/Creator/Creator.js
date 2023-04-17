@@ -7,71 +7,25 @@ import {
     TextInput,
     ScrollView,
 } from 'react-native';
-import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 // Layout
 import { MainLayout } from 'src/layouts';
 
+// Actions
+import { changeQuizInfo } from 'src/slices/creatorSlice';
+
 // Component
 import { Header, Button, CoverImage } from 'src/components/creator';
 
-const intialQuizData = {
-    title: '',
-    category: '',
-    description: '',
-    numberOfQuestion: 1,
-    isPublic: true,
-    questionList: [
-        {
-            index: 0,
-            question: '',
-            type: 'pool',
-            timeLimit: 5,
-            answerList: [
-                {
-                    answer: '',
-                    isCorrect: false,
-                },
-                {
-                    answer: '',
-                    isCorrect: false,
-                },
-                {
-                    answer: '',
-                    isCorrect: false,
-                },
-                {
-                    answer: '',
-                    isCorrect: false,
-                },
-            ],
-        },
-    ],
-};
+export default Creator = ({ navigation }) => {
+    const quiz = useSelector((state) => state.creator.quizData);
 
-export default function Creator({ navigation }) {
-    const [quizData, setQuizData] = useState(intialQuizData);
+    const dispatch = useDispatch();
 
-    const handleChangeTitle = (value) => {
-        setQuizData((prevState) => ({
-            ...prevState,
-            title: value,
-        }));
-    };
-
-    const handleChangeCategory = (category) => {
-        setQuizData((prevState) => ({
-            ...prevState,
-            category: category,
-        }));
-    };
-
-    const handleChangeDescription = (value) => {
-        setQuizData((prevState) => ({
-            ...prevState,
-            description: value,
-        }));
+    const handleChangeQuizInfo = (value) => {
+        dispatch(changeQuizInfo(value));
     };
 
     return (
@@ -97,7 +51,9 @@ export default function Creator({ navigation }) {
                     <TextInput
                         style={styles.inputTitle}
                         placeholder="Enter quiz title"
-                        onChangeText={handleChangeTitle}
+                        onChangeText={(value) =>
+                            handleChangeQuizInfo({ type: 'title', value })
+                        }
                     />
                 </View>
 
@@ -107,10 +63,7 @@ export default function Creator({ navigation }) {
                     <TouchableOpacity
                         style={styles.chooseCategory}
                         onPress={() => {
-                            navigation.navigate('ChooseCategory', {
-                                handleChangeCategory,
-                                currentCategory: quizData.category,
-                            });
+                            navigation.navigate('ChooseCategory');
                         }}
                     >
                         <Text
@@ -119,7 +72,7 @@ export default function Creator({ navigation }) {
                                 fontSize: 18,
                             }}
                         >
-                            {quizData.category || 'Choose category'}
+                            {quiz.category || 'Choose category'}
                         </Text>
                         <Ionicons
                             name="chevron-forward"
@@ -137,7 +90,12 @@ export default function Creator({ navigation }) {
                         placeholder="Enter quiz description"
                         multiline={true}
                         numberOfLines={4}
-                        onChangeText={handleChangeDescription}
+                        onChangeText={(value) =>
+                            handleChangeDescription({
+                                type: 'description',
+                                value,
+                            })
+                        }
                     />
                 </View>
             </ScrollView>
@@ -146,14 +104,14 @@ export default function Creator({ navigation }) {
                 title="Library question"
                 navigation={navigation}
                 direct={'AddQuestion'}
-                params={{
-                    quizDataCreator: quizData,
-                    setQuizDataCreator: setQuizData,
-                }}
+                // params={{
+                //     quizDataCreator: quizData,
+                //     setQuizDataCreator: setQuizData,
+                // }}
             />
         </MainLayout>
     );
-}
+};
 
 const styles = StyleSheet.create({
     header: {
