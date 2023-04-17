@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { ActivityIndicator } from 'react-native';
-import { loginUser } from 'src/redux/authSlice';
+import { useLoginUserMutation } from 'src/services/authApi';
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
@@ -22,6 +22,8 @@ import Divider from 'react-native-divider';
 import Header from 'src/components/auth/Header';
 import Button from 'src/components/auth/Button';
 import FormTextInput from 'src/components/auth/Input';
+import { useEffect } from 'react';
+import authSlice from 'src/slices/authSlice';
 
 const InitLogin = { userName: '', password: '' };
 
@@ -34,12 +36,56 @@ export default function Login({ navigation }) {
         setFormData({ ...formData, [name]: e.nativeEvent.text });
     };
 
+    const [loginUser, { data, isError, error }] = useLoginUserMutation();
+
+    useEffect(() => {
+        if (data) {
+            const Login = async () => {
+                await handleLoading(true);
+                // await dispatch(authAction(data));
+                dispatch(authSlice.actions.loGin(data));
+                setTimeout(() => {
+                    navigation.navigate('AppNavigator');
+                    handleLoading(false);
+                }, 3000);
+            };
+            Login();
+        }
+        if (isError) {
+            const errorText = error?.data?.message;
+            switch (errorText) {
+                case 'All fields are mandatory!':
+                    console.log('Vui long nhap day du thong tin');
+                    break;
+                case 'Account not exist':
+                    console.log('Khong tim thay user');
+                    break;
+                case 'Wrong password':
+                    console.log('Sai mat khau roi');
+                    break;
+                case 'Not Verify':
+                    console.log('Vui long vao mail de xac nhan');
+                    const letter = {
+                        title: 'SignIn Falure!',
+                        text: ' Please check your mail to verify-account',
+                    };
+                    setTimeout(() => {
+                        navigation.navigate('LetterScreen', letter);
+                    }, 1500);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }, [data, isError]);
+
     const handleLoading = (value) => {
         SetLoaDing(value);
     };
 
-    const handleLogin = () => {
-        dispatch(loginUser({ formData, navigation, handleLoading }));
+    const handleLogin = async () => {
+        // dispatch(loginUser({ formData, navigation, handleLoading }));
+        await loginUser(formData);
     };
 
     return loadDing ? (
