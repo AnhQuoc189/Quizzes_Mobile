@@ -26,17 +26,39 @@ import { useEffect } from 'react';
 import authSlice from 'src/slices/authSlice';
 
 const InitLogin = { userName: '', password: '' };
+const InitError = { userNameError: false, passwordError: false };
 
 export default function Login({ navigation }) {
     const [loadDing, SetLoaDing] = useState(false);
     const [formData, setFormData] = useState(InitLogin);
+    const [formError, setFormError] = useState(InitError);
+
+    const [noClick, setNoClick] = useState(true);
     const dispatch = useDispatch();
 
     const handleChange = (e, name) => {
         setFormData({ ...formData, [name]: e.nativeEvent.text });
+        setFormError({ ...formError, [name]: false });
+        if (!e.nativeEvent.text) {
+            setNoClick(true);
+        } else {
+            setNoClick(false);
+        }
     };
 
+    // console.log(click);
+
     const [loginUser, { data, isError, error }] = useLoginUserMutation();
+
+    // useEffect(() => {
+    //     if (!formData.userName || !formData.password) {
+    //         setClick(false);
+    //     } else {
+    //         setClick(true);
+    //     }
+    // }, [formData]);
+
+    // console.log(click);
 
     useEffect(() => {
         if (data) {
@@ -58,10 +80,16 @@ export default function Login({ navigation }) {
                     console.log('Vui long nhap day du thong tin');
                     break;
                 case 'Account not exist':
-                    console.log('Khong tim thay user');
+                    setFormError((pre) => {
+                        var newError = { ...pre, userName: true };
+                        return newError;
+                    });
                     break;
                 case 'Wrong password':
-                    console.log('Sai mat khau roi');
+                    setFormError((pre) => {
+                        var newError = { ...pre, password: true };
+                        return newError;
+                    });
                     break;
                 case 'Not Verify':
                     console.log('Vui long vao mail de xac nhan');
@@ -118,6 +146,11 @@ export default function Login({ navigation }) {
                             value={formData.userName}
                             handleChange={(e) => handleChange(e, 'userName')}
                         />
+                        {formError.userName && (
+                            <Text style={{ color: 'red' }}>
+                                UserName doesn't not exists
+                            </Text>
+                        )}
                         <FormTextInput
                             lable="Password"
                             place="Your Password"
@@ -131,12 +164,16 @@ export default function Login({ navigation }) {
                             value={formData.password}
                             handleChange={(e) => handleChange(e, 'password')}
                         />
+                        {formError.password && (
+                            <Text style={{ color: 'red' }}>Wrong password</Text>
+                        )}
 
                         <View style={styles.viewFormfooter}>
                             <Button
                                 title="Login"
                                 navigation={navigation}
                                 onPress={handleLogin}
+                                click={noClick}
                                 // onPress={() =>
                                 //     navigation.navigate('AppNavigator')
                                 // }
