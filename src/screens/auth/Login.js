@@ -2,35 +2,125 @@ import React, { useState } from 'react';
 import {
     SafeAreaView,
     Text,
-    TextInput,
     TouchableOpacity,
     View,
     Image,
     StyleSheet,
     ScrollView,
 } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { ActivityIndicator } from 'react-native';
+import { useLoginUserMutation } from 'src/services/authApi';
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 
 import google from 'src/assets/images/google.png';
-
 import Divider from 'react-native-divider';
 
 import Header from 'src/components/auth/Header';
 import Button from 'src/components/auth/Button';
 import FormTextInput from 'src/components/auth/Input';
+import { useEffect } from 'react';
+import authSlice from 'src/slices/authSlice';
 
 const InitLogin = { userName: '', password: '' };
+const InitError = { userNameError: false, passwordError: false };
 
 export default function Login({ navigation }) {
-    const [formData, seFormData] = useState(InitLogin);
+    const [loadDing, SetLoaDing] = useState(false);
+    const [formData, setFormData] = useState(InitLogin);
+    const [formError, setFormError] = useState(InitError);
+
+    const [noClick, setNoClick] = useState(true);
+    const dispatch = useDispatch();
 
     const handleChange = (e, name) => {
-        seFormData({ ...formData, [name]: e.nativeEvent.text });
+        setFormData({ ...formData, [name]: e.nativeEvent.text });
+        setFormError({ ...formError, [name]: false });
+        if (!e.nativeEvent.text) {
+            setNoClick(true);
+        } else {
+            setNoClick(false);
+        }
     };
 
-    return (
+    // console.log(click);
+
+    const [loginUser, { data, isError, error }] = useLoginUserMutation();
+
+    // useEffect(() => {
+    //     if (!formData.userName || !formData.password) {
+    //         setClick(false);
+    //     } else {
+    //         setClick(true);
+    //     }
+    // }, [formData]);
+
+    // console.log(click);
+
+    useEffect(() => {
+        if (data) {
+            const Login = async () => {
+                await handleLoading(true);
+                // await dispatch(authAction(data));
+                dispatch(authSlice.actions.loGin(data));
+                setTimeout(() => {
+                    navigation.navigate('AppNavigator');
+                    handleLoading(false);
+                }, 3000);
+            };
+            Login();
+        }
+        if (isError) {
+            const errorText = error?.data?.message;
+            switch (errorText) {
+                case 'All fields are mandatory!':
+                    console.log('Vui long nhap day du thong tin');
+                    break;
+                case 'Account not exist':
+                    setFormError((pre) => {
+                        var newError = { ...pre, userName: true };
+                        return newError;
+                    });
+                    break;
+                case 'Wrong password':
+                    setFormError((pre) => {
+                        var newError = { ...pre, password: true };
+                        return newError;
+                    });
+                    break;
+                case 'Not Verify':
+                    console.log('Vui long vao mail de xac nhan');
+                    const letter = {
+                        title: 'SignIn Falure!',
+                        text: ' Please check your mail to verify-account',
+                    };
+                    setTimeout(() => {
+                        navigation.navigate('LetterScreen', letter);
+                    }, 1500);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }, [data, isError]);
+
+    const handleLoading = (value) => {
+        SetLoaDing(value);
+    };
+
+    const handleLogin = async () => {
+        // dispatch(loginUser({ formData, navigation, handleLoading }));
+        await loginUser(formData);
+    };
+
+    return loadDing ? (
+        <View style={styles.viewLoading}>
+            <ActivityIndicator size="large" color="#865DFF" />
+        </View>
+    ) : (
         <SafeAreaView style={styles.safeAreaView}>
             <ScrollView
                 style={{ width: '90%' }}
@@ -44,11 +134,11 @@ export default function Login({ navigation }) {
                     />
                     <View style={styles.formSignUp}>
                         <FormTextInput
-                            lable="Email Address"
-                            place="Your email address"
+                            lable="UserName"
+                            place="User Name"
                             icon={
-                                <MaterialCommunityIcons
-                                    name="email-outline"
+                                <Feather
+                                    name="user"
                                     size={24}
                                     color="#865DFF"
                                 />
@@ -56,6 +146,11 @@ export default function Login({ navigation }) {
                             value={formData.userName}
                             handleChange={(e) => handleChange(e, 'userName')}
                         />
+                        {formError.userName && (
+                            <Text style={{ color: 'red' }}>
+                                UserName doesn't not exists
+                            </Text>
+                        )}
                         <FormTextInput
                             lable="Password"
                             place="Your Password"
@@ -69,12 +164,19 @@ export default function Login({ navigation }) {
                             value={formData.password}
                             handleChange={(e) => handleChange(e, 'password')}
                         />
+                        {formError.password && (
+                            <Text style={{ color: 'red' }}>Wrong password</Text>
+                        )}
 
                         <View style={styles.viewFormfooter}>
                             <Button
                                 title="Login"
                                 navigation={navigation}
-                                direct="AppNavigator"
+                                onPress={handleLogin}
+                                click={noClick}
+                                // onPress={() =>
+                                //     navigation.navigate('AppNavigator')
+                                // }
                             />
 
                             <View style={styles.viewForgot}>
@@ -116,7 +218,9 @@ export default function Login({ navigation }) {
                     </Divider>
 
                     <View style={styles.viewLoginAnother}>
-                        <TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate('AppNavigator')}
+                        >
                             <View style={styles.viewLoginwithFB}>
                                 <MaterialCommunityIcons
                                     name="facebook"
@@ -147,6 +251,13 @@ export default function Login({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+    viewLoading: {
+        width: '100%',
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
     safeAreaView: {
         backgroundColor: '#E3DFFD',
         display: 'flex',

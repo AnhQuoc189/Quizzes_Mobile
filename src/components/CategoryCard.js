@@ -1,20 +1,19 @@
 // Library
-import { useState } from 'react';
-import { TouchableOpacity } from 'react-native';
-import { StyleSheet, Text, View } from 'react-native';
+import { TouchableOpacity, StyleSheet, Text, View } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useDispatch } from 'react-redux';
+
+// Actions
+import { changeActiveCategory } from 'src/slices/creatorSlice';
 
 // Color
 import { colors, bgColors } from 'src/styles/color';
 
-const CategoryCard = ({
-    category,
-    activeCategory,
-    setActiveCategory,
-    width,
-}) => {
+const CategoryCard = ({ category, activeCategory, width }) => {
+    const dispatch = useDispatch();
+
     const handlePressCard = (name) => {
-        setActiveCategory(name);
+        dispatch(changeActiveCategory(name));
     };
 
     return (

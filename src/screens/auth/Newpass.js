@@ -1,24 +1,55 @@
-import React from 'react';
-import {
-    SafeAreaView,
-    StyleSheet,
-    View,
-    TouchableOpacity,
-    Text,
-    TextInput,
-} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { SafeAreaView, StyleSheet, View, Text } from 'react-native';
+
+import { useResetPassMutation } from 'src/services/authApi';
 
 import Button from 'src/components/auth/Button';
 import Header from 'src/components/auth/Header';
 import FormTextInput from 'src/components/auth/Input';
 import { MaterialIcons } from '@expo/vector-icons';
-export default function Newpass({ navigation }) {
+
+const Init = { newPass: '', confirmNewPass: '' };
+
+export default function Newpass({ navigation, ...props }) {
+    const [formData, setFormData] = useState(Init);
+
+    const email = props.route.params;
+    console.log(email);
+    const handleChange = (e, name) => {
+        setFormData({ ...formData, [name]: e.nativeEvent.text });
+    };
+
+    const [newPass, { data, isError, error }] = useResetPassMutation();
+
+    useEffect(() => {
+        if (data) {
+            const letter = {
+                title: 'Successfully!',
+                text: 'Change Password Successfully! Now you can signIn with your new password',
+            };
+            setTimeout(() => {
+                navigation.navigate('LetterScreen', letter);
+            }, 1500);
+        } else {
+            console.log('loi');
+        }
+    }, [data, isError]);
+
+    const handleResetPassWord = () => {
+        if (formData.newPass === formData.confirmNewPass) {
+            let password = formData.newPass;
+            newPass({ email, password });
+        } else {
+            console.log('Sai roi kia thang ngu');
+        }
+    };
+
     return (
         <SafeAreaView style={styles.safeAreaView}>
             <View style={styles.viewAll}>
                 <Header
                     title="Reset Password"
-                    direct="Login"
+                    direct="SendOTP"
                     navigation={navigation}
                 />
 
@@ -31,7 +62,7 @@ export default function Newpass({ navigation }) {
 
                 <FormTextInput
                     lable="Password"
-                    place="Your new Password"
+                    place="New Password"
                     icon={
                         <MaterialIcons
                             name="lock-outline"
@@ -39,6 +70,8 @@ export default function Newpass({ navigation }) {
                             color="#865DFF"
                         />
                     }
+                    value={formData.newPass}
+                    handleChange={(e) => handleChange(e, 'newPass')}
                 />
 
                 <FormTextInput
@@ -51,11 +84,13 @@ export default function Newpass({ navigation }) {
                             color="#865DFF"
                         />
                     }
+                    value={formData.confirmNewPass}
+                    handleChange={(e) => handleChange(e, 'confirmNewPass')}
                 />
 
                 <Button
                     title="Reset Password"
-                    direct="Settings"
+                    onPress={handleResetPassWord}
                     navigation={navigation}
                 />
             </View>

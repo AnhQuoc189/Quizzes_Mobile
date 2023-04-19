@@ -1,5 +1,5 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React from 'react';
-import { useState, useEffect } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -21,32 +21,7 @@ import { colors } from 'src/styles/color';
 // import Profile from './Profile';
 
 export default function Home({ navigation }) {
-    let date = new Date().getHours();
-
-    const [weatherState, setWeatherState] = useState({});
-    useEffect(() => {
-        if (date >= 6 && date < 13) {
-            setWeatherState({
-                name: 'weather-sunny',
-                discript: 'GOOD MORNING',
-            });
-        } else if (date >= 13 && date < 18) {
-            setWeatherState({
-                name: 'weather-partly-cloudy',
-                discript: 'GOOD AFTERNOON',
-            });
-        } else if (date >= 18) {
-            setWeatherState({
-                name: 'weather-night-partly-cloudy',
-                discript: 'GOOD EVENING',
-            });
-        } else if (date >= 0 && date < 6) {
-            setWeatherState({
-                name: 'weather-night',
-                discript: 'GOOD NIGHT',
-            });
-        }
-    }, []);
+    console.log('Anh Quoc');
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView

@@ -1,27 +1,28 @@
 // Library
-import { useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import { LogBox } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 
 // Layout
-import MainLayout from 'src/layouts/MainLayout';
+import { MainLayout } from 'src/layouts';
 
 // Constant
 import { categories } from 'src/constants/category.constant';
 
+// Actions
+import { changeQuizInfo } from 'src/slices/creatorSlice';
+
 // Component
-import Header from 'src/components/creator/Header';
-import CategoryCard from 'src/components/creator/CategoryCard';
-import Button from 'src/components/creator/Button';
+import { CategoryCard } from 'src/components';
+import { Header, Button } from 'src/components/creator';
 
-LogBox.ignoreLogs([
-    'Non-serializable values were found in the navigation state',
-]);
+const ChooseCategory = ({ navigation }) => {
+    const activeCategory = useSelector((state) => state.creator.activeCategory);
 
-const ChooseCategory = ({ navigation, route }) => {
-    const { handleChangeCategory, currentCategory } = route.params;
+    const dispatch = useDispatch();
 
-    const [activeCategory, setActiveCategory] = useState(currentCategory);
+    const handlePress = (value) => {
+        dispatch(changeQuizInfo(value));
+    };
 
     return (
         <MainLayout
@@ -41,7 +42,7 @@ const ChooseCategory = ({ navigation, route }) => {
                         key={category.name}
                         category={category}
                         activeCategory={category.name === activeCategory}
-                        setActiveCategory={setActiveCategory}
+                        width="47%"
                     />
                 ))}
             </ScrollView>
@@ -51,8 +52,11 @@ const ChooseCategory = ({ navigation, route }) => {
                     title="Next"
                     navigation={navigation}
                     direct="Creator"
-                    handlePress={handleChangeCategory}
-                    value={activeCategory}
+                    handlePress={handlePress}
+                    value={{
+                        type: 'category',
+                        value: activeCategory,
+                    }}
                 />
             </View>
         </MainLayout>
@@ -75,4 +79,5 @@ const styles = StyleSheet.create({
         gap: 15,
     },
 });
+
 export default ChooseCategory;

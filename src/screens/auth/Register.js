@@ -1,18 +1,12 @@
-import React, { useState } from 'react';
-import {
-    SafeAreaView,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
-    Image,
-    StyleSheet,
-} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { SafeAreaView, TextInput, View, StyleSheet } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { ScrollView } from 'react-native-gesture-handler';
+import { useDispatch } from 'react-redux';
+import { useRegisterUserMutation } from 'src/services/authApi';
 
 import Button from 'src/components/auth/Button';
 import Header from 'src/components/auth/Header';
@@ -25,16 +19,57 @@ const InitRegister = {
     userName: '',
     email: '',
     password: '',
+    fullName: '',
     confirmPassword: '',
 };
 export default function Register({ navigation }) {
     const [formData, seFormData] = useState(InitRegister);
+    const dispatch = useDispatch();
+
+    const [registerUser, { data, isError, error }] = useRegisterUserMutation();
+
+    useEffect(() => {
+        if (data) {
+            const letter = {
+                title: 'Congratulations!',
+                text: 'SignUp Successfully! Please check your mail to verify-account',
+            };
+            setTimeout(() => {
+                navigation.navigate('LetterScreen', letter);
+            }, 1500);
+        }
+        if (isError) {
+            const errorText = error?.data?.message;
+            switch (errorText) {
+                case 'All fields are mandatory!':
+                    console.log('Vui long nhap day du thong tin');
+                    break;
+                case 'Wrong email':
+                    console.log('Email k dung');
+                    break;
+                case 'UserName already exists':
+                    console.log('Ton tai userName roi thang ngu');
+                    break;
+                case 'Email already exists':
+                    console.log('Ton tai email roi thang ngu');
+                    break;
+                default:
+                    break;
+            }
+        }
+    }, [data, isError]);
 
     const handleChange = (e, name) => {
-        seFormData({ ...formData, [name]: e.nativeEvent.text });
+        seFormData({
+            ...formData,
+            [name]: e.nativeEvent.text,
+            fullName: formData.firstName + formData.lastName,
+        });
     };
 
-    console.log(formData);
+    const handleRegister = () => {
+        registerUser(formData);
+    };
 
     return (
         <SafeAreaView style={styles.safeAreaView}>
@@ -178,6 +213,7 @@ export default function Register({ navigation }) {
 
                             <Button
                                 title={'Register'}
+                                onPress={handleRegister}
                                 navigation={navigation}
                             />
                         </View>

@@ -4,15 +4,33 @@ import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 // Color
 import { colors } from 'src/styles/color';
 
-const Button = ({ navigation, value = null, title, handlePress, direct }) => {
+const Button = ({
+    navigation = null,
+    value,
+    title,
+    handlePress,
+    direct,
+    params,
+    width = '100%',
+    backgroundColor = colors.lightPurple,
+    color = '#fff',
+}) => {
     const handleOnPress = () => {
+        handlePress && !value && handlePress();
         value && handlePress(value);
-        navigation.navigate(direct);
+        navigation && navigation.navigate(direct, params);
     };
 
     return (
-        <TouchableOpacity style={styles.container} onPress={handleOnPress}>
-            <Text style={styles.text}>{title}</Text>
+        <TouchableOpacity
+            style={{
+                ...styles.container,
+                width: width,
+                backgroundColor: backgroundColor,
+            }}
+            onPress={handleOnPress}
+        >
+            <Text style={{ ...styles.text, color: color }}>{title}</Text>
         </TouchableOpacity>
     );
 };
@@ -24,13 +42,10 @@ const styles = StyleSheet.create({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        width: '100%',
-        backgroundColor: colors.lightPurple,
         paddingVertical: 14,
         borderRadius: 20,
     },
     text: {
-        color: '#fff',
         fontSize: 20,
         fontWeight: '600',
     },

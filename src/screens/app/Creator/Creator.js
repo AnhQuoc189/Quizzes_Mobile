@@ -7,47 +7,42 @@ import {
     TextInput,
     ScrollView,
 } from 'react-native';
-import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 // Layout
-import MainLayout from 'src/layouts/MainLayout';
+import { MainLayout } from 'src/layouts';
 
-// Color
-import { colors, bgColors } from 'src/styles/color';
+// Actions
+import { changeQuizInfo } from 'src/slices/creatorSlice';
 
 // Component
-import Button from 'src/components/creator/Button';
-import Header from 'src/components/creator/Header';
+import { Header, Button, CoverImage } from 'src/components/creator';
 
-const intialState = {
-    title: '',
-    category: '',
-    description: '',
-};
+export default Creator = ({ navigation }) => {
+    const quiz = useSelector((state) => state.creator.quizData);
 
-export default function Creator({ navigation }) {
-    const [quizData, setQuizData] = useState(intialState);
+    const dispatch = useDispatch();
 
-    const handleChangeTitle = (value) => {
-        setQuizData((prevState) => ({
-            ...prevState,
-            title: value,
-        }));
+    const handleChangeQuizInfo = (value) => {
+        dispatch(changeQuizInfo(value));
     };
 
-    const handleChangeCategory = (category) => {
-        setQuizData((prevState) => ({
-            ...prevState,
-            category: category,
-        }));
+    const validateQuiz = () => {
+        if (quiz.title && quiz.category) {
+            return true;
+        } else if (quiz.title === '') {
+            alert('Please enter Quiz title!');
+        } else {
+            alert('Please choose Quiz category!');
+        }
+        return false;
     };
 
-    const handleChangeDescription = (value) => {
-        setQuizData((prevState) => ({
-            ...prevState,
-            description: value,
-        }));
+    const handlePress = () => {
+        if (validateQuiz()) {
+            navigation.navigate('AddQuestion');
+        }
     };
 
     return (
@@ -55,35 +50,17 @@ export default function Creator({ navigation }) {
             navigation={navigation}
             header={
                 <Header
-                    title="Create Quiz"
+                    title="Quiz Creator"
                     style={styles.header}
                     navigation={navigation}
                     direct="Home"
-                    hasOption
+                    options={() => {}}
                 />
             }
         >
             <ScrollView contentContainerStyle={{ paddingBottom: 15 }}>
-                {/* Add Cover Image */}
-                <TouchableOpacity style={styles.coverImage}>
-                    <Ionicons
-                        name="image-outline"
-                        size={50}
-                        style={{
-                            color: colors.lightPurple,
-                        }}
-                    />
-                    <Text
-                        style={{
-                            color: colors.lightPurple,
-                            fontSize: 20,
-                            marginTop: 5,
-                            fontWeight: 600,
-                        }}
-                    >
-                        Add Cover Image
-                    </Text>
-                </TouchableOpacity>
+                {/* Add Cover Image Quiz*/}
+                <CoverImage />
 
                 {/* Input Title */}
                 <View style={{ marginTop: 10 }}>
@@ -91,7 +68,9 @@ export default function Creator({ navigation }) {
                     <TextInput
                         style={styles.inputTitle}
                         placeholder="Enter quiz title"
-                        onChangeText={handleChangeTitle}
+                        onChangeText={(value) =>
+                            handleChangeQuizInfo({ type: 'title', value })
+                        }
                     />
                 </View>
 
@@ -101,10 +80,7 @@ export default function Creator({ navigation }) {
                     <TouchableOpacity
                         style={styles.chooseCategory}
                         onPress={() => {
-                            navigation.navigate('ChooseCategory', {
-                                handleChangeCategory,
-                                currentCategory: quizData.category,
-                            });
+                            navigation.navigate('ChooseCategory');
                         }}
                     >
                         <Text
@@ -113,7 +89,7 @@ export default function Creator({ navigation }) {
                                 fontSize: 18,
                             }}
                         >
-                            {quizData.category || 'Choose category'}
+                            {quiz.category || 'Choose category'}
                         </Text>
                         <Ionicons
                             name="chevron-forward"
@@ -131,19 +107,20 @@ export default function Creator({ navigation }) {
                         placeholder="Enter quiz description"
                         multiline={true}
                         numberOfLines={4}
-                        onChangeText={handleChangeDescription}
+                        onChangeText={(value) =>
+                            handleChangeDescription({
+                                type: 'description',
+                                value,
+                            })
+                        }
                     />
                 </View>
             </ScrollView>
 
-            <Button
-                title="Add question"
-                navigation={navigation}
-                direct="AddQuestion"
-            />
+            <Button title="Library question" handlePress={handlePress} />
         </MainLayout>
     );
-}
+};
 
 const styles = StyleSheet.create({
     header: {
@@ -151,14 +128,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-    },
-    coverImage: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: bgColors.lightPurple,
-        paddingVertical: 70,
-        borderRadius: 25,
     },
     label: {
         fontSize: 20,
