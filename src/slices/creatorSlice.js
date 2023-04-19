@@ -200,6 +200,8 @@ const creatorSlice = createSlice({
                 state.quizData.questionList[state.quizData.numberOfQuestion];
 
             state.quizData.numberOfQuestion += 1;
+
+            state.isSaved = false;
         },
         deleteQuestion: (state, action) => {
             if (state.quizData.numberOfQuestion === 1) {
