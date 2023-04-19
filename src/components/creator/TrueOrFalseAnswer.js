@@ -10,7 +10,11 @@ import { useState } from 'react';
 const TrueOrFalseAnswer = () => {
     const activeQuestion = useSelector((state) => state.creator.activeQuestion);
 
-    const [isCheck, setIsCheck] = useState(false);
+    const initialCheckState = activeQuestion.answerList.some(
+        (answer) => answer.isCorrect === true,
+    );
+
+    const [isCheck, setIsCheck] = useState(initialCheckState);
 
     const dispatch = useDispatch();
 

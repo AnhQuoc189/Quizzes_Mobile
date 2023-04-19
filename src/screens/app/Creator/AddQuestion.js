@@ -50,6 +50,8 @@ const AddQuestion = ({ navigation }) => {
 
     const dispatch = useDispatch();
 
+    const [isValidated, setIsValidated] = useState(false);
+
     // Modal Visible State
     const [optionsModalVisible, setOptionsModalVisible] = useState(false);
     const [timeModalVisible, setTimeModalVisible] = useState(false);
@@ -65,6 +67,43 @@ const AddQuestion = ({ navigation }) => {
     // Handle Function
     const handleOpenOptionsModal = () => {
         setOptionsModalVisible(true);
+    };
+
+    const validateQuestion = () => {
+        const questionCondition = activeQuestion.question !== '';
+        const answerListCondition = activeQuestion.answerList.every(
+            (answer) => answer.answer !== '',
+        );
+        const correctAnswerCondition = activeQuestion.answerList.some(
+            (answer) => answer.isCorrect === true,
+        );
+
+        if (!questionCondition) {
+            alert('Please enter question');
+        } else if (!answerListCondition) {
+            alert('Please enter all answers');
+        } else if (!correctAnswerCondition) {
+            alert('Please choose correct answer');
+        }
+
+        switch (activeQuestion.type) {
+            case 'pool':
+                return (
+                    questionCondition &&
+                    answerListCondition &&
+                    correctAnswerCondition
+                );
+            case 'trueOrFalse':
+                return questionCondition && correctAnswerCondition;
+            default:
+                break;
+        }
+    };
+
+    const handlePressSaveQuestion = () => {
+        if (validateQuestion()) {
+            dispatch(changeQuestionInfo(activeQuestion));
+        }
     };
 
     return (
@@ -368,9 +407,7 @@ const AddQuestion = ({ navigation }) => {
                 {/* Save Button */}
                 <Button
                     title="Save question"
-                    handlePress={() =>
-                        dispatch(changeQuestionInfo(activeQuestion))
-                    }
+                    handlePress={handlePressSaveQuestion}
                 />
             </ScrollView>
 
@@ -497,9 +534,7 @@ const AddQuestion = ({ navigation }) => {
                                 width="48%"
                                 backgroundColor={bgColors.green}
                                 handlePress={() => {
-                                    dispatch(
-                                        changeQuestionInfo(activeQuestion),
-                                    );
+                                    handlePressSaveQuestion();
                                     setConfirmSaveModalVisible(false);
                                 }}
                             />

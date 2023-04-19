@@ -28,12 +28,29 @@ export default Creator = ({ navigation }) => {
         dispatch(changeQuizInfo(value));
     };
 
+    const validateQuiz = () => {
+        if (quiz.title && quiz.category) {
+            return true;
+        } else if (quiz.title === '') {
+            alert('Please enter Quiz title!');
+        } else {
+            alert('Please choose Quiz category!');
+        }
+        return false;
+    };
+
+    const handlePress = () => {
+        if (validateQuiz()) {
+            navigation.navigate('AddQuestion');
+        }
+    };
+
     return (
         <MainLayout
             navigation={navigation}
             header={
                 <Header
-                    title="Create Quiz"
+                    title="Quiz Creator"
                     style={styles.header}
                     navigation={navigation}
                     direct="Home"
@@ -100,15 +117,7 @@ export default Creator = ({ navigation }) => {
                 </View>
             </ScrollView>
 
-            <Button
-                title="Library question"
-                navigation={navigation}
-                direct={'AddQuestion'}
-                // params={{
-                //     quizDataCreator: quizData,
-                //     setQuizDataCreator: setQuizData,
-                // }}
-            />
+            <Button title="Library question" handlePress={handlePress} />
         </MainLayout>
     );
 };
