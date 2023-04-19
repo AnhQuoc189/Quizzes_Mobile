@@ -1,25 +1,43 @@
 // Library
-import {
-    SafeAreaView,
-    View,
-    Text,
-    StyleSheet,
-    TouchableOpacity,
-} from 'react-native';
-import { Ionicons, SimpleLineIcons } from '@expo/vector-icons';
+import { SafeAreaView, View, StyleSheet } from 'react-native';
+import { SimpleLineIcons } from '@expo/vector-icons';
 import { TextInput } from 'react-native-paper';
 import { ScrollView } from 'react-native-gesture-handler';
+import { useState } from 'react';
 
 //component
 import Header from 'src/components/auth/Header';
-import { BoxUser, CategoryCard } from 'src/components';
 
 //styles
-import { bgColor, colors } from 'src/styles/color';
-import { categories } from 'src/constants/category.constant';
-import { FlatList } from 'react-native';
-
+import { colors } from 'src/styles/color';
+import { DisplayDiscover, FilterSearch } from 'src/components/discover';
+import { useEffect } from 'react';
+import { BackHandler } from 'react-native';
 export default function Discover({ navigation }) {
+    const [isSearch, setIsSearch] = useState(false);
+    const [inputSearch, setInputSearch] = useState('');
+
+    const handleSearcrBar = (value) => {
+        setInputSearch(value);
+        setIsSearch(true);
+        console.log('stateSearch', isSearch);
+    };
+
+    useEffect(() => {
+        const backAction = () => {
+            setIsSearch(false);
+            console.log('state', isSearch);
+            return true;
+        };
+
+        const backHandler = BackHandler.addEventListener(
+            'hardwareBackPress',
+            backAction,
+        );
+
+        return () => backHandler.remove();
+    }, []);
+
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView>
@@ -39,61 +57,18 @@ export default function Discover({ navigation }) {
                         <TextInput
                             placeholderTextColor="gray"
                             textColor="gray"
+                            value={inputSearch}
+                            onChangeText={(value) => handleSearcrBar(value)}
                             activeUnderlineColor="transparent"
                             underlineColor="transparent"
                             placeholder="Quiz, categories, friends"
                             style={styles.textInput}
                         />
                     </View>
-                    {/* Top picks */}
-                    <TouchableOpacity style={styles.boxTopPick}>
-                        <View style={styles.box}>
-                            <Text
-                                style={{ ...styles.textHeader, fontSize: 14 }}
-                            >
-                                TOP PICKS
-                            </Text>
-                        </View>
-
-                        <View
-                            style={{
-                                alignItems: 'center',
-                                display: 'flex',
-                                justifyContent: 'flex-start',
-                                alignSelf: 'baseline',
-                            }}
-                        >
-                            <Text style={styles.textName}>
-                                Travel Trivia Quiz
-                            </Text>
-                            <Text style={styles.textSub}>
-                                Music . 5 Quizzes
-                            </Text>
-                        </View>
-                    </TouchableOpacity>
-                    {/* Main Content */}
                 </View>
-                <View style={styles.mainContent}>
-                    <Text style={[styles.textName, styles.textTitle]}>
-                        Top rank of the week
-                    </Text>
+                {/* Main Content */}
 
-                    <BoxUser number={true} />
-
-                    <View style={styles.categoryContain}>
-                        {categories.map((category) => (
-                            <CategoryCard
-                                width="45%"
-                                key={category.name}
-                                category={category}
-                                activeCategory={true}
-                                setActiveCategory={() => {
-                                    console.log('math');
-                                }}
-                            />
-                        ))}
-                    </View>
-                </View>
+                {isSearch ? <FilterSearch /> : <DisplayDiscover />}
             </ScrollView>
         </SafeAreaView>
     );
@@ -102,7 +77,6 @@ export default function Discover({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: 30,
         backgroundColor: colors.primary,
     },
     fisrtSection: {
@@ -156,16 +130,18 @@ const styles = StyleSheet.create({
         alignSelf: 'baseline',
     },
     textName: {
+        display: 'flex',
+        justifyContent: 'center',
         fontSize: 17,
         color: '#660012',
         fontWeight: '900',
-        alignItems: 'center',
     },
     textSub: {
         fontSize: 12,
         color: '#660012',
         fontWeight: '500',
         alignItems: 'center',
+        marginLeft: 6,
     },
     mainContent: {
         display: 'flex',
@@ -184,11 +160,9 @@ const styles = StyleSheet.create({
     },
     categoryContain: {
         display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
         flexDirection: 'row',
         flexWrap: 'wrap',
         paddingTop: 20,
-        gap: 15,
+        gap: 20,
     },
 });

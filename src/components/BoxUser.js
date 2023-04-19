@@ -6,7 +6,12 @@ import { TouchableOpacity } from 'react-native';
 
 const BoxUser = ({ ...props }) => {
     return (
-        <TouchableOpacity style={styles.container}>
+        <TouchableOpacity
+            style={{
+                ...styles.container,
+                backgroundColor: props.normal ? 'white' : colors.primary,
+            }}
+        >
             {props.number ? (
                 <View style={styles.number}>
                     <Text style={{ color: 'white' }}>1</Text>
@@ -25,8 +30,22 @@ const BoxUser = ({ ...props }) => {
             </View>
 
             <View style={styles.info}>
-                <Text style={styles.name}>Tuan Nguyen</Text>
-                <Text style={styles.numberRank}>124 points</Text>
+                <Text
+                    style={{
+                        ...styles.name,
+                        color: props.normal ? 'black' : 'white',
+                    }}
+                >
+                    Tuan Nguyen
+                </Text>
+                <Text
+                    style={{
+                        ...styles.numberRank,
+                        color: props.normal ? 'gray' : '#F5F5FD',
+                    }}
+                >
+                    124 points
+                </Text>
             </View>
             <Image
                 style={{ ...styles.image, marginLeft: 40 }}
@@ -40,7 +59,6 @@ const styles = StyleSheet.create({
     container: {
         width: '100%',
         height: 80,
-        backgroundColor: colors.primary,
         borderRadius: 20,
         marginTop: 15,
         display: 'flex',
@@ -68,13 +86,11 @@ const styles = StyleSheet.create({
         fontSize: 15,
         fontWeight: '900',
         justifyContent: 'space-between',
-        color: 'white',
     },
     numberRank: {
         fontSize: 13,
         justifyContent: 'space-between',
         color: 'white',
-        color: '#F5F5FD',
     },
     info: {
         justifyContent: 'space-between',
