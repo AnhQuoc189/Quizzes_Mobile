@@ -14,10 +14,7 @@ import { colors } from 'src/styles/color';
 const DetailQuiz = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.container}>
-            <ScrollView
-                style={{ width: '100%' }}
-                contentContainerStyle={{ flexGrow: 1 }}
-            >
+            <View style={{ width: '100%', flex: 1 }}>
                 <TouchableOpacity
                     style={{ alignItems: 'center' }}
                     onPress={() => {
@@ -26,8 +23,16 @@ const DetailQuiz = ({ navigation }) => {
                 >
                     <Text>Header</Text>
                 </TouchableOpacity>
-                <QuizInfo />
-            </ScrollView>
+                <QuizInfo
+                    isMine={false}
+                    category="TECH"
+                    numberQuestions="5"
+                    title="Remote Work Tool Quiz"
+                    discription=" Take this basic remote work tools quiz to test your tech
+                    knowledge"
+                    isCreator={false}
+                />
+            </View>
         </SafeAreaView>
     );
 };

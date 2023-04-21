@@ -11,6 +11,7 @@ import {
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useSelector } from 'react-redux';
 
 import { BoxQuiz } from 'src/components';
 import SubLayout from 'src/layouts/SubLayout';
@@ -21,7 +22,6 @@ import { colors } from 'src/styles/color';
 // import Profile from './Profile';
 
 export default function Home({ navigation }) {
-    console.log('Anh Quoc');
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView
@@ -39,13 +39,11 @@ export default function Home({ navigation }) {
                         >
                             <View style={styles.weather}>
                                 <MaterialCommunityIcons
-                                    name={weatherState.name}
+                                    name="weather-sunny"
                                     size={18}
                                     color="#FED7DD"
                                 />
-                                <Text style={styles.subText}>
-                                    {weatherState.discript}
-                                </Text>
+                                <Text style={styles.subText}>GOOD MORNING</Text>
                             </View>
                             <Text
                                 style={{ ...styles.textHeader, color: 'white' }}
@@ -152,7 +150,7 @@ export default function Home({ navigation }) {
                             <Text
                                 style={{ ...styles.textHeader, fontSize: 18 }}
                             >
-                                Live Quizzes
+                                My Library
                             </Text>
 
                             <TouchableOpacity

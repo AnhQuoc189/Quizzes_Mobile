@@ -1,11 +1,28 @@
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import {
+    StyleSheet,
+    Text,
+    View,
+    TouchableOpacity,
+    ScrollView,
+} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Feather from 'react-native-vector-icons/Feather';
+import { useState } from 'react';
 
 import { colors } from 'src/styles/color';
 import { bgColors } from 'src/styles/color';
 
-const QuizInfo = () => {
+import BoxQuestion from './BoxQuestion';
+import { Button } from './creator';
+
+const QuizInfo = ({
+    isMine,
+    category,
+    numberQuestions,
+    title,
+    discription,
+    isCreator,
+}) => {
     return (
         <View style={styles.container}>
             {/* First section */}
@@ -20,21 +37,20 @@ const QuizInfo = () => {
                                 color={colors.primary}
                             />
                             <Text style={styles.textCategory}>
-                                TECH . 5 QUESTIONS
+                                {category} . {numberQuestions} QUESTIONS
                             </Text>
                         </View>
 
-                        <TouchableOpacity style={{ padding: 5 }}>
-                            <Feather name="edit" size={24} color="gray" />
-                        </TouchableOpacity>
+                        {isMine && (
+                            <TouchableOpacity style={{ padding: 5 }}>
+                                <Feather name="edit" size={24} color="gray" />
+                            </TouchableOpacity>
+                        )}
                     </View>
                     {/* Name of quiz */}
-                    <Text style={styles.textHeader}>Remote Work Tool Quiz</Text>
+                    <Text style={styles.textHeader}>{title}</Text>
                     {/* discription */}
-                    <Text style={styles.textDiscription}>
-                        Take this basic remote work tools quiz to test your tech
-                        knowledge
-                    </Text>
+                    <Text style={styles.textDiscription}>{discription}</Text>
                 </View>
             </View>
 
@@ -50,16 +66,35 @@ const QuizInfo = () => {
                         <Text style={styles.textHeader}>Questions</Text>
 
                         <View style={styles.numberBox}>
-                            <Text style={styles.textNumber}>5</Text>
+                            <Text style={styles.textNumber}>
+                                {numberQuestions}
+                            </Text>
                         </View>
                     </View>
 
-                    <TouchableOpacity style={{ padding: 5 }}>
-                        <Feather name="edit" size={24} color="gray" />
-                    </TouchableOpacity>
+                    {isMine && (
+                        <TouchableOpacity style={{ padding: 5 }}>
+                            <Feather name="edit" size={24} color="gray" />
+                        </TouchableOpacity>
+                    )}
                 </View>
 
-                <View></View>
+                <ScrollView style={styles.questionsBox}>
+                    <BoxQuestion
+                        title="Which mathematical symbol was the title of Ed Sheeran's
+                    first album in 2011"
+                        number="1"
+                        type="Multiple Choices"
+                    />
+                </ScrollView>
+
+                <View style={{ marginTop: 20 }}>
+                    {isCreator ? (
+                        <Button title="Save" />
+                    ) : (
+                        <Button title="Play" />
+                    )}
+                </View>
             </View>
         </View>
     );
@@ -132,5 +167,12 @@ const styles = StyleSheet.create({
         fontWeight: '900',
         fontSize: 12,
         color: 'white',
+    },
+    questionsBox: {
+        height: '80%',
+        borderRadius: 20,
+        backgroundColor: bgColors.second,
+        paddingVertical: 20,
+        paddingHorizontal: 10,
     },
 });
