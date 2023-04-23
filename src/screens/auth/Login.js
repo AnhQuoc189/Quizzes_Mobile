@@ -26,39 +26,25 @@ import { useEffect } from 'react';
 import authSlice from 'src/slices/authSlice';
 
 const InitLogin = { userName: '', password: '' };
-const InitError = { userNameError: false, passwordError: false };
+const InitErrorExist = { userName: false, password: false };
 
 export default function Login({ navigation }) {
     const [loadDing, SetLoaDing] = useState(false);
     const [formData, setFormData] = useState(InitLogin);
-    const [formError, setFormError] = useState(InitError);
+    const [formError, setFormError] = useState(InitErrorExist);
 
     const [noClick, setNoClick] = useState(true);
     const dispatch = useDispatch();
 
-    const handleChange = (e, name) => {
-        setFormData({ ...formData, [name]: e.nativeEvent.text });
-        setFormError({ ...formError, [name]: false });
-        if (!e.nativeEvent.text) {
+    const [loginUser, { data, isError, error }] = useLoginUserMutation();
+
+    useEffect(() => {
+        if (!formData.password || !formData.userName) {
             setNoClick(true);
         } else {
             setNoClick(false);
         }
-    };
-
-    // console.log(click);
-
-    const [loginUser, { data, isError, error }] = useLoginUserMutation();
-
-    // useEffect(() => {
-    //     if (!formData.userName || !formData.password) {
-    //         setClick(false);
-    //     } else {
-    //         setClick(true);
-    //     }
-    // }, [formData]);
-
-    // console.log(click);
+    }, [formData]);
 
     useEffect(() => {
         if (data) {
@@ -107,13 +93,20 @@ export default function Login({ navigation }) {
         }
     }, [data, isError]);
 
+    const handleChange = (e, name) => {
+        const value = e.nativeEvent.text;
+        setFormData({ ...formData, [name]: value });
+        setFormError({ ...formError, [name]: false });
+    };
+
     const handleLoading = (value) => {
         SetLoaDing(value);
     };
 
-    const handleLogin = async () => {
-        // dispatch(loginUser({ formData, navigation, handleLoading }));
-        await loginUser(formData);
+    const handleLogin = () => {
+        if (!noClick) {
+            loginUser(formData);
+        }
     };
 
     return loadDing ? (

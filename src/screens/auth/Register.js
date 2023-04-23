@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, TextInput, View, StyleSheet } from 'react-native';
+import { SafeAreaView, TextInput, View, StyleSheet, Text } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
-import { Ionicons } from '@expo/vector-icons';
 import { ScrollView } from 'react-native-gesture-handler';
-import { useDispatch } from 'react-redux';
+import { RegisterValid } from 'src/validate/auth/Resgister';
 import { useRegisterUserMutation } from 'src/services/authApi';
 
 import Button from 'src/components/auth/Button';
 import Header from 'src/components/auth/Header';
 import FormTextInput from 'src/components/auth/Input';
+import RadioButton from 'src/components/auth/RadioButton';
 
 const InitRegister = {
     firstName: '',
@@ -22,11 +22,59 @@ const InitRegister = {
     fullName: '',
     confirmPassword: '',
 };
+
+const InitUserType = { Teacher: false, Student: false };
+
+const InitErrorExist = {
+    userName: false,
+    email: false,
+};
+
+const InitErrorUser = {
+    userNameError: false,
+    emailError: false,
+    passwordError: false,
+    confirmPasswordError: false,
+    requestQuantity: false,
+    textQuantity: false,
+};
+
 export default function Register({ navigation }) {
-    const [formData, seFormData] = useState(InitRegister);
-    const dispatch = useDispatch();
+    const [formData, setFormData] = useState(InitRegister);
+    const [formError, setFormError] = useState(InitErrorExist);
+    const [errorUser, setErrorUser] = useState(InitErrorUser);
+    const [type, setType] = useState(InitUserType);
+    const [noClick, setNoClick] = useState(true);
 
     const [registerUser, { data, isError, error }] = useRegisterUserMutation();
+
+    const {
+        userNameError,
+        emailError,
+        passwordError,
+        confirmPasswordError,
+        textQuantity,
+    } = errorUser;
+
+    useEffect(() => {
+        if (
+            !formData.firstName ||
+            !formData.lastName ||
+            !formData.userType ||
+            !formData.userName ||
+            !formData.email ||
+            !formData.password ||
+            !formData.confirmPassword ||
+            userNameError ||
+            emailError ||
+            passwordError ||
+            confirmPasswordError
+        ) {
+            setNoClick(true);
+        } else {
+            setNoClick(false);
+        }
+    }, [formData]);
 
     useEffect(() => {
         if (data) {
@@ -48,10 +96,16 @@ export default function Register({ navigation }) {
                     console.log('Email k dung');
                     break;
                 case 'UserName already exists':
-                    console.log('Ton tai userName roi thang ngu');
+                    setFormError((pre) => {
+                        var newError = { ...pre, userName: true };
+                        return newError;
+                    });
                     break;
                 case 'Email already exists':
-                    console.log('Ton tai email roi thang ngu');
+                    setFormError((pre) => {
+                        var newError = { ...pre, email: true };
+                        return newError;
+                    });
                     break;
                 default:
                     break;
@@ -60,15 +114,30 @@ export default function Register({ navigation }) {
     }, [data, isError]);
 
     const handleChange = (e, name) => {
-        seFormData({
+        const value = e.nativeEvent.text;
+        setFormData({
             ...formData,
-            [name]: e.nativeEvent.text,
+            [name]: value,
             fullName: formData.firstName + formData.lastName,
         });
+        setFormError({ ...formError, [name]: false });
+        RegisterValid(name, value, formData, setErrorUser);
     };
 
+    const handleType = (name) => {
+        setType((pre) => {
+            var newType = { ...InitUserType, [name]: true };
+            return newType;
+        });
+        setFormData({ ...formData, userType: name });
+    };
+
+    // console.log(formData);
+
     const handleRegister = () => {
-        registerUser(formData);
+        if (!noClick) {
+            registerUser(formData);
+        }
     };
 
     return (
@@ -134,21 +203,33 @@ export default function Register({ navigation }) {
                                 </View>
                             </View>
 
-                            <FormTextInput
-                                lable="UserType"
-                                place="UserType"
-                                icon={
-                                    <Ionicons
-                                        name="ios-options"
-                                        size={24}
-                                        color="#865DFF"
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    gap: 40,
+                                    alignItems: 'center',
+                                }}
+                            >
+                                <Text>UserType:</Text>
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        gap: 50,
+                                        alignItems: 'center',
+                                    }}
+                                >
+                                    <RadioButton
+                                        lable="Teacher"
+                                        isSelect={type.Teacher}
+                                        onPress={() => handleType('Teacher')}
                                     />
-                                }
-                                value={formData.userType}
-                                handleChange={(e) =>
-                                    handleChange(e, 'userType')
-                                }
-                            />
+                                    <RadioButton
+                                        lable="Student"
+                                        isSelect={type.Student}
+                                        onPress={() => handleType('Student')}
+                                    />
+                                </View>
+                            </View>
 
                             <FormTextInput
                                 lable="UserName"
@@ -165,6 +246,16 @@ export default function Register({ navigation }) {
                                     handleChange(e, 'userName')
                                 }
                             />
+                            {formError.userName && (
+                                <Text style={{ color: 'red' }}>
+                                    UserName already exist!
+                                </Text>
+                            )}
+                            {userNameError && (
+                                <Text style={{ color: 'red' }}>
+                                    {textQuantity}
+                                </Text>
+                            )}
 
                             <FormTextInput
                                 lable="Email"
@@ -179,6 +270,17 @@ export default function Register({ navigation }) {
                                 value={formData.email}
                                 handleChange={(e) => handleChange(e, 'email')}
                             />
+                            {formError.email && (
+                                <Text style={{ color: 'red' }}>
+                                    Email already exist!
+                                </Text>
+                            )}
+
+                            {emailError && (
+                                <Text style={{ color: 'red' }}>
+                                    Example: anhquoc1809@gmail.com
+                                </Text>
+                            )}
 
                             <FormTextInput
                                 lable="Password"
@@ -195,6 +297,11 @@ export default function Register({ navigation }) {
                                     handleChange(e, 'password')
                                 }
                             />
+                            {passwordError && (
+                                <Text style={{ color: 'red' }}>
+                                    (upper,lower,special,number,atleast 8)
+                                </Text>
+                            )}
                             <FormTextInput
                                 lable="Confirm Password"
                                 place="Your Password"
@@ -210,11 +317,17 @@ export default function Register({ navigation }) {
                                     handleChange(e, 'confirmPassword')
                                 }
                             />
+                            {confirmPasswordError && (
+                                <Text style={{ color: 'red' }}>
+                                    Wrong confirmPassword
+                                </Text>
+                            )}
 
                             <Button
                                 title={'Register'}
                                 onPress={handleRegister}
                                 navigation={navigation}
+                                click={noClick}
                             />
                         </View>
                     </View>

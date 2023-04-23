@@ -2,7 +2,6 @@ import React from 'react';
 import { TouchableOpacity, StyleSheet, View, Text } from 'react-native';
 
 export default function Button({ navigation, ...props }) {
-    console.log(props.click);
     return (
         <TouchableOpacity onPress={props.onPress}>
             <View
