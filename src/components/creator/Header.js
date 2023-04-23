@@ -10,18 +10,18 @@ const Header = ({
     options,
     setConfirmSaveModalVisible,
 }) => {
-    const isSaved = useSelector((state) => state.creator.isSaved);
+    // const isSaved = useSelector((state) => state.creator.isSaved);
 
     return (
         <View style={style}>
             {/* Back button */}
             <TouchableOpacity
                 onPress={() => {
-                    if (!isSaved) {
-                        setConfirmSaveModalVisible(true);
-                    } else {
-                        navigation.navigate(direct);
-                    }
+                    // if (!isSaved) {
+                    //     setConfirmSaveModalVisible(true);
+                    // } else {
+                    navigation.navigate(direct);
+                    // }
                 }}
             >
                 <Ionicons
