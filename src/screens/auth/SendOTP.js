@@ -2,8 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import { TouchableOpacity, View, Text, TextInput } from 'react-native';
 import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native';
-import { useDispatch } from 'react-redux';
-import { verifyOTP } from 'src/slices/authSlice';
 import {
     useRegisterMailOtpQuery,
     useVerifyOtpMutation,
@@ -12,30 +10,38 @@ import {
 import Header from 'src/components/auth/Header';
 import Button from 'src/components/auth/Button';
 
+import ResendOTP from 'src/components/auth/ResendOTP';
+
+const InitOtp = { 1: '', 2: '', 3: '', 4: '' };
+
 export default function SendOTP({ navigation, ...props }) {
     const firstInput = useRef();
     const secondInput = useRef();
     const thirdInput = useRef();
     const fourthInput = useRef();
-    const [OTP, setOTP] = useState({ 1: '', 2: '', 3: '', 4: '' });
-    const dispatch = useDispatch();
+    const [OTP, setOTP] = useState(InitOtp);
+    const [time, setTime] = useState(60);
+    const [noClick, setNoClick] = useState(true);
+    const [optValid, setOtpvalid] = useState(false);
+    const timerId = useRef();
+
     const email = props.route.params.userEmail;
+    const username = props.route.params.userName;
 
     const OtpMail = props.route.params;
     useRegisterMailOtpQuery(OtpMail);
 
-    const [generateOTP, { data, isError, error }] = useVerifyOtpMutation();
+    const [verifyOTP, { data, isError, error, isLoading }] =
+        useVerifyOtpMutation();
 
     useEffect(() => {
         if (data) {
-            setTimeout(() => {
-                navigation.navigate('Newpass', email);
-            }, 1500);
+            navigation.navigate('Newpass', email);
         } else {
             const errorText = error?.data?.message;
             switch (errorText) {
                 case 'Invalid OTP':
-                    console.log('Sai OTP roi thang ngu');
+                    setOtpvalid(true);
                     break;
                 default:
                     break;
@@ -43,10 +49,35 @@ export default function SendOTP({ navigation, ...props }) {
         }
     }, [data, isError]);
 
+    useEffect(() => {
+        timerId.current = setTimeout(() => {
+            setTime((prev) => prev - 1);
+        }, 1000);
+
+        if (time === 0) {
+            setOtpvalid(false);
+            setNoClick(true);
+        } else {
+            setNoClick(false);
+        }
+
+        if (time === 0) {
+            clearTimeout(timerId.current);
+        }
+    }, [time]);
+
+    const setTimeStart = () => {
+        setOtpvalid(false);
+        setOTP(InitOtp);
+        clearTimeout(timerId.current);
+        setTime(60);
+    };
+
     const handelSubmitOTP = () => {
         const OTPnumber = OTP[1] + OTP[2] + OTP[3] + OTP[4];
-
-        generateOTP({ email, code: OTPnumber });
+        if (!noClick) {
+            verifyOTP({ email, code: OTPnumber });
+        }
     };
 
     return (
@@ -76,6 +107,7 @@ export default function SendOTP({ navigation, ...props }) {
                                 onChangeText={(text) => {
                                     setOTP({ ...OTP, 1: text });
                                     // setOTP([...OTP  ,OTP[0]:text])
+                                    setOtpvalid(false);
                                     text && secondInput.current.focus();
                                 }}
                             />
@@ -88,9 +120,8 @@ export default function SendOTP({ navigation, ...props }) {
                                 ref={secondInput}
                                 onChangeText={(text) => {
                                     setOTP({ ...OTP, 2: text });
-                                    text
-                                        ? thirdInput.current.focus()
-                                        : firstInput.current.focus();
+                                    setOtpvalid(false);
+                                    text && thirdInput.current.focus();
                                 }}
                             />
                         </View>
@@ -102,9 +133,8 @@ export default function SendOTP({ navigation, ...props }) {
                                 ref={thirdInput}
                                 onChangeText={(text) => {
                                     setOTP({ ...OTP, 3: text });
-                                    text
-                                        ? fourthInput.current.focus()
-                                        : secondInput.current.focus();
+                                    setOtpvalid(false);
+                                    text && fourthInput.current.focus();
                                 }}
                             />
                         </View>
@@ -116,23 +146,36 @@ export default function SendOTP({ navigation, ...props }) {
                                 ref={fourthInput}
                                 onChangeText={(text) => {
                                     setOTP({ ...OTP, 4: text });
-                                    !text && thirdInput.current.focus();
+                                    setOtpvalid(false);
                                 }}
                             />
                         </View>
                     </View>
 
-                    <View style={styles.viewSendOTP}>
-                        <Text>Do not send OTP ? </Text>
-                        <TouchableOpacity>
-                            <Text style={styles.textSendOTP}>Send OTP</Text>
-                        </TouchableOpacity>
-                    </View>
+                    <Text style={{ marginTop: -20 }}>
+                        {time === 60
+                            ? '1:00'
+                            : time >= 10
+                            ? `0:${time}`
+                            : `0:0${time}`}
+                    </Text>
+                    <ResendOTP
+                        navigation={navigation}
+                        userEmail={email}
+                        userName={username}
+                        setTime={setTimeStart}
+                    />
+
+                    {optValid && (
+                        <Text style={{ color: 'red' }}>OTP Invalid</Text>
+                    )}
 
                     <Button
                         title="Submit"
                         navigation={navigation}
                         onPress={handelSubmitOTP}
+                        click={noClick}
+                        loading={isLoading}
                     />
                 </View>
             </View>

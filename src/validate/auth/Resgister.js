@@ -106,3 +106,22 @@ export const RegisterValid = (name, value, formData, setErrorUser) => {
             break;
     }
 };
+
+export const EmailReset = (value, setEmailFormaError) => {
+    var email =
+        /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (email.test(value) || value === '') {
+        setEmailFormaError(false);
+    } else {
+        setEmailFormaError(true);
+    }
+};
+
+export const RequirePassword = (value, setRequirePasswordError) => {
+    var password = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/;
+    if (password.test(value) || value === '') {
+        setRequirePasswordError(false);
+    } else {
+        setRequirePasswordError(true);
+    }
+};

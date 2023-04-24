@@ -3,6 +3,7 @@ import { SafeAreaView, StyleSheet, View, Text } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useDispatch } from 'react-redux';
 import { useGenerateOtpMutation } from 'src/services/authApi';
+import { EmailReset } from 'src/validate/auth/Resgister';
 
 import Button from 'src/components/auth/Button';
 import Header from 'src/components/auth/Header';
@@ -10,32 +11,37 @@ import FormTextInput from 'src/components/auth/Input';
 
 export default function Reset({ navigation }) {
     const [email, setEmail] = useState('');
+    const [emailError, setEmailError] = useState(false);
+    const [emailFormatError, setEmailFormaError] = useState(false);
+    const [noClick, setNoClick] = useState(true);
 
-    const [generateOTP, { data, isError, error }] = useGenerateOtpMutation();
+    const [generateOTP, { data, isError, error, isLoading }] =
+        useGenerateOtpMutation();
+
+    useEffect(() => {
+        if (!email) {
+            setNoClick(true);
+        } else {
+            setNoClick(false);
+        }
+    }, [email]);
 
     useEffect(() => {
         if (data) {
-            const text = `Your Password Recovery OTP is ${data.code}. Verify and recover your password`;
-            const userName = data.userName;
-            const userEmail = email;
-            const subject = 'Password Recovery OTP';
-            setTimeout(() => {
-                navigation.navigate('SendOTP', {
-                    userName,
-                    userEmail,
-                    text,
-                    subject,
-                });
-            }, 1500);
+            const infoEmail = {
+                text: `Your Password Recovery OTP is ${data.code}. Verify and recover your password`,
+                userName: data.userName,
+                userEmail: email,
+                subject: 'Password Recovery OTP',
+            };
+            navigation.navigate('SendOTP', infoEmail);
         }
         if (isError) {
             const errorText = error?.data?.message;
             switch (errorText) {
-                case 'email Empty':
-                    console.log('please enter email');
-                    break;
                 case 'email does not exists':
-                    console.log('Email Khong ton tai thang ngu');
+                    setEmailError(true);
+                    setEmailFormaError(false);
                     break;
                 default:
                     break;
@@ -43,9 +49,17 @@ export default function Reset({ navigation }) {
         }
     }, [data, isError]);
 
+    const handleChange = (e, name) => {
+        const value = e.nativeEvent.text;
+        setEmail(value);
+        setEmailError(false);
+        EmailReset(value, setEmailFormaError);
+    };
+
     const handleReset = () => {
-        // dispatch(generateOTP({ email, navigation }));
-        generateOTP(email);
+        if (!noClick) {
+            generateOTP(email);
+        }
     };
 
     return (
@@ -75,14 +89,25 @@ export default function Reset({ navigation }) {
                         />
                     }
                     value={email}
-                    handleChange={(e) => setEmail(e.nativeEvent.text)}
+                    handleChange={(e) => handleChange(e, 'email')}
                 />
+                {emailError && (
+                    <Text style={{ color: 'red' }}>Email doesn' not exist</Text>
+                )}
+
+                {emailFormatError && (
+                    <Text style={{ color: 'red' }}>
+                        Example:binbin18092003@gmail.com
+                    </Text>
+                )}
 
                 <Button
                     title="Reset Password"
                     // direct={'Newpass'}
                     onPress={handleReset}
                     navigation={navigation}
+                    click={noClick}
+                    loading={isLoading}
                 />
             </View>
         </SafeAreaView>

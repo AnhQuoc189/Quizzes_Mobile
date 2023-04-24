@@ -42,10 +42,10 @@ export const apiAuth = createApi({
             }),
         }),
         resetPass: builder.mutation({
-            query: ({ email, password }) => ({
+            query: ({ email, password, confirm }) => ({
                 url: 'api/auth/resetPassword',
                 method: 'PUT',
-                body: { email, password },
+                body: { email, password, confirm },
             }),
         }),
     }),
