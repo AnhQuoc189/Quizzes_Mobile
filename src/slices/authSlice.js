@@ -15,11 +15,11 @@ const authSlice = createSlice({
             state.authData = action.payload;
             SaveStore();
         },
-        logOut: () => {
+        logOut: (state) => {
             const Clear = async () => {
                 await AsyncStorage.clear();
             };
-            state.authData = action.payload;
+            state.authData = null;
             Clear();
         },
     },

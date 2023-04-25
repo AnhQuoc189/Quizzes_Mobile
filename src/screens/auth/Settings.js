@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -7,16 +7,37 @@ import {
     Text,
     TouchableOpacity,
 } from 'react-native';
+
 import Header from 'src/components/auth/Header';
 import Item from 'src/components/auth/Item';
+import { logOut } from 'src/slices/authSlice';
+import { useDispatch } from 'react-redux';
 
 import { Feather } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { Switch } from 'react-native-paper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Settings({ navigation }) {
+    // useEffect(() => {
+    //     const Show = async () => {
+    //         const infoUserJson = await AsyncStorage.getItem('profile');
+    //         const { data } = JSON.parse(infoUserJson);
+    //         const userName = data.user.userName;
+    //         console.log(userName);
+    //     };
+    //     Show();
+    // }, []);
+
+    const dispatch = useDispatch();
+
+    const logout = () => {
+        dispatch(logOut());
+        navigation.navigate('Login');
+    };
+
     return (
         <SafeAreaView style={styles.safeAreaView}>
             <ScrollView
@@ -106,7 +127,7 @@ export default function Settings({ navigation }) {
                             text="Most frequently asked question"
                         />
                     </View>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={logout}>
                         <View style={styles.viewLogout}>
                             <Text style={styles.textLogout}>Logout</Text>
                         </View>

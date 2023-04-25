@@ -16,9 +16,8 @@ const Button = ({
     color = '#fff',
 }) => {
     const handleOnPress = () => {
-        handlePress && !value && handlePress();
-        value && handlePress(value);
-        navigation && navigation.navigate(direct, params);
+        //
+        navigation.navigate('WatingRoom');
     };
 
     return (
