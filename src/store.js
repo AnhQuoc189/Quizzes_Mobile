@@ -3,13 +3,13 @@ import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/dist/query';
 
 // Slices
-import authSlice from './slices/authSlice';
+import authReducer from './slices/authSlice';
 import { apiAuth } from './services/authApi';
 import creatorReducer from './slices/creatorSlice';
 
 const store = configureStore({
     reducer: {
-        auths: authSlice.reducer,
+        auths: authReducer,
         [apiAuth.reducerPath]: apiAuth.reducer,
         creator: creatorReducer,
     },

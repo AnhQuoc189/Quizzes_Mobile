@@ -9,7 +9,6 @@ import {
     ScrollView,
 } from 'react-native';
 import { useDispatch } from 'react-redux';
-import { ActivityIndicator } from 'react-native';
 import { useLoginUserMutation } from 'src/services/authApi';
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -23,20 +22,20 @@ import Header from 'src/components/auth/Header';
 import Button from 'src/components/auth/Button';
 import FormTextInput from 'src/components/auth/Input';
 import { useEffect } from 'react';
-import authSlice from 'src/slices/authSlice';
+import { loGin } from 'src/slices/authSlice';
 
 const InitLogin = { userName: '', password: '' };
 const InitErrorExist = { userName: false, password: false };
 
 export default function Login({ navigation }) {
-    const [loadDing, SetLoaDing] = useState(false);
     const [formData, setFormData] = useState(InitLogin);
     const [formError, setFormError] = useState(InitErrorExist);
 
     const [noClick, setNoClick] = useState(true);
     const dispatch = useDispatch();
 
-    const [loginUser, { data, isError, error }] = useLoginUserMutation();
+    const [loginUser, { data, isError, error, isLoading }] =
+        useLoginUserMutation();
 
     useEffect(() => {
         if (!formData.password || !formData.userName) {
@@ -48,16 +47,8 @@ export default function Login({ navigation }) {
 
     useEffect(() => {
         if (data) {
-            const Login = async () => {
-                await handleLoading(true);
-                // await dispatch(authAction(data));
-                dispatch(authSlice.actions.loGin(data));
-                setTimeout(() => {
-                    navigation.navigate('AppNavigator');
-                    handleLoading(false);
-                }, 3000);
-            };
-            Login();
+            dispatch(loGin(data));
+            navigation.navigate('AppNavigator');
         }
         if (isError) {
             const errorText = error?.data?.message;
@@ -99,21 +90,13 @@ export default function Login({ navigation }) {
         setFormError({ ...formError, [name]: false });
     };
 
-    const handleLoading = (value) => {
-        SetLoaDing(value);
-    };
-
     const handleLogin = () => {
         if (!noClick) {
             loginUser(formData);
         }
     };
 
-    return loadDing ? (
-        <View style={styles.viewLoading}>
-            <ActivityIndicator size="large" color="#865DFF" />
-        </View>
-    ) : (
+    return (
         <SafeAreaView style={styles.safeAreaView}>
             <ScrollView
                 style={{ width: '90%' }}
@@ -170,6 +153,7 @@ export default function Login({ navigation }) {
                                 // onPress={() =>
                                 //     navigation.navigate('AppNavigator')
                                 // }
+                                loading={isLoading}
                             />
 
                             <View style={styles.viewForgot}>
@@ -244,13 +228,6 @@ export default function Login({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-    viewLoading: {
-        width: '100%',
-        height: '100%',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-
     safeAreaView: {
         backgroundColor: '#E3DFFD',
         display: 'flex',

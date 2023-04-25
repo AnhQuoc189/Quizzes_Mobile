@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default createSlice({
+const authSlice = createSlice({
     name: 'auth',
     initialState: { authData: null },
     reducers: {
@@ -24,3 +24,8 @@ export default createSlice({
         },
     },
 });
+
+export const { loGin, logOut } = authSlice.actions;
+
+const authReducer = authSlice.reducer;
+export default authReducer;

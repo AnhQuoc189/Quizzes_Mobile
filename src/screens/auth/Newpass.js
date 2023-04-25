@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { SafeAreaView, StyleSheet, View, Text } from 'react-native';
 
 import { useResetPassMutation } from 'src/services/authApi';
+import { RequirePassword } from 'src/validate/auth/Resgister';
 
 import Button from 'src/components/auth/Button';
 import Header from 'src/components/auth/Header';
@@ -12,14 +13,30 @@ const Init = { newPass: '', confirmNewPass: '' };
 
 export default function Newpass({ navigation, ...props }) {
     const [formData, setFormData] = useState(Init);
+    const [requirePasswordError, setRequirePasswordError] = useState(false);
+    const [confirmError, setConfirmError] = useState(false);
+    const [noClick, setNoClick] = useState(true);
 
     const email = props.route.params;
-    console.log(email);
+
     const handleChange = (e, name) => {
-        setFormData({ ...formData, [name]: e.nativeEvent.text });
+        const value = e.nativeEvent.text;
+        setConfirmError(false);
+        setFormData({ ...formData, [name]: value });
+        if (name === 'newPass') {
+            RequirePassword(value, setRequirePasswordError);
+        }
     };
 
-    const [newPass, { data, isError, error }] = useResetPassMutation();
+    const [newPass, { data, isError, isLoading }] = useResetPassMutation();
+
+    useEffect(() => {
+        if (!formData.newPass || !formData.confirmNewPass) {
+            setNoClick(true);
+        } else {
+            setNoClick(false);
+        }
+    }, [formData]);
 
     useEffect(() => {
         if (data) {
@@ -27,21 +44,19 @@ export default function Newpass({ navigation, ...props }) {
                 title: 'Successfully!',
                 text: 'Change Password Successfully! Now you can signIn with your new password',
             };
-            setTimeout(() => {
-                navigation.navigate('LetterScreen', letter);
-            }, 1500);
-        } else {
-            console.log('loi');
+            navigation.navigate('LetterScreen', letter);
+        }
+        if (isError) {
+            setConfirmError(true);
         }
     }, [data, isError]);
 
     const handleResetPassWord = () => {
-        if (formData.newPass === formData.confirmNewPass) {
-            let password = formData.newPass;
-            newPass({ email, password });
-        } else {
-            console.log('Sai roi kia thang ngu');
-        }
+        newPass({
+            email,
+            password: formData.newPass,
+            confirm: formData.confirmNewPass,
+        });
     };
 
     return (
@@ -49,7 +64,7 @@ export default function Newpass({ navigation, ...props }) {
             <View style={styles.viewAll}>
                 <Header
                     title="Reset Password"
-                    direct="SendOTP"
+                    direct="Login"
                     navigation={navigation}
                 />
 
@@ -73,6 +88,11 @@ export default function Newpass({ navigation, ...props }) {
                     value={formData.newPass}
                     handleChange={(e) => handleChange(e, 'newPass')}
                 />
+                {requirePasswordError && (
+                    <Text style={{ color: 'red' }}>
+                        (upper,lower,special,number,atleast 8)
+                    </Text>
+                )}
 
                 <FormTextInput
                     lable="Confirm Password"
@@ -88,10 +108,18 @@ export default function Newpass({ navigation, ...props }) {
                     handleChange={(e) => handleChange(e, 'confirmNewPass')}
                 />
 
+                {confirmError && (
+                    <Text style={{ color: 'red' }}>
+                        Confirm password Invalid
+                    </Text>
+                )}
+
                 <Button
                     title="Reset Password"
                     onPress={handleResetPassWord}
                     navigation={navigation}
+                    click={noClick}
+                    loading={isLoading}
                 />
             </View>
         </SafeAreaView>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, StyleSheet, View, Text } from 'react-native';
+import { ActivityIndicator } from 'react-native';
 
 export default function Button({ navigation, ...props }) {
     return (
@@ -10,13 +11,25 @@ export default function Button({ navigation, ...props }) {
                     { backgroundColor: props.click ? 'gray' : '#865DFF' },
                 ]}
             >
-                <Text style={styles.textTitle}>{props.title}</Text>
+                {props.loading ? (
+                    <View style={styles.viewLoading}>
+                        <ActivityIndicator size="large" color="#fff" />
+                    </View>
+                ) : (
+                    <Text style={styles.textTitle}>{props.title}</Text>
+                )}
             </View>
         </TouchableOpacity>
     );
 }
 
 const styles = StyleSheet.create({
+    viewLoading: {
+        width: '100%',
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     viewButon: {
         width: 310,
         height: 50,

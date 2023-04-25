@@ -46,7 +46,8 @@ export default function Register({ navigation }) {
     const [type, setType] = useState(InitUserType);
     const [noClick, setNoClick] = useState(true);
 
-    const [registerUser, { data, isError, error }] = useRegisterUserMutation();
+    const [registerUser, { data, isError, error, isLoading }] =
+        useRegisterUserMutation();
 
     const {
         userNameError,
@@ -82,9 +83,7 @@ export default function Register({ navigation }) {
                 title: 'Congratulations!',
                 text: 'SignUp Successfully! Please check your mail to verify-account',
             };
-            setTimeout(() => {
-                navigation.navigate('LetterScreen', letter);
-            }, 1500);
+            navigation.navigate('LetterScreen', letter);
         }
         if (isError) {
             const errorText = error?.data?.message;
@@ -328,6 +327,7 @@ export default function Register({ navigation }) {
                                 onPress={handleRegister}
                                 navigation={navigation}
                                 click={noClick}
+                                loading={isLoading}
                             />
                         </View>
                     </View>
