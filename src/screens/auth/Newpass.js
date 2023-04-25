@@ -31,7 +31,11 @@ export default function Newpass({ navigation, ...props }) {
     const [newPass, { data, isError, isLoading }] = useResetPassMutation();
 
     useEffect(() => {
-        if (!formData.newPass || !formData.confirmNewPass) {
+        if (
+            !formData.newPass ||
+            !formData.confirmNewPass ||
+            requirePasswordError
+        ) {
             setNoClick(true);
         } else {
             setNoClick(false);
