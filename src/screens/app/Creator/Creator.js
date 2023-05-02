@@ -6,9 +6,13 @@ import {
     TouchableOpacity,
     TextInput,
     ScrollView,
+    Modal,
+    Pressable,
 } from 'react-native';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 // Layout
 import { MainLayout } from 'src/layouts';
@@ -19,10 +23,14 @@ import { changeQuizInfo } from 'src/slices/creatorSlice';
 // Component
 import { Header, Button, CoverImage } from 'src/components/creator';
 
-export default Creator = ({ navigation }) => {
+const Creator = ({ navigation }) => {
+    // State RTK
     const quiz = useSelector((state) => state.creator.quizData);
 
     const dispatch = useDispatch();
+
+    // Modal State
+    const [optionsModalVisible, setOptionsModalVisible] = useState(false);
 
     const handleChangeQuizInfo = (value) => {
         dispatch(changeQuizInfo(value));
@@ -47,14 +55,13 @@ export default Creator = ({ navigation }) => {
 
     return (
         <MainLayout
-            navigation={navigation}
             header={
                 <Header
                     title="Quiz Creator"
                     style={styles.header}
                     navigation={navigation}
                     direct="Home"
-                    options={() => {}}
+                    options={() => setOptionsModalVisible(true)}
                 />
             }
         >
@@ -108,7 +115,7 @@ export default Creator = ({ navigation }) => {
                         multiline={true}
                         numberOfLines={4}
                         onChangeText={(value) =>
-                            handleChangeDescription({
+                            handleChangeQuizInfo({
                                 type: 'description',
                                 value,
                             })
@@ -118,17 +125,67 @@ export default Creator = ({ navigation }) => {
             </ScrollView>
 
             <Button title="Library question" handlePress={handlePress} />
+
+            {/* Options Modal */}
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={optionsModalVisible}
+                onRequestClose={() => {
+                    setOptionsModalVisible(!optionsModalVisible);
+                }}
+            >
+                <Pressable
+                    style={styles.optionsCenteredView}
+                    onPress={() => setOptionsModalVisible(!optionsModalVisible)}
+                >
+                    <Pressable style={styles.optionsModalView}>
+                        {/* Overview Button */}
+                        <TouchableOpacity
+                            style={styles.optionsBtn}
+                            onPress={() => {
+                                setOptionsModalVisible(false);
+                                if (validateQuiz()) {
+                                    navigation.navigate('Overview');
+                                }
+                            }}
+                        >
+                            <Ionicons name="pie-chart-outline" size={20} />
+                            <Text style={styles.optionsText}>Overview</Text>
+                        </TouchableOpacity>
+
+                        {/* Delete Button */}
+                        <TouchableOpacity
+                            style={{ ...styles.optionsBtn, marginTop: 10 }}
+                            onPress={() => {
+                                setOptionsModalVisible(!optionsModalVisible);
+                            }}
+                        >
+                            <MaterialCommunityIcons
+                                name="trash-can-outline"
+                                size={20}
+                                color="red"
+                            />
+                            <Text
+                                style={{
+                                    ...styles.optionsText,
+                                    color: 'red',
+                                    marginLeft: 10,
+                                }}
+                            >
+                                Delete
+                            </Text>
+                        </TouchableOpacity>
+                    </Pressable>
+                </Pressable>
+            </Modal>
         </MainLayout>
     );
 };
 
+export default Creator;
+
 const styles = StyleSheet.create({
-    header: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
     label: {
         fontSize: 20,
         fontWeight: 600,
@@ -164,5 +221,36 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         paddingVertical: 10,
         paddingHorizontal: 20,
+    },
+
+    // Options Modal
+    optionsCenteredView: {
+        flex: 1,
+        paddingTop: 80,
+        paddingRight: 20,
+        alignItems: 'flex-end',
+    },
+    optionsModalView: {
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 20,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    optionsBtn: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 6,
+    },
+    optionsText: {
+        fontSize: 16,
+        marginLeft: 10,
     },
 });

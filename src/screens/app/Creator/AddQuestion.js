@@ -50,8 +50,6 @@ const AddQuestion = ({ navigation }) => {
 
     const dispatch = useDispatch();
 
-    const [isValidated, setIsValidated] = useState(false);
-
     // Modal Visible State
     const [optionsModalVisible, setOptionsModalVisible] = useState(false);
     const [timeModalVisible, setTimeModalVisible] = useState(false);
@@ -621,12 +619,6 @@ const AddQuestion = ({ navigation }) => {
 export default AddQuestion;
 
 const styles = StyleSheet.create({
-    header: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
     pagination: {
         display: 'flex',
         flexDirection: 'row',
