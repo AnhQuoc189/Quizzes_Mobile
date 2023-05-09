@@ -2,23 +2,40 @@ import { StyleSheet, Text, View, Image } from 'react-native';
 import React from 'react';
 import { colors } from 'src/styles/color';
 
-const BoxQuestion = ({ number, title, type }) => {
+const answerConst = ['A', 'B', 'C', 'D'];
+
+const BoxQuestion = ({ number, title, type, questionData }) => {
     return (
         <View style={styles.container}>
             <View style={styles.numberBox}>
-                <Text style={styles.textNumber}>{number}</Text>
+                <Text style={styles.textNumber}>
+                    {questionData.questionIndex}
+                </Text>
             </View>
 
             <View style={{ width: '65%' }}>
-                <Text style={styles.textTitle}>{title}</Text>
-
-                <Text style={styles.textType}>{type}</Text>
+                <Text style={styles.textTitle}>{questionData.question}</Text>
+                <View style={{ flexDirection: 'row', gap: 10 }}>
+                    <Text style={styles.textType}>{type}</Text>
+                    <Text style={styles.textType}>
+                        Time: {questionData.answerTime} second
+                    </Text>
+                </View>
+                <View>
+                    {questionData.answerList.map((answer, index) => (
+                        <Text key={index}>
+                            {answerConst[index]}. {answer.body}
+                        </Text>
+                    ))}
+                </View>
             </View>
 
             <Image
                 style={styles.image}
                 source={{
-                    uri: 'https://i0.wp.com/thatnhucuocsong.com.vn/wp-content/uploads/2023/02/Hinh-anh-avatar-cute.jpg?ssl\u003d1',
+                    uri: questionData.backgroundImage
+                        ? questionData.backgroundImage
+                        : 'https://i0.wp.com/thatnhucuocsong.com.vn/wp-content/uploads/2023/02/Hinh-anh-avatar-cute.jpg?ssl\u003d1',
                 }}
             />
         </View>

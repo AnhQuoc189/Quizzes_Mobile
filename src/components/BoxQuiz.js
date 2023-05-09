@@ -10,19 +10,26 @@ const BoxQuiz = ({ navigation, ...props }) => {
         <TouchableOpacity
             style={styles.container}
             onPress={() => {
-                navigation.navigate(props.direct);
+                const quizData = props.quizData;
+                navigation.navigate(props.direct, quizData);
             }}
         >
             <Image
                 style={styles.image}
                 source={{
-                    uri: 'https://us.123rf.com/450wm/sn333g/sn333g1608/sn333g160800029/65791205-math-round-bright-symbol-vector-colorful-mathematics-school-subject-bright-sign-in-thin-line-style.jpg?ver=6',
+                    // uri: 'https://us.123rf.com/450wm/sn333g/sn333g1608/sn333g160800029/65791205-math-round-bright-symbol-vector-colorful-mathematics-school-subject-bright-sign-in-thin-line-style.jpg?ver=6',
+                    uri:
+                        props.quizData.backgroundImage !== undefined
+                            ? props.quizData.backgroundImage
+                            : 'https://us.123rf.com/450wm/sn333g/sn333g1608/sn333g160800029/65791205-math-round-bright-symbol-vector-colorful-mathematics-school-subject-bright-sign-in-thin-line-style.jpg?ver=6',
                 }}
             />
 
             <View style={styles.info}>
-                <Text style={styles.textHeader}>Tuan Nguyen</Text>
-                <Text style={styles.numberRank}>Maths * 6 quizzes</Text>
+                <Text style={styles.textHeader}>{props.quizData.name}</Text>
+                <Text style={styles.numberRank}>
+                    {props.quizData.numberOfQuestions} * questions
+                </Text>
             </View>
             <Ionicons
                 name="chevron-forward"

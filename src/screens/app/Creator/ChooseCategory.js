@@ -16,13 +16,13 @@ import { CategoryCard } from 'src/components';
 import { Header, Button } from 'src/components/creator';
 
 const ChooseCategory = ({ navigation }) => {
-    const activeCategory = useSelector((state) => state.creator.activeCategory);
+    // const activeCategory = useSelector((state) => state.creator.activeCategory);
 
     const dispatch = useDispatch();
 
-    const handlePress = (value) => {
-        dispatch(changeQuizInfo(value));
-    };
+    // const handlePress = (value) => {
+    //     dispatch(changeQuizInfo(value));
+    // };
 
     return (
         <MainLayout
@@ -41,7 +41,7 @@ const ChooseCategory = ({ navigation }) => {
                     <CategoryCard
                         key={category.name}
                         category={category}
-                        activeCategory={category.name === activeCategory}
+                        // activeCategory={category.name === activeCategory}
                         width="47%"
                     />
                 ))}
@@ -52,17 +52,23 @@ const ChooseCategory = ({ navigation }) => {
                     title="Next"
                     navigation={navigation}
                     direct="Creator"
-                    handlePress={handlePress}
-                    value={{
-                        type: 'category',
-                        value: activeCategory,
-                    }}
+                    // handlePress={handlePress}
+                    // value={{
+                    //     type: 'category',
+                    //     value: activeCategory,
+                    // }}
                 />
             </View>
         </MainLayout>
     );
 };
 const styles = StyleSheet.create({
+    header: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
     categoryList: {
         display: 'flex',
         alignItems: 'center',

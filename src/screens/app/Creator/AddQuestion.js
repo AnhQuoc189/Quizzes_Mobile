@@ -42,67 +42,69 @@ import { bgColors, colors } from 'src/styles/color';
 
 const AddQuestion = ({ navigation }) => {
     // State RTK
-    const questionList = useSelector(
-        (state) => state.creator.quizData.questionList,
-    );
-    const activeQuestion = useSelector((state) => state.creator.activeQuestion);
-    const isSaved = useSelector((state) => state.creator.isSaved);
+    // const questionList = useSelector(
+    //     (state) => state.creator.quizData.questionList,
+    // );
+    // const activeQuestion = useSelector((state) => state.creator.activeQuestion);
+    // const isSaved = useSelector((state) => state.creator.isSaved);
 
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
 
-    // Modal Visible State
-    const [optionsModalVisible, setOptionsModalVisible] = useState(false);
-    const [timeModalVisible, setTimeModalVisible] = useState(false);
-    const [questionTypeModalVisible, setQuestionTypeModalVisible] =
-        useState(false);
-    const [confirmSaveModalVisible, setConfirmSaveModalVisible] =
-        useState(false);
-    const [
-        confirmDeleteQuestionModalVisible,
-        setConfirmDeleteQuestionModalVisible,
-    ] = useState(false);
+    // const [isValidated, setIsValidated] = useState(false);
 
-    // Handle Function
-    const handleOpenOptionsModal = () => {
-        setOptionsModalVisible(true);
-    };
+    // // Modal Visible State
+    // const [optionsModalVisible, setOptionsModalVisible] = useState(false);
+    // const [timeModalVisible, setTimeModalVisible] = useState(false);
+    // const [questionTypeModalVisible, setQuestionTypeModalVisible] =
+    //     useState(false);
+    // const [confirmSaveModalVisible, setConfirmSaveModalVisible] =
+    //     useState(false);
+    // const [
+    //     confirmDeleteQuestionModalVisible,
+    //     setConfirmDeleteQuestionModalVisible,
+    // ] = useState(false);
 
-    const validateQuestion = () => {
-        const questionCondition = activeQuestion.question !== '';
-        const answerListCondition = activeQuestion.answerList.every(
-            (answer) => answer.answer !== '',
-        );
-        const correctAnswerCondition = activeQuestion.answerList.some(
-            (answer) => answer.isCorrect === true,
-        );
+    // // Handle Function
+    // const handleOpenOptionsModal = () => {
+    //     setOptionsModalVisible(true);
+    // };
 
-        if (!questionCondition) {
-            alert('Please enter question');
-        } else if (!answerListCondition) {
-            alert('Please enter all answers');
-        } else if (!correctAnswerCondition) {
-            alert('Please choose correct answer');
-        }
+    // const validateQuestion = () => {
+    //     const questionCondition = activeQuestion.question !== '';
+    //     const answerListCondition = activeQuestion.answerList.every(
+    //         (answer) => answer.answer !== '',
+    //     );
+    //     const correctAnswerCondition = activeQuestion.answerList.some(
+    //         (answer) => answer.isCorrect === true,
+    //     );
 
-        switch (activeQuestion.type) {
-            case 'pool':
-                return (
-                    questionCondition &&
-                    answerListCondition &&
-                    correctAnswerCondition
-                );
-            case 'trueOrFalse':
-                return questionCondition && correctAnswerCondition;
-            default:
-                break;
-        }
-    };
+    //     if (!questionCondition) {
+    //         alert('Please enter question');
+    //     } else if (!answerListCondition) {
+    //         alert('Please enter all answers');
+    //     } else if (!correctAnswerCondition) {
+    //         alert('Please choose correct answer');
+    //     }
 
-    const handlePressSaveQuestion = () => {
-        if (validateQuestion()) {
-            dispatch(changeQuestionInfo(activeQuestion));
-        }
-    };
+    //     switch (activeQuestion.type) {
+    //         case 'pool':
+    //             return (
+    //                 questionCondition &&
+    //                 answerListCondition &&
+    //                 correctAnswerCondition
+    //             );
+    //         case 'trueOrFalse':
+    //             return questionCondition && correctAnswerCondition;
+    //         default:
+    //             break;
+    //     }
+    // };
+
+    // const handlePressSaveQuestion = () => {
+    //     if (validateQuestion()) {
+    //         dispatch(changeQuestionInfo(activeQuestion));
+    //     }
+    // };
 
     return (
         <MainLayout
@@ -113,8 +115,8 @@ const AddQuestion = ({ navigation }) => {
                     style={styles.header}
                     navigation={navigation}
                     direct="Creator"
-                    options={handleOpenOptionsModal}
-                    setConfirmSaveModalVisible={setConfirmSaveModalVisible}
+                    // options={handleOpenOptionsModal}
+                    // setConfirmSaveModalVisible={setConfirmSaveModalVisible}
                 />
             }
         >
@@ -123,7 +125,7 @@ const AddQuestion = ({ navigation }) => {
                 contentContainerStyle={styles.pagination}
                 horizontal={true}
             >
-                {questionList.map((question) => (
+                {/* {questionList.map((question) => (
                     <TouchableOpacity
                         key={question.index}
                         style={{
@@ -154,7 +156,7 @@ const AddQuestion = ({ navigation }) => {
                             {question.index + 1}
                         </Text>
                     </TouchableOpacity>
-                ))}
+                ))} */}
             </ScrollView>
 
             {/* Question */}
@@ -179,7 +181,8 @@ const AddQuestion = ({ navigation }) => {
                                 fontWeight: 700,
                             }}
                         >
-                            {activeQuestion.timeLimit} Sec
+                            {/* {activeQuestion.timeLimit} Sec */}
+                            Sec
                         </Text>
                     </TouchableOpacity>
 
@@ -190,13 +193,13 @@ const AddQuestion = ({ navigation }) => {
                             borderWidth: 0,
                             backgroundColor: colors.primary,
                         }}
-                        onPress={() => {
-                            if (!isSaved) {
-                                setConfirmSaveModalVisible(true);
-                            } else {
-                                dispatch(addQuestion());
-                            }
-                        }}
+                        // onPress={() => {
+                        //     if (!isSaved) {
+                        //         setConfirmSaveModalVisible(true);
+                        //     } else {
+                        //         dispatch(addQuestion());
+                        //     }
+                        // }}
                     >
                         <MaterialCommunityIcons
                             name="plus"
@@ -210,11 +213,11 @@ const AddQuestion = ({ navigation }) => {
 
                     {/* Type Question Setting Button */}
                     <TouchableOpacity
-                        onPress={() =>
-                            setQuestionTypeModalVisible(
-                                !questionTypeModalVisible,
-                            )
-                        }
+                        // onPress={() =>
+                        //     setQuestionTypeModalVisible(
+                        //         !questionTypeModalVisible,
+                        //     )
+                        // }
                         style={styles.settingBtn}
                     >
                         <Text
@@ -222,7 +225,7 @@ const AddQuestion = ({ navigation }) => {
                                 fontWeight: 700,
                             }}
                         >
-                            {activeQuestion.type}
+                            {/* {activeQuestion.type} */}
                         </Text>
                         <MaterialCommunityIcons
                             name="chevron-down"
@@ -232,7 +235,7 @@ const AddQuestion = ({ navigation }) => {
                     </TouchableOpacity>
 
                     {/* Time Setting Modal */}
-                    <Modal
+                    {/* <Modal
                         animationType="fade"
                         transparent={true}
                         visible={timeModalVisible}
@@ -297,10 +300,10 @@ const AddQuestion = ({ navigation }) => {
                                 </View>
                             </Pressable>
                         </Pressable>
-                    </Modal>
+                    </Modal> */}
 
                     {/* Type Setting Modal */}
-                    <Modal
+                    {/* <Modal
                         animationType="fade"
                         transparent={true}
                         visible={questionTypeModalVisible}
@@ -369,7 +372,7 @@ const AddQuestion = ({ navigation }) => {
                                 </View>
                             </Pressable>
                         </Pressable>
-                    </Modal>
+                    </Modal> */}
                 </View>
 
                 {/* Question title */}
@@ -378,15 +381,15 @@ const AddQuestion = ({ navigation }) => {
                     <TextInput
                         style={{ ...styles.input, marginTop: 5 }}
                         placeholder="Enter your question"
-                        value={activeQuestion.question}
-                        onChangeText={(value) => {
-                            dispatch(
-                                changeActiveQuestionInfo({
-                                    type: 'question',
-                                    value,
-                                }),
-                            );
-                        }}
+                        // value={activeQuestion.question}
+                        // onChangeText={(value) => {
+                        //     dispatch(
+                        //         changeActiveQuestionInfo({
+                        //             type: 'question',
+                        //             value,
+                        //         }),
+                        //     );
+                        // }}
                     />
                 </View>
 
@@ -394,23 +397,23 @@ const AddQuestion = ({ navigation }) => {
                 <View style={{ marginVertical: 10 }}>
                     <Text style={styles.label}>Answers</Text>
                     {/* Pool  */}
-                    {activeQuestion.type === 'pool' && <PoolAnswer />}
+                    {/* {activeQuestion.type === 'pool' && <PoolAnswer />} */}
 
                     {/* True Or False */}
-                    {activeQuestion.type === 'trueOrFalse' && (
+                    {/* {activeQuestion.type === 'trueOrFalse' && (
                         <TrueOrFalseAnswer />
-                    )}
+                    )} */}
                 </View>
 
                 {/* Save Button */}
                 <Button
                     title="Save question"
-                    handlePress={handlePressSaveQuestion}
+                    // handlePress={handlePressSaveQuestion}
                 />
             </ScrollView>
 
             {/* Options Modal */}
-            <Modal
+            {/* <Modal
                 animationType="fade"
                 transparent={true}
                 visible={optionsModalVisible}
@@ -422,9 +425,9 @@ const AddQuestion = ({ navigation }) => {
                     style={styles.optionsCenteredView}
                     onPress={() => setOptionsModalVisible(!optionsModalVisible)}
                 >
-                    <Pressable style={styles.optionsModalView}>
-                        {/* Duplicate Button */}
-                        <TouchableOpacity
+                    <Pressable style={styles.optionsModalView}> */}
+            {/* Duplicate Button */}
+            {/* <TouchableOpacity
                             style={styles.optionsBtn}
                             onPress={() => {
                                 if (!isSaved) {
@@ -445,10 +448,10 @@ const AddQuestion = ({ navigation }) => {
                                 size={20}
                             />
                             <Text style={styles.optionsText}>Duplicate</Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
 
-                        {/* Delete Button */}
-                        <TouchableOpacity
+            {/* Delete Button */}
+            {/* <TouchableOpacity
                             style={{ ...styles.optionsBtn, marginTop: 10 }}
                             onPress={() => {
                                 setOptionsModalVisible(!optionsModalVisible);
@@ -472,10 +475,10 @@ const AddQuestion = ({ navigation }) => {
                         </TouchableOpacity>
                     </Pressable>
                 </Pressable>
-            </Modal>
+            </Modal> */}
 
             {/* Confirm Save Modal*/}
-            <Modal
+            {/* <Modal
                 animationType="fade"
                 transparent={true}
                 visible={confirmSaveModalVisible}
@@ -539,10 +542,10 @@ const AddQuestion = ({ navigation }) => {
                         </View>
                     </Pressable>
                 </Pressable>
-            </Modal>
+            </Modal> */}
 
             {/* Confirm Delete Question Modal */}
-            <Modal
+            {/* <Modal
                 animationType="fade"
                 transparent={true}
                 visible={confirmDeleteQuestionModalVisible}
@@ -611,7 +614,7 @@ const AddQuestion = ({ navigation }) => {
                         </View>
                     </Pressable>
                 </Pressable>
-            </Modal>
+            </Modal> */}
         </MainLayout>
     );
 };
@@ -619,6 +622,12 @@ const AddQuestion = ({ navigation }) => {
 export default AddQuestion;
 
 const styles = StyleSheet.create({
+    header: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
     pagination: {
         display: 'flex',
         flexDirection: 'row',

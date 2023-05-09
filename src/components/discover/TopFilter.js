@@ -26,9 +26,9 @@ const TopFilter = () => {
                     <Text style={styles.buttonText}>See All</Text>
                 </TouchableOpacity>
             </View>
-
+            {/* 
             <BoxQuiz />
-            <BoxQuiz />
+            <BoxQuiz /> */}
 
             {/* Friends */}
             <View style={styles.headerContainer}>

@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -8,20 +8,43 @@ import {
     Text,
     Image,
 } from 'react-native';
+import { ActivityIndicator } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { BoxQuiz } from 'src/components';
 import SubLayout from 'src/layouts/SubLayout';
 
 import { colors } from 'src/styles/color';
+import { useGetTeacherQuizzesQuery } from 'src/services/quizApi';
+import { useCreateQuizMutation } from 'src/services/quizApi';
 
-// import Settings from '../auth/Settings';
-// import Profile from './Profile';
-
+import { fetchTeacherQuizes } from 'src/slices/quizSlice';
 export default function Home({ navigation }) {
+    const dispatch = useDispatch();
+
+    const userData = useSelector((state) => state.auths?.authData);
+    const userName = userData?.data?.user?.userName;
+    const avatar = userData?.data?.user?.avatar;
+    const teacherId = userData?.data?.user?._id;
+
+    const accessToken = userData?.data?.accessToken;
+
+    const { data, isLoading } = useGetTeacherQuizzesQuery({
+        accessToken,
+        teacherId,
+    });
+
+    useEffect(() => {
+        if (data) {
+            dispatch(fetchTeacherQuizes(data));
+        }
+    }, [data]);
+
+    const quizes = useSelector((state) => state.quizs.quizes);
+
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView
@@ -48,19 +71,23 @@ export default function Home({ navigation }) {
                             <Text
                                 style={{ ...styles.textHeader, color: 'white' }}
                             >
-                                Madelyn Dias
+                                {userName}
                             </Text>
                         </View>
 
                         <TouchableOpacity
                             onPress={() => {
-                                navigation.navigate('Profile');
+                                navigation.navigate('Profile', {
+                                    avatar: 'cc',
+                                });
                             }}
                         >
                             <Image
                                 style={styles.image}
                                 source={{
-                                    uri: 'https://i0.wp.com/thatnhucuocsong.com.vn/wp-content/uploads/2023/02/Hinh-anh-avatar-cute.jpg?ssl\u003d1',
+                                    uri: avatar
+                                        ? avatar
+                                        : 'https://i0.wp.com/thatnhucuocsong.com.vn/wp-content/uploads/2023/02/Hinh-anh-avatar-cute.jpg?ssl\u003d1',
                                 }}
                             />
                         </TouchableOpacity>
@@ -146,6 +173,9 @@ export default function Home({ navigation }) {
                     }}
                 >
                     <SubLayout>
+                        <View style={styles.viewLoading}>
+                            <ActivityIndicator size="large" color="#fff" />
+                        </View>
                         <View style={styles.headerContainer}>
                             <Text
                                 style={{ ...styles.textHeader, fontSize: 18 }}
@@ -163,11 +193,22 @@ export default function Home({ navigation }) {
                             </TouchableOpacity>
                         </View>
 
-                        <BoxQuiz direct="DetailQuiz" navigation={navigation} />
-                        <BoxQuiz />
-                        <BoxQuiz />
-                        <BoxQuiz />
-                        <BoxQuiz />
+                        {isLoading ? (
+                            <View style={styles.viewLoading}>
+                                <ActivityIndicator size="large" color="#fff" />
+                            </View>
+                        ) : (
+                            <View>
+                                {quizes.map((quizData, index) => (
+                                    <BoxQuiz
+                                        key={index}
+                                        quizData={quizData}
+                                        navigation={navigation}
+                                        direct="DetailQuiz"
+                                    />
+                                ))}
+                            </View>
+                        )}
                     </SubLayout>
                 </View>
             </ScrollView>

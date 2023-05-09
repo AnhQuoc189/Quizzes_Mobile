@@ -27,7 +27,7 @@ export const RegisterValid = (name, value, formData, setErrorUser) => {
             }
             break;
 
-        case 'email':
+        case 'mail':
             var email =
                 /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             if (email.test(value) || value === '') {

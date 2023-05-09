@@ -25,7 +25,7 @@ export default function SendOTP({ navigation, ...props }) {
     const [optValid, setOtpvalid] = useState(false);
     const timerId = useRef();
 
-    const email = props.route.params.userEmail;
+    const mail = props.route.params.userEmail;
     const username = props.route.params.userName;
 
     const OtpMail = props.route.params;
@@ -36,7 +36,7 @@ export default function SendOTP({ navigation, ...props }) {
 
     useEffect(() => {
         if (data) {
-            navigation.navigate('Newpass', email);
+            navigation.navigate('Newpass', mail);
         } else {
             const errorText = error?.data?.message;
             switch (errorText) {
@@ -76,7 +76,7 @@ export default function SendOTP({ navigation, ...props }) {
     const handelSubmitOTP = () => {
         const OTPnumber = OTP[1] + OTP[2] + OTP[3] + OTP[4];
         if (!noClick) {
-            verifyOTP({ email, code: OTPnumber });
+            verifyOTP({ mail, code: OTPnumber });
         }
     };
 
@@ -161,7 +161,7 @@ export default function SendOTP({ navigation, ...props }) {
                     </Text>
                     <ResendOTP
                         navigation={navigation}
-                        userEmail={email}
+                        userEmail={mail}
                         userName={username}
                         setTime={setTimeStart}
                     />

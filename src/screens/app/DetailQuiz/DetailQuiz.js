@@ -7,22 +7,21 @@ import {
 } from 'react-native';
 import React from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
+import Header from 'src/components/auth/Header';
 
 import { QuizInfo } from 'src/components';
 import { colors } from 'src/styles/color';
 
-const DetailQuiz = ({ navigation }) => {
+const DetailQuiz = ({ navigation, ...props }) => {
+    const quizData = props.route.params;
     return (
         <SafeAreaView style={styles.container}>
             <View style={{ width: '100%', flex: 1 }}>
-                <TouchableOpacity
-                    style={{ alignItems: 'center' }}
-                    onPress={() => {
-                        navigation.navigate('Home');
-                    }}
-                >
-                    <Text>Header</Text>
-                </TouchableOpacity>
+                <Header
+                    title="Question"
+                    direct="Home"
+                    navigation={navigation}
+                />
                 <QuizInfo
                     isMine={false}
                     category="TECH"
@@ -31,6 +30,8 @@ const DetailQuiz = ({ navigation }) => {
                     discription=" Take this basic remote work tools quiz to test your tech
                     knowledge"
                     isCreator={false}
+                    navigation={navigation}
+                    quizData={quizData}
                 />
             </View>
         </SafeAreaView>
@@ -45,6 +46,5 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: colors.primary,
-        paddingVertical: 50,
     },
 });

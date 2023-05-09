@@ -24,6 +24,9 @@ import FormTextInput from 'src/components/auth/Input';
 import { useEffect } from 'react';
 import { loGin } from 'src/slices/authSlice';
 
+//Web: 782625948070-5a1sertfems0ia4cedglharqqo44kqb4.apps.googleusercontent.com
+//IOS; 782625948070-dnqkej8k4movbj0j37lgjuuv435iucgb.apps.googleusercontent.com
+//Android: 
 const InitLogin = { userName: '', password: '' };
 const InitErrorExist = { userName: false, password: false };
 
@@ -54,7 +57,6 @@ export default function Login({ navigation }) {
             const errorText = error?.data?.message;
             switch (errorText) {
                 case 'All fields are mandatory!':
-                    console.log('Vui long nhap day du thong tin');
                     break;
                 case 'Account not exist':
                     setFormError((pre) => {
@@ -69,7 +71,6 @@ export default function Login({ navigation }) {
                     });
                     break;
                 case 'Not Verify':
-                    console.log('Vui long vao mail de xac nhan');
                     const letter = {
                         title: 'SignIn Falure!',
                         text: ' Please check your mail to verify-account',
