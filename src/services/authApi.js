@@ -2,7 +2,10 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const apiAuth = createApi({
     reducerPath: 'apiAuth',
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://192.168.134.18:4000/' }),
+    baseQuery: fetchBaseQuery({
+        // baseUrl: 'https://server-auth-quocanh.onrender.com/',
+        baseUrl: 'http://192.168.22.18:4000/',
+    }),
     endpoints: (builder) => ({
         loginUser: builder.mutation({
             query: (formData) => ({
@@ -20,10 +23,10 @@ export const apiAuth = createApi({
         }),
 
         generateOtp: builder.mutation({
-            query: (email) => ({
+            query: (mail) => ({
                 url: 'api/auth/generateOTP',
                 method: 'GET',
-                params: { email },
+                params: { mail },
             }),
         }),
 
@@ -35,17 +38,17 @@ export const apiAuth = createApi({
             }),
         }),
         verifyOtp: builder.mutation({
-            query: ({ email, code }) => ({
+            query: ({ mail, code }) => ({
                 url: 'api/auth/verifyOTP',
                 method: 'GET',
-                params: { email, code },
+                params: { mail, code },
             }),
         }),
         resetPass: builder.mutation({
-            query: ({ email, password, confirm }) => ({
+            query: ({ mail, password, confirm }) => ({
                 url: 'api/auth/resetPassword',
                 method: 'PUT',
-                body: { email, password, confirm },
+                body: { mail, password, confirm },
             }),
         }),
     }),

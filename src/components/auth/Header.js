@@ -12,7 +12,12 @@ export default function Header({ navigation, ...props }) {
             </View>
             <View style={{ bottom: 33, right: 150 }}>
                 <TouchableOpacity
-                    onPress={() => navigation.navigate(props.direct)}
+                    onPress={() => {
+                        if (props.setFocus) {
+                            props.setFocus();
+                        }
+                        navigation.navigate(props.direct);
+                    }}
                 >
                     <AntDesign name="arrowleft" size={30} color={props.color} />
                 </TouchableOpacity>

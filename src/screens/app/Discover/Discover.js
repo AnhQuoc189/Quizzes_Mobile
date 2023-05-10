@@ -15,18 +15,18 @@ import { useEffect } from 'react';
 import { BackHandler } from 'react-native';
 export default function Discover({ navigation }) {
     const [isSearch, setIsSearch] = useState(false);
+    const [isFocus, setIsFocus] = useState(false);
     const [inputSearch, setInputSearch] = useState('');
 
     const handleSearcrBar = (value) => {
         setInputSearch(value);
         setIsSearch(true);
-        console.log('stateSearch', isSearch);
     };
 
     useEffect(() => {
         const backAction = () => {
             setIsSearch(false);
-            console.log('state', isSearch);
+            // console.log('state', isSearch);
             return true;
         };
 
@@ -44,9 +44,10 @@ export default function Discover({ navigation }) {
                 <View style={styles.fisrtSection}>
                     <Header
                         title="Discover"
-                        direct="Home"
+                        direct={isFocus ? 'Discover' : 'Home'}
                         color="white"
                         navigation={navigation}
+                        setFocus={() => setIsFocus(false)}
                     />
                     <View style={styles.searchBar}>
                         <SimpleLineIcons
@@ -55,6 +56,10 @@ export default function Discover({ navigation }) {
                             color="white"
                         />
                         <TextInput
+                            // focusable={(value) => console.log(value)}
+                            onFocus={() => {
+                                setIsFocus(true);
+                            }}
                             placeholderTextColor="gray"
                             textColor="gray"
                             value={inputSearch}
@@ -68,7 +73,8 @@ export default function Discover({ navigation }) {
                 </View>
                 {/* Main Content */}
 
-                {isSearch ? <FilterSearch /> : <DisplayDiscover />}
+                {isFocus ? <FilterSearch /> : <DisplayDiscover />}
+                {/* {display && <DisplayDiscover />} */}
             </ScrollView>
         </SafeAreaView>
     );

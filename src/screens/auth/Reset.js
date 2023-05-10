@@ -10,7 +10,7 @@ import Header from 'src/components/auth/Header';
 import FormTextInput from 'src/components/auth/Input';
 
 export default function Reset({ navigation }) {
-    const [email, setEmail] = useState('');
+    const [mail, setEmail] = useState('');
     const [emailError, setEmailError] = useState(false);
     const [emailFormatError, setEmailFormaError] = useState(false);
     const [noClick, setNoClick] = useState(true);
@@ -19,19 +19,19 @@ export default function Reset({ navigation }) {
         useGenerateOtpMutation();
 
     useEffect(() => {
-        if (!email) {
+        if (!mail) {
             setNoClick(true);
         } else {
             setNoClick(false);
         }
-    }, [email]);
+    }, [mail]);
 
     useEffect(() => {
         if (data) {
             const infoEmail = {
                 text: `Your Password Recovery OTP is ${data.code}. Verify and recover your password`,
                 userName: data.userName,
-                userEmail: email,
+                userEmail: mail,
                 subject: 'Password Recovery OTP',
             };
             navigation.navigate('SendOTP', infoEmail);
@@ -58,7 +58,7 @@ export default function Reset({ navigation }) {
 
     const handleReset = () => {
         if (!noClick) {
-            generateOTP(email);
+            generateOTP(mail);
         }
     };
 
@@ -88,8 +88,8 @@ export default function Reset({ navigation }) {
                             color="#865DFF"
                         />
                     }
-                    value={email}
-                    handleChange={(e) => handleChange(e, 'email')}
+                    value={mail}
+                    handleChange={(e) => handleChange(e, 'mail')}
                 />
                 {emailError && (
                     <Text style={{ color: 'red' }}>Email doesn' not exist</Text>

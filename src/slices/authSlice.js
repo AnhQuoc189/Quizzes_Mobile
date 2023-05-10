@@ -1,9 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+const initialState = {
+    authData: null,
+};
+
 const authSlice = createSlice({
     name: 'auth',
-    initialState: { authData: null },
+    initialState,
     reducers: {
         loGin: (state, action) => {
             const SaveStore = async () => {

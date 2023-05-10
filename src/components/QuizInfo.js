@@ -14,6 +14,7 @@ import { bgColors } from 'src/styles/color';
 
 import BoxQuestion from './BoxQuestion';
 import { Button } from './creator';
+import { FlatList } from 'react-native';
 
 const QuizInfo = ({
     isMine,
@@ -22,7 +23,17 @@ const QuizInfo = ({
     title,
     discription,
     isCreator,
+    questionList,
+    navigation,
+    quizData,
 }) => {
+    const StartGame = () => {
+        navigation.navigate('WaitingRoom', quizData);
+        // console.log(quizData);
+    };
+
+    const questionsData = quizData.questionList;
+
     return (
         <View style={styles.container}>
             {/* First section */}
@@ -37,7 +48,7 @@ const QuizInfo = ({
                                 color={colors.primary}
                             />
                             <Text style={styles.textCategory}>
-                                {category} . {numberQuestions} QUESTIONS
+                                {category} . {questionsData.length} QUESTIONS
                             </Text>
                         </View>
 
@@ -67,7 +78,7 @@ const QuizInfo = ({
 
                         <View style={styles.numberBox}>
                             <Text style={styles.textNumber}>
-                                {numberQuestions}
+                                {questionsData.length}
                             </Text>
                         </View>
                     </View>
@@ -79,20 +90,32 @@ const QuizInfo = ({
                     )}
                 </View>
 
-                <ScrollView style={styles.questionsBox}>
-                    <BoxQuestion
-                        title="Which mathematical symbol was the title of Ed Sheeran's
-                    first album in 2011"
-                        number="1"
-                        type="Multiple Choices"
+                <View style={{ height: '70%' }}>
+                    <FlatList
+                        keyExtractor={(item) => item._id}
+                        data={questionsData}
+                        renderItem={({ item }) => (
+                            <View style={styles.questionsBox}>
+                                <BoxQuestion
+                                    title="Which mathematical symbol was the title of Ed Sheeran's
+                        first album in 2011"
+                                    number="1"
+                                    type="Multiple Choices"
+                                    questionData={item}
+                                />
+                            </View>
+                        )}
+                        ItemSeparatorComponent={() => (
+                            <View style={{ height: 20 }} />
+                        )}
                     />
-                </ScrollView>
+                </View>
 
                 <View style={{ marginTop: 20 }}>
                     {isCreator ? (
                         <Button title="Save" />
                     ) : (
-                        <Button title="Play" />
+                        <Button title="Play" handleOnPress={StartGame} />
                     )}
                 </View>
             </View>
@@ -120,7 +143,9 @@ const styles = StyleSheet.create({
     },
 
     secondSection: {
-        flex: 1,
+        height: '70%',
+
+        // flex: 1,
         width: '100%',
         backgroundColor: 'white',
         borderRadius: 20,
@@ -129,9 +154,12 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
     editBox: {
+        // height: '50%',
         justifyContent: 'space-between',
         flexDirection: 'row',
         marginBottom: 10,
+        // height: '10%',
+        // backgroundColor: 'red',
     },
     textCategory: {
         color: colors.primary,
@@ -169,7 +197,9 @@ const styles = StyleSheet.create({
         color: 'white',
     },
     questionsBox: {
-        height: '80%',
+        // flexDirection: 'row',
+        // height: '90%',
+        // width: '200%',
         borderRadius: 20,
         backgroundColor: bgColors.second,
         paddingVertical: 20,

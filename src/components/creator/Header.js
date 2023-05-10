@@ -1,19 +1,19 @@
-import { TouchableOpacity, Text, View, StyleSheet } from 'react-native';
+import { TouchableOpacity, Text, View } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-// import { useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 const Header = ({
     title,
-    // style,
+    style,
     navigation,
     direct,
     options,
-    // setConfirmSaveModalVisible,
+    setConfirmSaveModalVisible,
 }) => {
     // const isSaved = useSelector((state) => state.creator.isSaved);
 
     return (
-        <View style={styles.header}>
+        <View style={style}>
             {/* Back button */}
             <TouchableOpacity
                 onPress={() => {
@@ -62,12 +62,3 @@ const Header = ({
     );
 };
 export default Header;
-
-const styles = StyleSheet.create({
-    header: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-});

@@ -11,14 +11,22 @@ import {
 import { colors } from 'src/styles/color';
 import logo from 'src/assets/images/logo.png';
 
-export default function WaitingRoom() {
+export default function WaitingRoom({ navigation, ...props }) {
+    const quizData = props.route.params;
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.viewAll}>
-                <Text style={styles.viewTitle}>Quiz Title</Text>
+                <Text style={styles.viewTitle}>{quizData.name}</Text>
                 <View style={styles.viewQuiz}>
                     <View style={styles.viewQuizHeader}>
-                        <Image style={styles.viewImage} source={logo} />
+                        <Image
+                            style={styles.viewImage}
+                            source={{
+                                uri: quizData.backgroundImage
+                                    ? quizData.backgroundImage
+                                    : logo,
+                            }}
+                        />
                         <Text style={{ textAlign: 'center' }}>
                             What will you do when your girlfriend go to hotel
                             with another man
@@ -26,12 +34,16 @@ export default function WaitingRoom() {
                     </View>
                     {/* <Divider color="gray"></Divider> */}
                     <View style={styles.viewQuizMore}>
-                        <Text>Creator Name</Text>
-                        <Text>5 questions</Text>
+                        <Text>Creator: {quizData.creatorName}</Text>
+                        <Text>{quizData.questionList.length} questions</Text>
                     </View>
                 </View>
                 <View style={styles.viewButton}>
-                    <TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => {
+                            navigation.navigate('DetailQuiz', quizData);
+                        }}
+                    >
                         <View
                             style={{
                                 ...styles.buttonItem,
@@ -96,7 +108,8 @@ const styles = StyleSheet.create({
     },
 
     viewImage: {
-        height: '50%',
+        width: 100,
+        height: 65,
         resizeMode: 'contain',
     },
     viewQuizMore: {

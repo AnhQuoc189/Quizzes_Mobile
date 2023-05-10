@@ -17,7 +17,7 @@ const InitRegister = {
     lastName: '',
     userType: '',
     userName: '',
-    email: '',
+    mail: '',
     password: '',
     fullName: '',
     confirmPassword: '',
@@ -27,7 +27,7 @@ const InitUserType = { Teacher: false, Student: false };
 
 const InitErrorExist = {
     userName: false,
-    email: false,
+    mail: false,
 };
 
 const InitErrorUser = {
@@ -63,7 +63,7 @@ export default function Register({ navigation }) {
             !formData.lastName ||
             !formData.userType ||
             !formData.userName ||
-            !formData.email ||
+            !formData.mail ||
             !formData.password ||
             !formData.confirmPassword ||
             userNameError ||
@@ -87,6 +87,7 @@ export default function Register({ navigation }) {
         }
         if (isError) {
             const errorText = error?.data?.message;
+            console.log(errorText);
             switch (errorText) {
                 case 'All fields are mandatory!':
                     console.log('Vui long nhap day du thong tin');
@@ -102,7 +103,7 @@ export default function Register({ navigation }) {
                     break;
                 case 'Email already exists':
                     setFormError((pre) => {
-                        var newError = { ...pre, email: true };
+                        var newError = { ...pre, mail: true };
                         return newError;
                     });
                     break;
@@ -266,10 +267,10 @@ export default function Register({ navigation }) {
                                         color="#865DFF"
                                     />
                                 }
-                                value={formData.email}
-                                handleChange={(e) => handleChange(e, 'email')}
+                                value={formData.mail}
+                                handleChange={(e) => handleChange(e, 'mail')}
                             />
-                            {formError.email && (
+                            {formError.mail && (
                                 <Text style={{ color: 'red' }}>
                                     Email already exist!
                                 </Text>

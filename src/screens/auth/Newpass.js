@@ -17,7 +17,7 @@ export default function Newpass({ navigation, ...props }) {
     const [confirmError, setConfirmError] = useState(false);
     const [noClick, setNoClick] = useState(true);
 
-    const email = props.route.params;
+    const mail = props.route.params;
 
     const handleChange = (e, name) => {
         const value = e.nativeEvent.text;
@@ -57,7 +57,7 @@ export default function Newpass({ navigation, ...props }) {
 
     const handleResetPassWord = () => {
         newPass({
-            email,
+            mail,
             password: formData.newPass,
             confirm: formData.confirmNewPass,
         });
