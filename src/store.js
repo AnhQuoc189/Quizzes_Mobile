@@ -6,6 +6,9 @@ import { setupListeners } from '@reduxjs/toolkit/dist/query';
 import { apiAuth } from './services/authApi';
 import { apiQuiz } from './services/quizApi';
 import { apiUser } from './services/userApi';
+import { apiGame } from './services/gameApi';
+import { apiLeaderboard } from './services/leaderboardApi';
+import { apiPlayerResult } from './services/playerResultApi';
 
 // Slices
 import authReducer from './slices/authSlice';
@@ -23,6 +26,9 @@ const store = configureStore({
         [apiAuth.reducerPath]: apiAuth.reducer,
         [apiQuiz.reducerPath]: apiQuiz.reducer,
         [apiUser.reducerPath]: apiUser.reducer,
+        [apiGame.reducerPath]: apiGame.reducer,
+        [apiLeaderboard.reducerPath]: apiLeaderboard.reducer,
+        [apiPlayerResult.reducerPath]: apiPlayerResult.reducer,
 
         auths: authReducer,
         quizs: quizReducer,
@@ -37,6 +43,9 @@ const store = configureStore({
             apiAuth.middleware,
             apiQuiz.middleware,
             apiUser.middleware,
+            apiGame.middleware,
+            apiLeaderboard.middleware,
+            apiPlayerResult.middleware,
         ]),
 });
 

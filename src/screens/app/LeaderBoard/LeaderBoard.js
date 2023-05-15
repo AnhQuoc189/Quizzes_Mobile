@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { SafeAreaView, View, Text, TouchableOpacity } from 'react-native';
 import {
     useCommentQuizMutation,
@@ -9,7 +9,7 @@ import {
 } from 'src/services/quizApi';
 import { useSelector } from 'react-redux';
 export default function LeaderBoard() {
-    // const [formQuiz, { data, isLoading, error }] = useCreateQuizMutation();
+    const [formQuiz, { data, isLoading, error }] = useCreateQuizMutation();
     // const [likeQuiz, { data, isLoading, error }] = useLikeQuizMutation();
     // const [commentQuiz, { data, isLoading, error }] = useCommentQuizMutation();
     // const [updateQuiz, { data, isLoading, error }] = useUpdateQuizMutation();
@@ -19,8 +19,26 @@ export default function LeaderBoard() {
     const userId = userData?.data?.user?._id;
     const accessToken = userData?.data?.accessToken;
 
+    // useEffect(() => {
+    //     if (data) {
+    //         console.log(data);
+    //     }
+    // });
     const TestApi = () => {
-        // formQuiz({ accessToken, newQuiz: 'Co cai dau bui' });
+        formQuiz({
+            accessToken,
+            newQuiz: {
+                name: 'QuocTuan',
+                backgroundImage: '',
+                description: 'Hehe',
+                creatorName: 'QuocAnh',
+                pointsPerQuestion: 1,
+                isPublic: true,
+                tags: [],
+                likesCount: [],
+                questionList: [],
+            },
+        });
         // likeQuiz({ accessToken, userId });
         // commentQuiz({ accessToken, userId, comment: 'AnhQuocdacomment' });
         // updateQuiz({

@@ -28,7 +28,7 @@ const QuizInfo = ({
     quizData,
 }) => {
     const StartGame = () => {
-        navigation.navigate('WaitingRoom', quizData);
+        navigation.navigate('HostScreen', quizData);
         // console.log(quizData);
     };
 
