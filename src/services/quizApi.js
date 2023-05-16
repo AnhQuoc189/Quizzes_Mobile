@@ -4,7 +4,7 @@ export const apiQuiz = createApi({
     reducerPath: 'apiQuiz',
     baseQuery: fetchBaseQuery({
         // baseUrl: 'https://server-auth-quocanh.onrender.com/',
-        baseUrl: 'http://192.168.22.18:4000/',
+        baseUrl: 'http://192.168.168.18:4000/',
     }),
     endpoints: (builder) => ({
         getAllQuizzes: builder.query({
@@ -33,7 +33,7 @@ export const apiQuiz = createApi({
                 url: `api/quizzes`,
                 method: 'POST',
                 headers: { Authorization: `Bearer ${accessToken}` },
-                body: { newQuiz },
+                body: newQuiz,
             }),
         }),
         updateQuiz: builder.mutation({
@@ -41,7 +41,7 @@ export const apiQuiz = createApi({
                 url: `api/quizzes/${quizId}`,
                 method: 'PUT',
                 headers: { Authorization: `Bearer ${accessToken}` },
-                body: { updateQuiz },
+                body: updateQuiz,
             }),
         }),
         deleteQuiz: builder.mutation({
@@ -63,7 +63,7 @@ export const apiQuiz = createApi({
                 url: `api/quizzes/${userId}/commentQuiz`,
                 method: 'POST',
                 headers: { Authorization: `Bearer ${accessToken}` },
-                body: { comment },
+                body: comment,
             }),
         }),
     }),

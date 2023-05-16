@@ -10,7 +10,9 @@ import {
 } from 'react-native';
 import { ActivityIndicator } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -20,6 +22,9 @@ import SubLayout from 'src/layouts/SubLayout';
 import { colors } from 'src/styles/color';
 import { useGetTeacherQuizzesQuery } from 'src/services/quizApi';
 import { useCreateQuizMutation } from 'src/services/quizApi';
+
+let nameIcontime;
+let timeCurrent;
 
 import { fetchTeacherQuizes } from 'src/slices/quizSlice';
 export default function Home({ navigation }) {
@@ -36,6 +41,36 @@ export default function Home({ navigation }) {
         accessToken,
         teacherId,
     });
+
+    useEffect(() => {
+        const today = new Date();
+        const hour = today.getHours();
+        timeCurrent = `GOOD ${
+            (hour < 12 && hour > 5 && 'MORNING') ||
+            (hour < 17 && hour > 12 && 'AFTERNOON') ||
+            'EVENING'
+        } `;
+
+        nameIcontime = `${
+            (hour < 12 && 'weather-sunny') ||
+            (hour < 17 && 'weather-cloud') ||
+            'weather-night'
+        } `;
+
+        // nameIcontime = `${
+        //     (hour < 12 && hour > 5 && 'weather-sunny') ||
+        //     (hour < 17 && hour > 12 && 'weather-sunny-cloud') ||
+        //     weather-night
+        // } `;
+
+        // nameIcontime = 'weather-night';
+        nameIcontime =
+            hour < 12 && hour > 5
+                ? 'weather-sunny'
+                : hour < 17 && hour > 12
+                ? 'weather-cloudy'
+                : 'weather-night';
+    }, []);
 
     useEffect(() => {
         if (data) {
@@ -62,11 +97,13 @@ export default function Home({ navigation }) {
                         >
                             <View style={styles.weather}>
                                 <MaterialCommunityIcons
-                                    name="weather-sunny"
+                                    name={nameIcontime}
                                     size={18}
                                     color="#FED7DD"
                                 />
-                                <Text style={styles.subText}>GOOD MORNING</Text>
+                                <Text style={styles.subText}>
+                                    {timeCurrent}
+                                </Text>
                             </View>
                             <Text
                                 style={{ ...styles.textHeader, color: 'white' }}
@@ -139,7 +176,12 @@ export default function Home({ navigation }) {
                             players
                         </Text>
 
-                        <TouchableOpacity style={styles.btnFindFriends}>
+                        <TouchableOpacity
+                            style={styles.btnFindFriends}
+                            onPress={() => {
+                                navigation.navigate('JoinGame');
+                            }}
+                        >
                             <View
                                 style={{
                                     flexDirection: 'row',
@@ -159,7 +201,7 @@ export default function Home({ navigation }) {
                                         color: colors.primary,
                                     }}
                                 >
-                                    Find Friends
+                                    Join Game
                                 </Text>
                             </View>
                         </TouchableOpacity>

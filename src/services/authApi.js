@@ -4,7 +4,7 @@ export const apiAuth = createApi({
     reducerPath: 'apiAuth',
     baseQuery: fetchBaseQuery({
         // baseUrl: 'https://server-auth-quocanh.onrender.com/',
-        baseUrl: 'http://192.168.22.18:4000/',
+        baseUrl: 'http://192.168.168.18:4000/',
     }),
     endpoints: (builder) => ({
         loginUser: builder.mutation({
