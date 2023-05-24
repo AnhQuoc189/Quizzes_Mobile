@@ -7,9 +7,13 @@ import {
     useLikeQuizMutation,
     useUpdateQuizMutation,
 } from 'src/services/quizApi';
-import { useSelector } from 'react-redux';
+
+import { createQuiz } from 'src/slices/quizSlice';
+
+import { useSelector, useDispatch } from 'react-redux';
 export default function LeaderBoard() {
     const [formQuiz, { data, isLoading, error }] = useCreateQuizMutation();
+    const dispatch = useDispatch();
     // const [likeQuiz, { data, isLoading, error }] = useLikeQuizMutation();
     // const [commentQuiz, { data, isLoading, error }] = useCommentQuizMutation();
     // const [updateQuiz, { data, isLoading, error }] = useUpdateQuizMutation();
@@ -24,8 +28,9 @@ export default function LeaderBoard() {
     //         console.log(data);
     //     }
     // });
-    const TestApi = () => {
-        formQuiz({
+    const TestApi = async () => {
+        // console.log('CC');
+        const { data } = await formQuiz({
             accessToken,
             newQuiz: {
                 name: 'QuocTuan',
@@ -39,6 +44,8 @@ export default function LeaderBoard() {
                 questionList: [],
             },
         });
+        console.log(data);
+        dispatch(createQuiz(data));
         // likeQuiz({ accessToken, userId });
         // commentQuiz({ accessToken, userId, comment: 'AnhQuocdacomment' });
         // updateQuiz({
@@ -49,7 +56,6 @@ export default function LeaderBoard() {
         // deleteQuiz({ accessToken, quizId: '123123qate123123123a' });
     };
 
-    const Test = () => {};
     return (
         <SafeAreaView>
             <View style={{ marginTop: 100 }}>

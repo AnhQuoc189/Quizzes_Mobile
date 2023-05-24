@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import {
     StyleSheet,
     Text,
@@ -7,11 +8,29 @@ import {
 } from 'react-native';
 import background from 'src/assets/images/background.png';
 import logo from 'src/assets/images/logo.png';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useDispatch } from 'react-redux';
+import { loGin } from 'src/slices/authSlice';
 
 export default function Splash({ navigation }) {
-    setTimeout(() => {
-        navigation.navigate('AuthNavigator');
-    }, 5000);
+    const dispatch = useDispatch();
+    useEffect(() => {
+        getUser = async () => {
+            const store = await AsyncStorage.getItem('profile');
+            if (store) {
+                const data = JSON.parse(store);
+                dispatch(loGin(data));
+                setTimeout(() => {
+                    navigation.navigate('AppNavigator');
+                }, 5000);
+            } else {
+                setTimeout(() => {
+                    navigation.navigate('AuthNavigator');
+                }, 5000);
+            }
+        };
+        getUser();
+    }, []);
 
     return (
         <SafeAreaView style={{ flex: 1 }}>

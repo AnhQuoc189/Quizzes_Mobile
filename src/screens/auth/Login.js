@@ -26,7 +26,7 @@ import { loGin } from 'src/slices/authSlice';
 
 //Web: 782625948070-5a1sertfems0ia4cedglharqqo44kqb4.apps.googleusercontent.com
 //IOS; 782625948070-dnqkej8k4movbj0j37lgjuuv435iucgb.apps.googleusercontent.com
-//Android: 
+//Android:
 const InitLogin = { userName: '', password: '' };
 const InitErrorExist = { userName: false, password: false };
 
@@ -51,6 +51,7 @@ export default function Login({ navigation }) {
     useEffect(() => {
         if (data) {
             dispatch(loGin(data));
+            console.log('CC');
             navigation.navigate('AppNavigator');
         }
         if (isError) {
@@ -168,7 +169,12 @@ export default function Login({ navigation }) {
                             </View>
 
                             <View style={styles.viewNote}>
-                                <View style={{ flexDirection: 'row' }}>
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        width: '100%',
+                                    }}
+                                >
                                     <Text style={styles.textNoteGray}>
                                         By continuing, you agree to the
                                     </Text>
@@ -267,6 +273,7 @@ const styles = StyleSheet.create({
     },
 
     viewNote: {
+        width: '100%',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',

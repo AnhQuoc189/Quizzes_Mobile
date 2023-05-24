@@ -1,18 +1,100 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TextInput, TouchableOpacity } from 'react-native';
 import { SafeAreaView, View, Text, StyleSheet } from 'react-native';
 import Header from 'src/components/auth/Header';
 import { ActivityIndicator } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
+import { useCreatePlayerResultMutation } from 'src/services/playerResultApi';
+import { createPlayerResults } from 'src/slices/playerResultSlice';
+import { useAddPlayerMutation } from 'src/services/gameApi';
+import { addPlayer } from 'src/slices/gamesSlice';
 
 export default function JoinGame({ navigation }) {
     const [pin, setPin] = useState();
     const [isPlayerAdded, setIsPlayerAdded] = useState(false);
+    const [pinExist, setPinExist] = useState(true);
+
+    const dispatch = useDispatch();
+
+    const userData = useSelector((state) => state.auths?.authData);
+    const socket = useSelector((state) => state.sockets.socket);
+
+    const [InitPlayerResult, { data, isError, error, isLoading }] =
+        useCreatePlayerResultMutation();
+
+    const [InitAddPlayer] = useAddPlayerMutation();
+
+    useEffect(() => {
+        if (data) {
+            dispatch(createPlayerResults(data));
+        }
+    }, [data]);
+
+    useEffect(() => {
+        socket?.on(
+            'move-to-game-page',
+            (gameId, gamePin, leaderboardID, quizData) => {
+                // console.log(gameId, gamePin);
+
+                // dispatch(
+                //     createPlayerResult({
+                //         playerId: user.result._id,
+                //         gameId: gameId,
+                //         score: 0,
+                //         answers: [],
+                //     }),
+                // );
+                // history(`/games/player/${gameId}`, {
+                //     state: { gamePin, leaderboardID },
+                // });
+                navigation.navigate('PlayerScreen', {
+                    gameId,
+                    gamePin,
+                    leaderboardID,
+                    quizData,
+                });
+                // InitPlayerResult({
+                //     playerId: userData.data.user._id,
+                //     gameId: gameId,
+                //     score: 0,
+                //     answers: [],
+                // });
+            },
+        );
+    }, [socket, dispatch, navigation, userData.data.user._id]);
+
+    const result = async (message, playerId, gameId) => {
+        if (message === 'correct') {
+            // dispatch(addPlayer(gameId, playerId));
+            const { data } = await InitAddPlayer({ gameId, playerId });
+            dispatch(addPlayer(data));
+            setPinExist(true);
+            setIsPlayerAdded(true);
+        } else {
+            setPinExist(false);
+        }
+    };
+
+    handleChangePin = (value) => {
+        setPin(value);
+        setPinExist(true);
+    };
 
     const joinGame = () => {
-        setIsPlayerAdded(true);
-        setTimeout(() => {
-            navigation.navigate('PlayerScreen');
-        }, 5000);
+        // setIsPlayerAdded(true);
+        // setTimeout(() => {
+        //     navigation.navigate('PlayerScreen');
+        // }, 5000);
+        socket?.emit(
+            'add-player',
+            userData.data.user,
+            socket.id,
+            pin,
+            (message, playerId, gameId) => {
+                result(message, playerId, gameId);
+            },
+        );
+        // console.log(userData);
     };
 
     return (
@@ -30,19 +112,28 @@ export default function JoinGame({ navigation }) {
                             placeholder="PIN"
                             style={{ fontSize: 50 }}
                             keyboardType="numeric"
-                            onChangeText={(value) => setPin(value)}
+                            onChangeText={(value) => handleChangePin(value)}
                         />
                     </View>
-                    {pin && (
-                        <TouchableOpacity
-                            style={styles.viewEnter}
-                            onPress={joinGame}
-                        >
-                            <View>
-                                <Text style={styles.textEnter}>Enter</Text>
-                            </View>
-                        </TouchableOpacity>
-                    )}
+                    <View
+                        style={{ width: '60%', alignItems: 'center', gap: 10 }}
+                    >
+                        {!pinExist && (
+                            <Text style={{ color: 'red' }}>
+                                Pin doesn not exist
+                            </Text>
+                        )}
+                        {pin && (
+                            <TouchableOpacity
+                                style={styles.viewEnter}
+                                onPress={joinGame}
+                            >
+                                <View>
+                                    <Text style={styles.textEnter}>Enter</Text>
+                                </View>
+                            </TouchableOpacity>
+                        )}
+                    </View>
                 </View>
             ) : (
                 <View style={styles.loading}>
@@ -102,7 +193,7 @@ const styles = StyleSheet.create({
 
     viewEnter: {
         height: 60,
-        width: '60%',
+        width: '100%',
         backgroundColor: '#03C988',
         justifyContent: 'center',
         alignItems: 'center',

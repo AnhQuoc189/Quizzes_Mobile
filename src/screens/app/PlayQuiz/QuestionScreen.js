@@ -11,6 +11,7 @@ export default function QuestionScreen({
     host,
     correctAnswer,
 }) {
+    useEffect;
     return (
         <View style={styles.container}>
             <View>
@@ -27,17 +28,21 @@ export default function QuestionScreen({
                 </View>
                 <View style={styles.viewQuestionTitle}>
                     <Text style={styles.textSub}>
-                        Question {questionData.questionIndex} of {lengthQuiz}
+                        Question {questionData?.questionIndex} of {lengthQuiz}
                     </Text>
-                    <Text style={styles.textTitle}>
-                        {questionData.question}
+                    <Text style={styles?.textTitle}>
+                        {questionData?.question}
                     </Text>
                 </View>
                 <View>
                     <Question
                         questionData={questionData}
                         host={host}
-                        Correct={correctAnswer[questionData.questionIndex - 1]}
+                        Correct={
+                            host
+                                ? correctAnswer[questionData?.questionIndex - 1]
+                                : ''
+                        }
                     />
                 </View>
             </View>

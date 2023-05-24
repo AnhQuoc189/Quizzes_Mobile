@@ -1,10 +1,11 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { API } from 'src/constants/api';
 
 export const apiQuiz = createApi({
     reducerPath: 'apiQuiz',
     baseQuery: fetchBaseQuery({
         // baseUrl: 'https://server-auth-quocanh.onrender.com/',
-        baseUrl: 'http://192.168.168.18:4000/',
+        baseUrl: API,
     }),
     endpoints: (builder) => ({
         getAllQuizzes: builder.query({
@@ -66,6 +67,49 @@ export const apiQuiz = createApi({
                 body: comment,
             }),
         }),
+
+        addQuestion: builder.mutation({
+            query: ({ accessToken, quizId, newQuestion }) => ({
+                url: `api/${quizId}/questions`,
+                method: 'POST',
+                headers: { Authorization: `Bearer ${accessToken}` },
+                body: newQuestion,
+            }),
+        }),
+
+        getQuestions: builder.query({
+            query: ({ accessToken, quizId }) => ({
+                url: `api/${quizId}/questions`,
+                method: 'GET',
+                headers: { Authorization: `Bearer ${accessToken}` },
+            }),
+        }),
+
+        getQuestion: builder.query({
+            query: ({ accessToken, quizId, questionId }) => ({
+                url: `api/${quizId}/questions/${questionId}`,
+                method: 'GET',
+                headers: { Authorization: `Bearer ${accessToken}` },
+            }),
+        }),
+
+        updateQuestion: builder.mutation({
+            query: ({ accessToken, quizId, questionId }) => ({
+                url: `api/${quizId}/questions/${questionId}`,
+                method: 'PUT',
+                headers: { Authorization: `Bearer ${accessToken}` },
+                body: newQuestion,
+            }),
+        }),
+
+        deleteQuestion: builder.mutation({
+            query: ({ accessToken, quizId, questionId }) => ({
+                url: `api/${quizId}/questions/${questionId}`,
+                method: 'DELETE',
+                headers: { Authorization: `Bearer ${accessToken}` },
+                body: newQuestion,
+            }),
+        }),
     }),
 });
 
@@ -78,4 +122,10 @@ export const {
     useDeleteQuizMutation,
     useLikeQuizMutation,
     useCommentQuizMutation,
+
+    useAddQuestionMutation,
+    useGetQuestionsQuery,
+    useGetQuestionQuery,
+    useUpdateQuestionMutation,
+    useDeleteQuestionMutation,
 } = apiQuiz;

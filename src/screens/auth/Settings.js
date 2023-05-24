@@ -8,6 +8,9 @@ import {
     TouchableOpacity,
 } from 'react-native';
 
+// import { StackActions, NavigationActions } from 'react-navigation';
+import { CommonActions } from '@react-navigation/native';
+
 import Header from 'src/components/auth/Header';
 import Item from 'src/components/auth/Item';
 import { logOut } from 'src/slices/authSlice';
@@ -21,6 +24,8 @@ import { Switch } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Settings({ navigation }) {
+    console.log('bb');
+
     // useEffect(() => {
     //     const Show = async () => {
     //         const infoUserJson = await AsyncStorage.getItem('profile');
@@ -35,7 +40,15 @@ export default function Settings({ navigation }) {
 
     const logout = () => {
         dispatch(logOut());
-        navigation.navigate('Login');
+        // navigation.dispatch(
+        //     CommonActions.reset({
+        //         index: 1,
+        //         routeNames: [{ name: 'Home' }],
+        //     }),
+        // );
+        navigation.navigate('AuthNavigator');
+        // navigation.dispatch(StackActions.popToTop());
+        // navigation.reset([NavigationAction.navigate({ routeName: 'Home' })], 0);
     };
 
     return (
@@ -47,7 +60,7 @@ export default function Settings({ navigation }) {
                 <View style={styles.viewAll}>
                     <Header
                         title="Settings"
-                        direct="Onboard"
+                        direct="Profile"
                         navigation={navigation}
                     />
                     <View style={styles.viewAccountAndOther}>
