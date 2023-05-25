@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-
+import { SimpleLineIcons } from '@expo/vector-icons';
 export default function Header({ navigation, ...props }) {
     return (
         <View style={styles.header}>
@@ -22,6 +22,25 @@ export default function Header({ navigation, ...props }) {
                     <AntDesign name="arrowleft" size={30} color={props.color} />
                 </TouchableOpacity>
             </View>
+
+            {props.option && (
+                <View style={{ bottom: 60, left: 140 }}>
+                    <TouchableOpacity
+                        onPress={() => {
+                            // if (props.setFocus) {
+                            //     props.setFocus();
+                            // }
+                            if (props.handleOption) props.handleOption();
+                        }}
+                    >
+                        <SimpleLineIcons
+                            name="options"
+                            size={24}
+                            color="black"
+                        />
+                    </TouchableOpacity>
+                </View>
+            )}
         </View>
     );
 }

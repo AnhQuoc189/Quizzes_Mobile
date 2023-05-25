@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     SafeAreaView,
     View,
@@ -13,11 +13,26 @@ import {
 import { colors } from 'src/styles/color';
 import logo from 'src/assets/images/logo.png';
 
-export default function WaitingRoom({ quizData, navigation, onPress }) {
+export default function WaitingRoom({
+    pin,
+    socket,
+    quizData,
+    navigation,
+    onPressLetgo,
+    onPressCanCel,
+}) {
+    const [playerList, setPlayerList] = useState([]);
+    useEffect(() => {
+        socket?.on('player-added', (player, pinGameCurrent) => {
+            if (pin === pinGameCurrent) {
+                setPlayerList([...playerList, player]);
+            }
+        });
+    }, [playerList, socket, pin]);
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.viewAll}>
-                <Text style={styles.viewPin}>Show PIN: 1809</Text>
+                <Text style={styles.viewPin}>Show PIN: {pin}</Text>
                 <View style={styles.viewHeader}>
                     <View style={styles.viewQuiz}>
                         <View style={styles.viewQuizHeader}>
@@ -50,9 +65,10 @@ export default function WaitingRoom({ quizData, navigation, onPress }) {
                     <Text style={{ fontSize: 20, textAlign: 'center' }}>
                         Player List
                     </Text>
+                    {!playerList.length && <Text>No player here</Text>}
                     <FlatList
                         showsVerticalScrollIndicator={false}
-                        data={[1, 2, 3, 4, 5, 6]}
+                        data={playerList}
                         renderItem={({ item }) => (
                             <View style={{ alignItems: 'center' }}>
                                 <UserJoin index={item} />
@@ -65,11 +81,7 @@ export default function WaitingRoom({ quizData, navigation, onPress }) {
                 </View>
 
                 <View style={styles.viewButton}>
-                    <TouchableOpacity
-                        onPress={() => {
-                            navigation.navigate('DetailQuiz', quizData);
-                        }}
-                    >
+                    <TouchableOpacity onPress={onPressCanCel}>
                         <View
                             style={{
                                 ...styles.buttonItem,
@@ -79,7 +91,7 @@ export default function WaitingRoom({ quizData, navigation, onPress }) {
                             <Text>Cancle</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={onPress}>
+                    <TouchableOpacity onPress={onPressLetgo}>
                         <View
                             style={{
                                 ...styles.buttonItem,
@@ -100,18 +112,18 @@ export const UserJoin = ({ index }) => {
         <View style={styles.viewUser}>
             <View style={styles.viewCount}>
                 <View style={styles.viewCountCircle}>
-                    <Text style={{ color: '#000' }}>{index}</Text>
+                    <Text style={{ color: '#000' }}>{1}</Text>
                 </View>
             </View>
             <View style={styles.viewUserImage}>
                 <Image
                     style={styles.imageUser}
                     source={{
-                        uri: 'https://i0.wp.com/thatnhucuocsong.com.vn/wp-content/uploads/2023/02/Hinh-anh-avatar-cute.jpg?ssl\u003d1',
+                        uri: index.avatar,
                     }}
                 />
                 <View>
-                    <Text>Davis Curtis</Text>
+                    <Text>{index.userName}</Text>
                 </View>
             </View>
         </View>
@@ -153,7 +165,7 @@ const styles = StyleSheet.create({
     },
 
     viewQuiz: {
-        height: '120%',
+        height: '140%',
         width: '70%',
         backgroundColor: '#fff',
         borderRadius: 10,
@@ -183,11 +195,12 @@ const styles = StyleSheet.create({
 
     viewPlayer: {
         backgroundColor: '#F1F6F9',
-        height: '46%',
+        height: '40%',
         width: '70%',
-        marginTop: 20,
+        marginTop: 60,
         flexDirection: 'column',
         borderRadius: 20,
+        alignItems: 'center',
     },
 
     viewButton: {
@@ -206,7 +219,7 @@ const styles = StyleSheet.create({
     },
 
     viewUser: {
-        width: '90%',
+        width: '100%',
         height: 60,
         backgroundColor: '#F48484',
         borderRadius: 10,

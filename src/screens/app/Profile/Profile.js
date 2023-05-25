@@ -11,11 +11,14 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 
+import { StackActions, NavigationActions } from 'react-navigation';
+
 import SubLayout from 'src/layouts/SubLayout';
 
 import { colors } from 'src/styles/color';
 
 export default function Profile({ navigation }) {
+    console.log('AA');
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView
@@ -25,10 +28,30 @@ export default function Profile({ navigation }) {
                 {/* Header */}
                 <View style={styles.header}>
                     <TouchableOpacity>
-                        <Ionicons name="arrow-back" size={28} color="white" />
+                        <TouchableOpacity
+                            onPress={() => {
+                                navigation.navigate('Home');
+                            }}
+                        >
+                            <Ionicons
+                                name="arrow-back"
+                                size={28}
+                                color="white"
+                            />
+                        </TouchableOpacity>
                     </TouchableOpacity>
                     <TouchableOpacity
                         onPress={() => {
+                            // navigation.dispatch(StackActions.popToTop());
+                            // const resetAction = StackActions.reset({
+                            //     index: 0,
+                            //     actions: [
+                            //         NavigationActions.navigate({
+                            //             routeName: 'Home',
+                            //         }),
+                            //     ],
+                            // });
+                            // this.props.navigation.dispatch(resetAction);
                             navigation.navigate('Settings');
                         }}
                     >

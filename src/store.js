@@ -33,13 +33,22 @@ const store = configureStore({
         auths: authReducer,
         quizs: quizReducer,
         users: userReducer,
-        socket: socketReducer,
+        sockets: socketReducer,
         games: gameReducer,
         leaderboards: leaderboardReducer,
         playeResults: playeResultReducer,
     },
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat([
+        getDefaultMiddleware({
+            serializableCheck: false,
+            immutableCheck: {
+                ignoredPaths: [
+                    'ignoredPath',
+                    'ignoredNested.one',
+                    'ignoredNested.two',
+                ],
+            },
+        }).concat([
             apiAuth.middleware,
             apiQuiz.middleware,
             apiUser.middleware,

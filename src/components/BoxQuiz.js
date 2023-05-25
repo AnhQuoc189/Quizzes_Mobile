@@ -19,8 +19,8 @@ const BoxQuiz = ({ navigation, ...props }) => {
                 source={{
                     // uri: 'https://us.123rf.com/450wm/sn333g/sn333g1608/sn333g160800029/65791205-math-round-bright-symbol-vector-colorful-mathematics-school-subject-bright-sign-in-thin-line-style.jpg?ver=6',
                     uri:
-                        props.quizData.backgroundImage !== undefined
-                            ? props.quizData.backgroundImage
+                        props.quizData?.backgroundImage !== undefined
+                            ? props.quizData?.backgroundImage
                             : 'https://us.123rf.com/450wm/sn333g/sn333g1608/sn333g160800029/65791205-math-round-bright-symbol-vector-colorful-mathematics-school-subject-bright-sign-in-thin-line-style.jpg?ver=6',
                 }}
             />

@@ -1,40 +1,40 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { SafeAreaView, Text, StyleSheet, View, Image } from 'react-native';
 import WaitingRoom from './WaitingRoom';
 import QuestionScreen from './QuestionScreen';
 import QuesntionLeaderboard from './QuesntionLeaderboard';
 import LeaderBoardCurrent from './Leaderboardcurrent';
+import ResultScreen from './ResultScreen';
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { LinearGradient } from 'expo-linear-gradient';
 import correct from 'src/assets/images/correctfull.png';
 import wrong from 'src/assets/images/wrong.png';
 
-const InitQuizData = {
-    questionType: 'Quiz',
-    pointType: 'Standard',
-    answerTime: 5,
-    backgroundImage: '',
-    question: '',
-    answerList: [
-        { name: 'a', body: '', isCorrect: false },
-        { name: 'b', body: '', isCorrect: false },
-        { name: 'c', body: '', isCorrect: false },
-        { name: 'd', body: '', isCorrect: false },
-    ],
-    questionIndex: 1,
-};
-
 export default function PlayerScreen({ navigation, ...props }) {
-    // const quizData = props.route.params;
+    const quizData = props.route.params.quizData;
 
     const [isStartedGame, setIsStaretedGame] = useState(false);
     const [timeAlready, setTimeAlready] = useState(true);
     const [isQuestionScreen, setIsQuestionScreen] = useState(false);
     const [isQuestionResultScreen, setIsQuestionResultScreen] = useState(false);
     const [isLeaderboardScreen, setIsLeaderboardScreen] = useState(false);
+    const [isResultFinal, setIsResultFinal] = useState(false);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-    const [questionData, setQuestionData] = useState(InitQuizData);
+    const [isResultScreen, setIsResultScreen] = useState(false);
+    const [questionData, setQuestionData] = useState();
     const [timer, setTimer] = useState(10);
+    const [timerQuestion, setTimerQuestion] = useState(0);
+    const [correctAnswerCount, setCorrectAnswerCount] = useState(1);
+    const [answerTime, setAnswerTime] = useState(0);
+
+    const [answer, setAnswer] = useState({
+        questionIndex: 0,
+        answers: [],
+        time: 0,
+    });
+
+    const socket = useSelector((state) => state.sockets.socket);
 
     // const StartGame = () => {
     //     setIsStaretedGame(true);
@@ -55,6 +55,79 @@ export default function PlayerScreen({ navigation, ...props }) {
     //         time--;
     //     }, 1000);
     // };
+
+    // useEffect(() => {
+    //     setTimeAlready(true);
+    //     StartCountDownPreview(10);
+    // }, []);
+
+    // useEffect(() => {
+    //     socket?.on('host-end-gamee', () => {
+    //         console.log('Dau bui');
+    //     });
+    // }, [socket]);
+
+    useEffect(() => {
+        socket?.on('host-countdown-preview', () => {
+            console.log(quizData.questionList.length);
+            // setIsPreviewScreen(true);
+            // setIsResultScreen(false);
+            setTimeAlready(true);
+            StartCountDownPreview(10);
+        });
+        socket?.on('host-start-question-timer', (time, question) => {
+            console.log(time, question.questionData.answerTime);
+            // // console.log(question, 'ccc');
+            // console.log('AnhQuoc');
+            setTimerQuestion(time);
+            setIsResultScreen(false);
+            setQuestionData(question.questionData);
+            setIsQuestionScreen(true);
+            startQuestionCountdown(time);
+            setAnswer((prevstate) => ({
+                ...prevstate,
+                questionIndex: question.questionIndex,
+                answers: [],
+                time: 0,
+            }));
+            setCorrectAnswerCount(question.correctAnswersCount);
+        });
+        socket?.on('host-end-gamee', () => {
+            setIsResultScreen(false);
+            setIsResultFinal(true);
+        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [socket]);
+
+    const StartCountDownPreview = (seconds) => {
+        let time = seconds;
+        let interval = setInterval(() => {
+            setTimer(time);
+            if (time === 0) {
+                clearInterval(interval);
+                // setQuestionData(question.questionData);
+                setTimeAlready(false);
+                setIsQuestionScreen(true);
+            }
+            time--;
+        }, 1000);
+    };
+
+    const startQuestionCountdown = (seconds) => {
+        let time = seconds;
+        let answerSeconds = 0;
+        let interval = setInterval(() => {
+            setTimer(time);
+            setAnswerTime(answerSeconds);
+            if (time === 0) {
+                clearInterval(interval);
+                setIsQuestionScreen(false);
+                setIsResultScreen(true);
+            }
+            time--;
+            answerSeconds++;
+        }, 1000);
+    };
 
     // const displayQuestion = (index) => {
     //     if (index === quizData.questionList.length) {
@@ -126,7 +199,7 @@ export default function PlayerScreen({ navigation, ...props }) {
 
     return (
         <SafeAreaView style={styles.container}>
-            {/* {timeAlready && (
+            {timeAlready && (
                 <View style={styles.viewTimerAlready}>
                     <LinearGradient
                         // Button Linear Gradient
@@ -138,19 +211,23 @@ export default function PlayerScreen({ navigation, ...props }) {
                         </Text>
                     </LinearGradient>
                 </View>
-            )} */}
-            {/* {timeAlready && <AnswerCorrect />} */}
-            {timeAlready && <AnswerWrong />}
+            )}
+            {/* {timeAlready && <AnswerWrong />} */}
 
-            {/* {isQuestionScreen && (
+            {isQuestionScreen && (
                 <QuestionScreen
-                    timer={questionData.answerTime}
+                    timer={timerQuestion}
                     questionData={questionData}
                     lengthQuiz={quizData.questionList.length}
-                    host={true}
+                    host={false}
                 />
+                // <Text>AAAAAAAAAAAAAAAAA</Text>
             )}
-            {isQuestionResultScreen && <QuesntionLeaderboard />}
+            {/* {isResultScreen && <AnswerCorrect />} */}
+            {isResultScreen && <AnswerWrong />}
+            {isResultFinal && <ResultScreen />}
+
+            {/* {isQuestionResultScreen && <QuesntionLeaderboard />}
             {isLeaderboardScreen && <LeaderBoardCurrent />} */}
         </SafeAreaView>
     );

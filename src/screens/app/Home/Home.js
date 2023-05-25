@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
 import React, { useEffect } from 'react';
 import {
     SafeAreaView,
@@ -22,12 +23,19 @@ import SubLayout from 'src/layouts/SubLayout';
 import { colors } from 'src/styles/color';
 import { useGetTeacherQuizzesQuery } from 'src/services/quizApi';
 import { useCreateQuizMutation } from 'src/services/quizApi';
+import { createSocket } from 'src/slices/socketSlice';
+import { io } from 'socket.io-client';
+
+import { useIsFocused } from '@react-navigation/native';
 
 let nameIcontime;
 let timeCurrent;
 
 import { fetchTeacherQuizes } from 'src/slices/quizSlice';
+import { useCallback } from 'react';
+import { useState } from 'react';
 export default function Home({ navigation }) {
+    const SOCKET_URL = 'http://192.168.71.18:3001';
     const dispatch = useDispatch();
 
     const userData = useSelector((state) => state.auths?.authData);
@@ -37,10 +45,25 @@ export default function Home({ navigation }) {
 
     const accessToken = userData?.data?.accessToken;
 
+    const isFocused = useIsFocused();
+
+    useEffect(() => {
+        if (userData) {
+            const socket = io(SOCKET_URL, {
+                transports: ['websocket'],
+            });
+            dispatch(createSocket(socket));
+            socket.connect();
+            return () => socket?.disconnect();
+        }
+    }, [userData, dispatch]);
+
     const { data, isLoading } = useGetTeacherQuizzesQuery({
         accessToken,
         teacherId,
     });
+
+    console.log('AnhQuoc');
 
     useEffect(() => {
         const today = new Date();
@@ -56,14 +79,6 @@ export default function Home({ navigation }) {
             (hour < 17 && 'weather-cloud') ||
             'weather-night'
         } `;
-
-        // nameIcontime = `${
-        //     (hour < 12 && hour > 5 && 'weather-sunny') ||
-        //     (hour < 17 && hour > 12 && 'weather-sunny-cloud') ||
-        //     weather-night
-        // } `;
-
-        // nameIcontime = 'weather-night';
         nameIcontime =
             hour < 12 && hour > 5
                 ? 'weather-sunny'
@@ -72,6 +87,12 @@ export default function Home({ navigation }) {
                 : 'weather-night';
     }, []);
 
+    // useFocusEffect(
+    //     useCallback(() => {
+    //         console.log('focus');
+    //         setD(3);
+    //     }, []),
+    // );
     useEffect(() => {
         if (data) {
             dispatch(fetchTeacherQuizes(data));
@@ -79,6 +100,10 @@ export default function Home({ navigation }) {
     }, [data]);
 
     const quizes = useSelector((state) => state.quizs.quizes);
+
+    // quizes.map((item) => {
+    //     console.log(item.name);
+    // });
 
     return (
         <SafeAreaView style={styles.container}>

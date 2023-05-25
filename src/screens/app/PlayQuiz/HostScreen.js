@@ -6,6 +6,7 @@ import QuesntionLeaderboard from './QuesntionLeaderboard';
 import LeaderBoardCurrent from './Leaderboardcurrent';
 import { useState } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useSelector } from 'react-redux';
 
 const InitQuizData = {
     questionType: 'Quiz',
@@ -25,8 +26,16 @@ const InitQuizData = {
 let CorrectAnswer = [];
 
 export default function HostScreen({ navigation, ...props }) {
-    const quizData = props.route.params;
+    // console.log(props.route.params);
+    const quizData = props.route.params.quizData;
+    const game = props.route.params.newGame;
+    const leaderboard = props.route.params.newLeaderboard;
+
     const [correct, setCorrect] = useState();
+    const socket = useSelector((state) => state.sockets.socket);
+    // console.log(socket);
+    // const game = useSelector((state) => state.games);
+    // console.log(game);
 
     useEffect(() => {
         CorrectAnswer = [];
@@ -53,9 +62,18 @@ export default function HostScreen({ navigation, ...props }) {
     const [timer, setTimer] = useState(10);
 
     const StartGame = () => {
-        setIsStaretedGame(true);
+        socket?.emit('start-game', quizData, game, leaderboard);
+        socket?.emit('countdown-preview', game?.pin, () => {
+            StartCountDownPreview(10, currentQuestionIndex);
+        });
+
         setTimeAlready(true);
-        StartCountDownPreview(10, currentQuestionIndex);
+        setIsStaretedGame(true);
+    };
+
+    const cancelGame = () => {
+        socket?.emit('host-leave-room', game.pin);
+        navigation.navigate('DetailQuiz', quizData);
     };
 
     const StartCountDownPreview = (seconds, index) => {
@@ -88,10 +106,16 @@ export default function HostScreen({ navigation, ...props }) {
                 ].answerList.filter((answer) => answer.isCorrect === true)
                     .length,
             };
-            //   socket.emit("start-question-timer", time, question, () => {
-            //     startQuestionCountdown(time, index)
-            //   })
-            startQuestionCountdown(time, index);
+            socket.emit(
+                'start-question-timer',
+                game.pin,
+                time,
+                question,
+                () => {
+                    startQuestionCountdown(time, index);
+                },
+            );
+            // startQuestionCountdown(time, index);
         }
     };
 
@@ -122,6 +146,8 @@ export default function HostScreen({ navigation, ...props }) {
         setIsLeaderboardScreen(true);
         if (index >= quizData.questionList.length - 1) {
             // socket.emit('host-end-game', playerList, currentLeaderboard);
+            socket.emit('host-end-game', game?.pin);
+
             // toast.info('Game ended!', {
             //     position: 'top-right',
             //     autoClose: 2000,
@@ -144,9 +170,12 @@ export default function HostScreen({ navigation, ...props }) {
         <SafeAreaView style={styles.container}>
             {!isStartedGame && (
                 <WaitingRoom
+                    pin={game.pin}
+                    socket={socket}
                     quizData={quizData}
                     navigation={navigation}
-                    onPress={StartGame}
+                    onPressLetgo={StartGame}
+                    onPressCanCel={cancelGame}
                 />
             )}
             {timeAlready && (

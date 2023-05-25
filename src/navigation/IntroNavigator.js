@@ -11,11 +11,7 @@ export default function IntroNavigator(props) {
             initialRouteName="Splash"
             screenOptions={{ headerShown: false }}
         >
-            <IntroStack.Screen
-                name="Splash"
-                component={Splash}
-                options={{ headerShown: false }}
-            />
+            <IntroStack.Screen name="Splash" component={Splash} />
         </IntroStack.Navigator>
     );
 }
