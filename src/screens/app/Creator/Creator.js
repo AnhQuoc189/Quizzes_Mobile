@@ -18,8 +18,35 @@ import { changeQuizInfo } from 'src/slices/creatorSlice';
 
 // Component
 import { Header, Button, CoverImage } from 'src/components/creator';
+import ImageUpload from 'src/components/creator/ImageUpload';
+import { useState } from 'react';
 
 export default Creator = ({ navigation }) => {
+    const [coverImage, setCoverImage] = useState(null);
+    const [result, setResult] = useState(''); // result is the url when upload is successful
+    //only call when submit quiz or question
+    const uploadImage = () => {
+        if (!coverImage) return alert('file not found!');
+        // else return console.log(file);
+        const formData = new FormData();
+        formData.append('file', `data:image/jpeg;base64,${file}`);
+        formData.append('upload_preset', 'xs3m3hri');
+        formData.append('folder', 'examples/test'); // Add this line to specify the folder
+        fetch(`https://api.cloudinary.com/v1_1/dg4vxltmf/image/upload`, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+                setResult(data?.secure_url);
+            })
+            .catch((error) => console.error(error));
+    };
     // const quiz = useSelector((state) => state.creator.quizData);
 
     // const dispatch = useDispatch();
@@ -63,7 +90,8 @@ export default Creator = ({ navigation }) => {
                 showsVerticalScrollIndicator={false}
             >
                 {/* Add Cover Image Quiz*/}
-                <CoverImage />
+
+                <ImageUpload onChange={setCoverImage} />
 
                 {/* Input Title */}
                 <View style={{ marginTop: 10 }}>

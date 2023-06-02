@@ -41,6 +41,31 @@ import {
 import { bgColors, colors } from 'src/styles/color';
 
 const AddQuestion = ({ navigation }) => {
+    const [coverImage, setCoverImage] = useState(null);
+    const [result, setResult] = useState(''); // result is the url when upload is successful
+    //only call when submit quiz or question
+    const uploadImage = () => {
+        if (!coverImage) return alert('file not found!');
+        // else return console.log(file);
+        const formData = new FormData();
+        formData.append('file', `data:image/jpeg;base64,${file}`);
+        formData.append('upload_preset', 'xs3m3hri');
+        formData.append('folder', 'examples/test'); // Add this line to specify the folder
+        fetch(`https://api.cloudinary.com/v1_1/dg4vxltmf/image/upload`, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+                setResult(data?.secure_url);
+            })
+            .catch((error) => console.error(error));
+    };
     // State RTK
     // const questionList = useSelector(
     //     (state) => state.creator.quizData.questionList,
@@ -162,7 +187,7 @@ const AddQuestion = ({ navigation }) => {
             {/* Question */}
             <ScrollView contentContainerStyle={styles.questionContainer}>
                 {/* Add Cover Image Question */}
-                <CoverImage />
+                <ImageUpload onChange={setCoverImage} />
 
                 {/* Question Settings */}
                 <View style={styles.settings}>
