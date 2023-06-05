@@ -1,54 +1,173 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import React, { useCallback } from 'react';
+import {
+    View,
+    Text,
+    TouchableOpacity,
+    StyleSheet,
+    Image,
+    Alert,
+    ActivityIndicator,
+    ToastAndroid,
+    Platform,
+    AlertIOS,
+} from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { useDeleteQuizMutation } from 'src/services/quizApi';
+import { useImportQuizMutation } from 'src/services/quizApi';
 import { useSelector, useDispatch } from 'react-redux';
-import { deleteQuiz } from 'src/slices/quizSlice';
+import { deleteQuiz, addLibrayQuiz, createQuiz } from 'src/slices/quizSlice';
+import { setQuizPlay } from 'src/slices/quizSlice';
+import { useFocusEffect } from '@react-navigation/native';
 
-export default function EditOrDelete({ onClose, quizData, navigation }) {
+export default function EditOrDelete({
+    avatar,
+    onClose,
+    quizData,
+    navigation,
+    mylibrary,
+}) {
     const dispatch = useDispatch();
     const [point, setPoint] = useState();
     const userData = useSelector((state) => state.auths?.authData);
     const accessToken = userData?.data?.accessToken;
+    const userName = userData?.data?.user?.userName;
+    const userId = userData?.data?.user?._id;
+
+    const [loadingImport, setLoadingImport] = useState(false);
+
+    const [removeQuiz, { isLoading }] = useDeleteQuizMutation();
+    const [importQuiz, { error }] = useImportQuizMutation();
 
     useEffect(() => {
-        let Point = 0;
-        let pointsPerQuestion = quizData.pointsPerQuestion;
-        console.log(pointsPerQuestion);
-        quizData.questionList.map((question) => {
-            console.log(question?.pointType);
-            // if (question?.pointType === 'Standard') {
-            //     Point += pointsPerQuestion;
-            // }
-            switch (question.pointType) {
-                case 'Standard':
-                    Point += pointsPerQuestion;
-                    break;
-                case 'Double':
-                    Point += pointsPerQuestion * 2;
+        if (error) {
+            console.log(error.data);
+            switch (error.data) {
+                case 'Quiz already exists':
+                    if (Platform.OS === 'android') {
+                        ToastAndroid.show(
+                            'Quiz already exist in your library',
+                            ToastAndroid.SHORT,
+                        );
+                    } else {
+                        AlertIOS.alert('Quiz already exist in your library');
+                    }
                     break;
                 default:
                     break;
             }
-        });
-    }, []);
-
-    const [removeQuiz] = useDeleteQuizMutation();
-
-    handleDelete = async () => {
-        // console.log({ accessToken, quizId: quizData._id });
-
-        const { data } = await removeQuiz({
-            accessToken,
-            quizId: quizData._id,
-        });
-        if (data) {
-            onClose();
-            dispatch(deleteQuiz(quizData));
-            navigation.navigate('Home');
         }
+    }, [error]);
+
+    const showConfirmDialog = () => {
+        return Alert.alert(
+            'Are your sure?',
+            'Are you sure you want to remove this quiz box?',
+            [
+                {
+                    text: 'Yes',
+                    onPress: async () => {
+                        const { data } = await removeQuiz({
+                            accessToken,
+                            quizId: quizData._id,
+                            userId,
+                        });
+                        if (data) {
+                            onClose();
+                            dispatch(deleteQuiz(quizData));
+                            navigation.navigate('Home');
+                            if (Platform.OS === 'android') {
+                                ToastAndroid.show(
+                                    'Delete successfully!',
+                                    ToastAndroid.SHORT,
+                                );
+                            } else {
+                                AlertIOS.alert('Delete successfully!');
+                            }
+                        }
+                    },
+                },
+                {
+                    text: 'No',
+                },
+            ],
+        );
+    };
+
+    const showImportDialog = () => {
+        return Alert.alert(
+            'Are your sure?',
+            'Are you sure you want to import this quiz ?',
+            [
+                {
+                    text: 'Yes',
+                    onPress: async () => {
+                        const { data, isLoading } = await importQuiz({
+                            accessToken,
+                            quizData,
+                            userId,
+                        });
+                        if (isLoading) {
+                            setLoadingImport(true);
+                        }
+                        if (data) {
+                            onClose();
+                            dispatch(addLibrayQuiz(quizData));
+                            if (Platform.OS === 'android') {
+                                ToastAndroid.show(
+                                    'Import successfully!',
+                                    ToastAndroid.SHORT,
+                                );
+                            } else {
+                                AlertIOS.alert('Delete successfully!');
+                            }
+                        }
+                    },
+                },
+                {
+                    text: 'No',
+                },
+            ],
+        );
+    };
+
+    useFocusEffect(
+        useCallback(() => {
+            let Point = 0;
+            let pointsPerQuestion = quizData.pointsPerQuestion;
+
+            quizData.questionList.map((question) => {
+                switch (question.pointType) {
+                    case 'Standard':
+                        Point += pointsPerQuestion;
+                        break;
+                    case 'Double':
+                        Point += pointsPerQuestion * 2;
+                        break;
+                    default:
+                        break;
+                }
+            });
+            setPoint(Point);
+        }, []),
+    );
+
+    const handleDelete = () => {
+        showConfirmDialog();
+    };
+
+    const handleEdit = () => {
+        navigation.navigate('Creator', { quiz: quizData, creator: false });
+    };
+
+    const handleSolo = () => {
+        dispatch(setQuizPlay(quizData));
+        navigation.navigate('PlaySolo');
+    };
+
+    const handleImport = () => {
+        showImportDialog();
     };
 
     return (
@@ -82,40 +201,102 @@ export default function EditOrDelete({ onClose, quizData, navigation }) {
                 <Text style={{ color: 'gray', fontWeight: 500 }}>
                     DESCRIPTION
                 </Text>
-                <Text style={{ fontSize: 16 }}>
-                    Any time is a good time for a quiz and even better if that
-                    happens to be a football themed quiz!
-                </Text>
+                <Text style={{ fontSize: 16 }}>{quizData.description}</Text>
+                <View style={{ flexDirection: 'row' }}>
+                    <Text style={{ color: 'gray', fontWeight: 500 }}>
+                        pointsPerQuestion :{' '}
+                    </Text>
+                    <Text style={{ fontSize: 16 }}>
+                        {quizData.pointsPerQuestion}
+                    </Text>
+                </View>
             </View>
             <View style={styles.creator}>
                 <View style={styles.infocreator}>
-                    <Image
-                        style={styles.image}
-                        source={{
-                            uri: 'https://i0.wp.com/thatnhucuocsong.com.vn/wp-content/uploads/2023/02/Hinh-anh-avatar-cute.jpg?ssl\u003d1',
-                        }}
-                    />
-                    <View>
-                        <Text>{quizData.creatorName}</Text>
-                        <Text>Creator</Text>
+                    <View style={{ flexDirection: 'row', gap: 20 }}>
+                        <Image
+                            style={styles.image}
+                            source={{
+                                uri: avatar
+                                    ? avatar
+                                    : 'https://i0.wp.com/thatnhucuocsong.com.vn/wp-content/uploads/2023/02/Hinh-anh-avatar-cute.jpg?ssl\u003d1',
+                            }}
+                        />
+                        <View>
+                            <Text>{quizData.creatorName}</Text>
+                            <Text>Creator</Text>
+                        </View>
                     </View>
+                    {quizData.sourceCreator && (
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={{ fontWeight: 500 }}>Source: </Text>
+                            <Text>{quizData.sourceCreator}</Text>
+                        </View>
+                    )}
                 </View>
             </View>
-            <View style={styles.footer}>
-                <TouchableOpacity style={styles.editButton}>
-                    <View>
-                        <Text style={styles.textEdit}>Edit</Text>
-                    </View>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.deleteButton}
-                    onPress={handleDelete}
-                >
-                    <View>
-                        <Text style={styles.textDelete}>Delete</Text>
-                    </View>
-                </TouchableOpacity>
-            </View>
+            {mylibrary ? (
+                <View style={styles.footer}>
+                    <TouchableOpacity
+                        style={styles.editButton}
+                        onPress={handleEdit}
+                    >
+                        <View>
+                            <Text style={styles.textEdit}>Edit</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={styles.deleteButton}
+                        onPress={handleDelete}
+                    >
+                        <View>
+                            {isLoading ? (
+                                <ActivityIndicator size="large" color="#fff" />
+                            ) : (
+                                <Text style={styles.textDelete}>Delete</Text>
+                            )}
+                        </View>
+                    </TouchableOpacity>
+                </View>
+            ) : (
+                <View style={styles.footer}>
+                    {userName !== quizData.creatorName &&
+                        userName !== quizData.sourceCreator && (
+                            <TouchableOpacity
+                                style={styles.editButton}
+                                onPress={handleImport}
+                            >
+                                <View>
+                                    {loadingImport ? (
+                                        <ActivityIndicator
+                                            size="large"
+                                            color="#fff"
+                                        />
+                                    ) : (
+                                        <Text style={styles.textEdit}>
+                                            Import
+                                        </Text>
+                                    )}
+                                </View>
+                            </TouchableOpacity>
+                        )}
+                    <TouchableOpacity
+                        style={{
+                            ...styles.deleteButton,
+                            backgroundColor: '#695AE0',
+                        }}
+                        onPress={handleSolo}
+                    >
+                        <View>
+                            {isLoading ? (
+                                <ActivityIndicator size="large" color="#fff" />
+                            ) : (
+                                <Text style={styles.textDelete}>Play Solo</Text>
+                            )}
+                        </View>
+                    </TouchableOpacity>
+                </View>
+            )}
         </View>
     );
 }
@@ -165,7 +346,7 @@ const styles = StyleSheet.create({
         width: 40,
         height: 40,
         borderRadius: 50,
-        resizeMode: 'contain',
+        resizeMode: 'cover',
     },
 
     creator: {
@@ -176,8 +357,9 @@ const styles = StyleSheet.create({
 
     infocreator: {
         flexDirection: 'row',
-        gap: 10,
+
         alignItems: 'center',
+        justifyContent: 'space-between',
     },
 
     footer: {

@@ -1,3 +1,3 @@
-export const questionTypes = ['pool', 'trueOrFalse'];
+export const questionTypes = ['Quiz', 'True/False'];
 
 // 'checkbox', 'typing'

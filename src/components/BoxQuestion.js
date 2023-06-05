@@ -4,7 +4,7 @@ import { colors } from 'src/styles/color';
 
 const answerConst = ['A', 'B', 'C', 'D'];
 
-const BoxQuestion = ({ number, title, type, questionData }) => {
+const BoxQuestion = ({ number, title, type, questionData, mylibrary }) => {
     return (
         <View style={styles.container}>
             <View style={styles.numberBox}>
@@ -16,14 +16,27 @@ const BoxQuestion = ({ number, title, type, questionData }) => {
             <View style={{ width: '65%' }}>
                 <Text style={styles.textTitle}>{questionData.question}</Text>
                 <View style={{ flexDirection: 'row', gap: 10 }}>
-                    <Text style={styles.textType}>{type}</Text>
+                    <Text style={styles.textType}>
+                        {questionData.optionQuestion
+                            ? questionData.optionQuestion + ' Choice'
+                            : 'Single Choice'}
+                    </Text>
                     <Text style={styles.textType}>
                         Time: {questionData.answerTime} second
                     </Text>
                 </View>
                 <View>
                     {questionData.answerList.map((answer, index) => (
-                        <Text key={index}>
+                        <Text
+                            key={index}
+                            style={{
+                                fontWeight: 500,
+                                color:
+                                    answer.isCorrect && mylibrary
+                                        ? 'red'
+                                        : '#333',
+                            }}
+                        >
                             {answerConst[index]}. {answer.body}
                         </Text>
                     ))}
@@ -71,6 +84,7 @@ const styles = StyleSheet.create({
     },
     textTitle: {
         fontWeight: 'bold',
+        fontSize: 18,
     },
     textType: {
         fontSize: 12,

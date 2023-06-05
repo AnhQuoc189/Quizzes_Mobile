@@ -1,5 +1,6 @@
 // Library
 import { useState } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import {
     StyleSheet,
     Text,
@@ -9,6 +10,7 @@ import {
     Modal,
     TextInput,
     Pressable,
+    ToastAndroid,
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -16,9 +18,13 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 // Layout
 import { MainLayout } from 'src/layouts';
 
+import AnswerInput from './AnswerInput';
+
 // Constant
 import { timeLimit } from 'src/constants/time.constant';
 import { questionTypes } from 'src/constants/questionTypes.constant';
+import { pointTypes } from 'src/constants/pointTypes.constant';
+import { optionQuestions } from 'src/constants/optionQuestion';
 
 // Actions
 import {
@@ -30,6 +36,8 @@ import {
     duplicateQuestion,
 } from 'src/slices/creatorSlice';
 
+import { ModalQuiz } from './Modal';
+
 // Component
 import {
     Button,
@@ -39,109 +47,109 @@ import {
     TrueOrFalseAnswer,
 } from 'src/components/creator';
 import { bgColors, colors } from 'src/styles/color';
+import { useEffect } from 'react';
+import Item from './Item';
 
-const AddQuestion = ({ navigation }) => {
-    const [coverImage, setCoverImage] = useState(null);
-    const [result, setResult] = useState(''); // result is the url when upload is successful
-    //only call when submit quiz or question
-    const uploadImage = () => {
-        if (!coverImage) return alert('file not found!');
-        // else return console.log(file);
-        const formData = new FormData();
-        formData.append('file', `data:image/jpeg;base64,${file}`);
-        formData.append('upload_preset', 'xs3m3hri');
-        formData.append('folder', 'examples/test'); // Add this line to specify the folder
-        fetch(`https://api.cloudinary.com/v1_1/dg4vxltmf/image/upload`, {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'Content-Type': 'multipart/form-data',
-                'X-Requested-With': 'XMLHttpRequest',
+// import { useSelector } from 'react-redux';
+import { useAddQuestionMutation } from 'src/services/quizApi';
+import { useDeleteQuestionMutation } from 'src/services/quizApi';
+import { updateQuiz } from 'src/slices/quizSlice';
+import { useCallback } from 'react';
+
+const InitQuestion = {
+    questionType: 'Quiz',
+    optionQuestion: 'Single',
+    pointType: 'Standard',
+    answerTime: 5,
+    backgroundImage: '',
+    question: '',
+    answerList: [
+        { name: 'a', body: '', isCorrect: false },
+        { name: 'b', body: '', isCorrect: false },
+        { name: 'c', body: '', isCorrect: false },
+        { name: 'd', body: '', isCorrect: false },
+    ],
+    questionIndex: 1,
+    maxCorrectAnswer: 1,
+    correctAnswerCount: 0,
+    answerCorrect: [],
+};
+
+const AddQuestion = ({ navigation, ...props }) => {
+    const dispatch = useDispatch();
+    const userData = useSelector((state) => state.auths?.authData);
+    const accessToken = userData?.data?.accessToken;
+
+    const [questionList, setQuestionList] = useState([]);
+    const quiz = props.route.params.quiz;
+    const creator = props.route.params.creator;
+
+    const [initQuestion] = useAddQuestionMutation();
+    const [deleteQuestion, { isLoading }] = useDeleteQuestionMutation();
+
+    useFocusEffect(
+        useCallback(() => {
+            setQuestionList(quiz.questionList);
+        }, [quiz]),
+    );
+
+    const handleAddQuestion = async () => {
+        const { data } = await initQuestion({
+            accessToken,
+            quizId: quiz._id,
+            newQuestion: {
+                ...InitQuestion,
+                questionIndex: questionList.length + 1,
             },
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log(data);
-                setResult(data?.secure_url);
-            })
-            .catch((error) => console.error(error));
+        });
+        if (data) {
+            if (Platform.OS === 'android') {
+                ToastAndroid.show(
+                    'Add question successfully!',
+                    ToastAndroid.SHORT,
+                );
+            } else {
+                AlertIOS.alert('Add question successfully!');
+            }
+            const { Question, quiz } = data;
+            dispatch(updateQuiz(quiz));
+            setQuestionList([...questionList, Question]);
+        }
     };
-    // State RTK
-    // const questionList = useSelector(
-    //     (state) => state.creator.quizData.questionList,
-    // );
-    // const activeQuestion = useSelector((state) => state.creator.activeQuestion);
-    // const isSaved = useSelector((state) => state.creator.isSaved);
 
-    // const dispatch = useDispatch();
-
-    // const [isValidated, setIsValidated] = useState(false);
-
-    // // Modal Visible State
-    // const [optionsModalVisible, setOptionsModalVisible] = useState(false);
-    // const [timeModalVisible, setTimeModalVisible] = useState(false);
-    // const [questionTypeModalVisible, setQuestionTypeModalVisible] =
-    //     useState(false);
-    // const [confirmSaveModalVisible, setConfirmSaveModalVisible] =
-    //     useState(false);
-    // const [
-    //     confirmDeleteQuestionModalVisible,
-    //     setConfirmDeleteQuestionModalVisible,
-    // ] = useState(false);
-
-    // // Handle Function
-    // const handleOpenOptionsModal = () => {
-    //     setOptionsModalVisible(true);
-    // };
-
-    // const validateQuestion = () => {
-    //     const questionCondition = activeQuestion.question !== '';
-    //     const answerListCondition = activeQuestion.answerList.every(
-    //         (answer) => answer.answer !== '',
-    //     );
-    //     const correctAnswerCondition = activeQuestion.answerList.some(
-    //         (answer) => answer.isCorrect === true,
-    //     );
-
-    //     if (!questionCondition) {
-    //         alert('Please enter question');
-    //     } else if (!answerListCondition) {
-    //         alert('Please enter all answers');
-    //     } else if (!correctAnswerCondition) {
-    //         alert('Please choose correct answer');
-    //     }
-
-    //     switch (activeQuestion.type) {
-    //         case 'pool':
-    //             return (
-    //                 questionCondition &&
-    //                 answerListCondition &&
-    //                 correctAnswerCondition
-    //             );
-    //         case 'trueOrFalse':
-    //             return questionCondition && correctAnswerCondition;
-    //         default:
-    //             break;
-    //     }
-    // };
-
-    // const handlePressSaveQuestion = () => {
-    //     if (validateQuestion()) {
-    //         dispatch(changeQuestionInfo(activeQuestion));
-    //     }
-    // };
+    const handleDeleteQuestion = async (questionId) => {
+        const { data } = await deleteQuestion({
+            accessToken,
+            quizId: quiz._id,
+            questionId,
+        });
+        if (data) {
+            if (Platform.OS === 'android') {
+                ToastAndroid.show(
+                    'Delete question successfully!',
+                    ToastAndroid.SHORT,
+                );
+            } else {
+                AlertIOS.alert('Delete question successfully!');
+            }
+            dispatch(updateQuiz(data));
+            setQuestionList(data.questionList);
+        }
+    };
 
     return (
         <MainLayout
             navigation={navigation}
             header={
                 <Header
+                    add={true}
                     title="Add Question"
                     style={styles.header}
                     navigation={navigation}
                     direct="Creator"
-                    // options={handleOpenOptionsModal}
-                    // setConfirmSaveModalVisible={setConfirmSaveModalVisible}
+                    creator={creator}
+                    quiz={quiz}
+                    addQuestion={handleAddQuestion}
                 />
             }
         >
@@ -149,497 +157,36 @@ const AddQuestion = ({ navigation }) => {
             <ScrollView
                 contentContainerStyle={styles.pagination}
                 horizontal={true}
+                pagingEnabled={true}
             >
-                {/* {questionList.map((question) => (
-                    <TouchableOpacity
-                        key={question.index}
+                {questionList &&
+                    questionList.map((question) => (
+                        <Item
+                            quizId={quiz._id}
+                            key={question.questionIndex}
+                            data={question}
+                            length={questionList.length}
+                            handleAddQuestion={(InitQuestion) =>
+                                handleAddQuestion(InitQuestion)
+                            }
+                            handleDeleteQuestion={(InitQuestion) =>
+                                handleDeleteQuestion(InitQuestion)
+                            }
+                            loadingDelete={isLoading}
+                        />
+                    ))}
+                {!questionList.length && (
+                    <Text
                         style={{
-                            ...styles.questionIndex,
-                            backgroundColor:
-                                question.index === activeQuestion.index
-                                    ? '#000'
-                                    : '#fff',
-                        }}
-                        onPress={() => {
-                            if (!isSaved) {
-                                setConfirmSaveModalVisible(true);
-                            } else {
-                                dispatch(
-                                    changeActiveQuestionIndex(question.index),
-                                );
-                            }
+                            textAlign: 'center',
+                            justifyContent: 'center',
+                            fontSize: 20,
                         }}
                     >
-                        <Text
-                            style={{
-                                color:
-                                    question.index === activeQuestion.index
-                                        ? '#fff'
-                                        : '#000',
-                            }}
-                        >
-                            {question.index + 1}
-                        </Text>
-                    </TouchableOpacity>
-                ))} */}
+                        No question here
+                    </Text>
+                )}
             </ScrollView>
-
-            {/* Question */}
-            <ScrollView contentContainerStyle={styles.questionContainer}>
-                {/* Add Cover Image Question */}
-                <ImageUpload onChange={setCoverImage} />
-
-                {/* Question Settings */}
-                <View style={styles.settings}>
-                    {/* Time Setting Button */}
-                    <TouchableOpacity
-                        onPress={() => setTimeModalVisible(!timeModalVisible)}
-                        style={styles.settingBtn}
-                    >
-                        <MaterialCommunityIcons
-                            name="clock-outline"
-                            size={25}
-                            color={colors.lightPurple}
-                        />
-                        <Text
-                            style={{
-                                fontWeight: 700,
-                            }}
-                        >
-                            {/* {activeQuestion.timeLimit} Sec */}
-                            Sec
-                        </Text>
-                    </TouchableOpacity>
-
-                    {/* Add Question Button */}
-                    <TouchableOpacity
-                        style={{
-                            ...styles.settingBtn,
-                            borderWidth: 0,
-                            backgroundColor: colors.primary,
-                        }}
-                        // onPress={() => {
-                        //     if (!isSaved) {
-                        //         setConfirmSaveModalVisible(true);
-                        //     } else {
-                        //         dispatch(addQuestion());
-                        //     }
-                        // }}
-                    >
-                        <MaterialCommunityIcons
-                            name="plus"
-                            size={25}
-                            color="#fff"
-                            style={{
-                                paddingHorizontal: 10,
-                            }}
-                        />
-                    </TouchableOpacity>
-
-                    {/* Type Question Setting Button */}
-                    <TouchableOpacity
-                        // onPress={() =>
-                        //     setQuestionTypeModalVisible(
-                        //         !questionTypeModalVisible,
-                        //     )
-                        // }
-                        style={styles.settingBtn}
-                    >
-                        <Text
-                            style={{
-                                fontWeight: 700,
-                            }}
-                        >
-                            {/* {activeQuestion.type} */}
-                        </Text>
-                        <MaterialCommunityIcons
-                            name="chevron-down"
-                            size={25}
-                            color={colors.lightPurple}
-                        />
-                    </TouchableOpacity>
-
-                    {/* Time Setting Modal */}
-                    {/* <Modal
-                        animationType="fade"
-                        transparent={true}
-                        visible={timeModalVisible}
-                        onRequestClose={() => {
-                            setTimeModalVisible(!timeModalVisible);
-                        }}
-                    >
-                        <Pressable
-                            style={styles.centeredView}
-                            onPress={() =>
-                                setTimeModalVisible(!timeModalVisible)
-                            }
-                        >
-                            <Pressable style={styles.modalView}>
-                                <Text
-                                    style={{
-                                        fontSize: 30,
-                                        fontWeight: 600,
-                                    }}
-                                >
-                                    Time limit
-                                </Text>
-
-                                <View style={styles.timeLimitGroup}>
-                                    {timeLimit.map((time) => (
-                                        <TouchableOpacity
-                                            key={time}
-                                            style={{
-                                                ...styles.timeLimitBtn,
-                                                backgroundColor:
-                                                    activeQuestion.timeLimit ===
-                                                    time
-                                                        ? colors.pink
-                                                        : bgColors.lightPurple,
-                                            }}
-                                            onPress={() => {
-                                                dispatch(
-                                                    changeActiveQuestionInfo({
-                                                        type: 'timeLimit',
-                                                        value: time,
-                                                    }),
-                                                );
-                                                setTimeModalVisible(
-                                                    !timeModalVisible,
-                                                );
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    ...styles.timeLimitText,
-                                                    color:
-                                                        activeQuestion.timeLimit ===
-                                                        time
-                                                            ? '#fff'
-                                                            : '#000',
-                                                }}
-                                            >
-                                                {time} sec
-                                            </Text>
-                                        </TouchableOpacity>
-                                    ))}
-                                </View>
-                            </Pressable>
-                        </Pressable>
-                    </Modal> */}
-
-                    {/* Type Setting Modal */}
-                    {/* <Modal
-                        animationType="fade"
-                        transparent={true}
-                        visible={questionTypeModalVisible}
-                        onRequestClose={() => {
-                            setQuestionTypeModalVisible(
-                                !questionTypeModalVisible,
-                            );
-                        }}
-                    >
-                        <Pressable
-                            style={styles.centeredView}
-                            onPress={() =>
-                                setQuestionTypeModalVisible(
-                                    !questionTypeModalVisible,
-                                )
-                            }
-                        >
-                            <Pressable style={styles.modalView}>
-                                <Text
-                                    style={{
-                                        fontSize: 30,
-                                        fontWeight: 600,
-                                    }}
-                                >
-                                    Question Type
-                                </Text>
-
-                                <View style={styles.timeLimitGroup}>
-                                    {questionTypes.map((type) => (
-                                        <TouchableOpacity
-                                            key={type}
-                                            style={{
-                                                ...styles.timeLimitBtn,
-                                                backgroundColor:
-                                                    activeQuestion.type === type
-                                                        ? colors.pink
-                                                        : bgColors.lightPurple,
-                                                width: '45%',
-                                            }}
-                                            onPress={() => {
-                                                dispatch(
-                                                    changeActiveQuestionInfo({
-                                                        type: 'type',
-                                                        value: type,
-                                                    }),
-                                                    setQuestionTypeModalVisible(
-                                                        !questionTypeModalVisible,
-                                                    ),
-                                                );
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    ...styles.timeLimitText,
-                                                    color:
-                                                        activeQuestion.type ===
-                                                        type
-                                                            ? '#fff'
-                                                            : '#000',
-                                                }}
-                                            >
-                                                {type}
-                                            </Text>
-                                        </TouchableOpacity>
-                                    ))}
-                                </View>
-                            </Pressable>
-                        </Pressable>
-                    </Modal> */}
-                </View>
-
-                {/* Question title */}
-                <View style={{ marginTop: 10 }}>
-                    <Text style={styles.label}>Title</Text>
-                    <TextInput
-                        style={{ ...styles.input, marginTop: 5 }}
-                        placeholder="Enter your question"
-                        // value={activeQuestion.question}
-                        // onChangeText={(value) => {
-                        //     dispatch(
-                        //         changeActiveQuestionInfo({
-                        //             type: 'question',
-                        //             value,
-                        //         }),
-                        //     );
-                        // }}
-                    />
-                </View>
-
-                {/* Answer Choices */}
-                <View style={{ marginVertical: 10 }}>
-                    <Text style={styles.label}>Answers</Text>
-                    {/* Pool  */}
-                    {/* {activeQuestion.type === 'pool' && <PoolAnswer />} */}
-
-                    {/* True Or False */}
-                    {/* {activeQuestion.type === 'trueOrFalse' && (
-                        <TrueOrFalseAnswer />
-                    )} */}
-                </View>
-
-                {/* Save Button */}
-                <Button
-                    title="Save question"
-                    // handlePress={handlePressSaveQuestion}
-                />
-            </ScrollView>
-
-            {/* Options Modal */}
-            {/* <Modal
-                animationType="fade"
-                transparent={true}
-                visible={optionsModalVisible}
-                onRequestClose={() => {
-                    setOptionsModalVisible(!optionsModalVisible);
-                }}
-            >
-                <Pressable
-                    style={styles.optionsCenteredView}
-                    onPress={() => setOptionsModalVisible(!optionsModalVisible)}
-                >
-                    <Pressable style={styles.optionsModalView}> */}
-            {/* Duplicate Button */}
-            {/* <TouchableOpacity
-                            style={styles.optionsBtn}
-                            onPress={() => {
-                                if (!isSaved) {
-                                    setOptionsModalVisible(
-                                        !optionsModalVisible,
-                                    );
-                                    setConfirmSaveModalVisible(true);
-                                } else {
-                                    dispatch(duplicateQuestion(activeQuestion));
-                                    setOptionsModalVisible(
-                                        !optionsModalVisible,
-                                    );
-                                }
-                            }}
-                        >
-                            <MaterialCommunityIcons
-                                name="content-duplicate"
-                                size={20}
-                            />
-                            <Text style={styles.optionsText}>Duplicate</Text>
-                        </TouchableOpacity> */}
-
-            {/* Delete Button */}
-            {/* <TouchableOpacity
-                            style={{ ...styles.optionsBtn, marginTop: 10 }}
-                            onPress={() => {
-                                setOptionsModalVisible(!optionsModalVisible);
-                                setConfirmDeleteQuestionModalVisible(true);
-                            }}
-                        >
-                            <MaterialCommunityIcons
-                                name="trash-can-outline"
-                                size={20}
-                                color="red"
-                            />
-                            <Text
-                                style={{
-                                    ...styles.optionsText,
-                                    color: 'red',
-                                    marginLeft: 10,
-                                }}
-                            >
-                                Delete
-                            </Text>
-                        </TouchableOpacity>
-                    </Pressable>
-                </Pressable>
-            </Modal> */}
-
-            {/* Confirm Save Modal*/}
-            {/* <Modal
-                animationType="fade"
-                transparent={true}
-                visible={confirmSaveModalVisible}
-                onRequestClose={() => {
-                    setConfirmSaveModalVisible(!confirmSaveModalVisible);
-                }}
-            >
-                <Pressable
-                    style={styles.centeredView}
-                    onPress={() =>
-                        setConfirmSaveModalVisible(!confirmSaveModalVisible)
-                    }
-                >
-                    <Pressable style={styles.modalView}>
-                        <Text
-                            style={{
-                                width: '100%',
-                                fontSize: 28,
-                                fontWeight: 700,
-                                textAlign: 'left',
-                            }}
-                        >
-                            Save latest changes?
-                        </Text>
-                        <Text
-                            style={{
-                                width: '100%',
-                                textAlign: 'left',
-                                marginTop: 10,
-                                fontSize: 18,
-                            }}
-                        >
-                            Hold on - Please save your question before
-                            continuing!
-                        </Text>
-                        <View
-                            style={{
-                                marginTop: 20,
-                                flexDirection: 'row',
-                                width: '100%',
-                                justifyContent: 'space-between',
-                            }}
-                        >
-                            <Button
-                                title="Back to edit"
-                                width="48%"
-                                backgroundColor={colors.pink}
-                                handlePress={() =>
-                                    setConfirmSaveModalVisible(false)
-                                }
-                            />
-                            <Button
-                                title="Save"
-                                width="48%"
-                                backgroundColor={bgColors.green}
-                                handlePress={() => {
-                                    handlePressSaveQuestion();
-                                    setConfirmSaveModalVisible(false);
-                                }}
-                            />
-                        </View>
-                    </Pressable>
-                </Pressable>
-            </Modal> */}
-
-            {/* Confirm Delete Question Modal */}
-            {/* <Modal
-                animationType="fade"
-                transparent={true}
-                visible={confirmDeleteQuestionModalVisible}
-                onRequestClose={() => {
-                    setConfirmDeleteQuestionModalVisible(
-                        !confirmDeleteQuestionModalVisible,
-                    );
-                }}
-            >
-                <Pressable
-                    style={styles.centeredView}
-                    onPress={() =>
-                        setConfirmDeleteQuestionModalVisible(
-                            !confirmDeleteQuestionModalVisible,
-                        )
-                    }
-                >
-                    <Pressable style={styles.modalView}>
-                        <Text
-                            style={{
-                                width: '100%',
-                                fontSize: 28,
-                                fontWeight: 700,
-                                textAlign: 'left',
-                            }}
-                        >
-                            Delete question?
-                        </Text>
-                        <Text
-                            style={{
-                                width: '100%',
-                                textAlign: 'left',
-                                marginTop: 10,
-                                fontSize: 18,
-                            }}
-                        >
-                            Are you sure you want to delete this question?
-                        </Text>
-                        <View
-                            style={{
-                                marginTop: 20,
-                                flexDirection: 'row',
-                                width: '100%',
-                                justifyContent: 'space-between',
-                            }}
-                        >
-                            <Button
-                                title="Cancel"
-                                width="48%"
-                                backgroundColor={colors.pink}
-                                handlePress={() =>
-                                    setConfirmDeleteQuestionModalVisible(false)
-                                }
-                            />
-                            <Button
-                                title="Delete"
-                                width="48%"
-                                backgroundColor={bgColors.green}
-                                handlePress={() => {
-                                    dispatch(
-                                        deleteQuestion(activeQuestion.index),
-                                    );
-                                    setConfirmDeleteQuestionModalVisible(false);
-                                }}
-                            />
-                        </View>
-                    </Pressable>
-                </Pressable>
-            </Modal> */}
         </MainLayout>
     );
 };
@@ -657,9 +204,12 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 17,
+        justifyContent: 'center',
+        gap: 12,
         overflow: 'scroll',
         paddingVertical: 6,
+        height: 1020,
+        // backgroundColor: 'red',
     },
     questionIndex: {
         display: 'flex',
@@ -676,20 +226,21 @@ const styles = StyleSheet.create({
     },
     settings: {
         marginTop: 10,
-        flexDirection: 'row',
+        flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        gap: 20,
     },
     settingBtn: {
         borderWidth: 3,
         borderColor: bgColors.lightPurple,
         borderRadius: 99,
         paddingVertical: 5,
-        paddingHorizontal: 10,
+        paddingHorizontal: 5,
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
-        gap: 5,
+        justifyContent: 'center',
+        gap: 3,
+        width: '31%',
     },
     label: {
         fontSize: 20,
@@ -703,6 +254,21 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         paddingHorizontal: 20,
         fontSize: 18,
+    },
+    button: {
+        width: '50%',
+        backgroundColor: colors.lightPurple,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingVertical: 14,
+        borderRadius: 20,
+    },
+
+    text: {
+        fontSize: 20,
+        fontWeight: '600',
+        color: '#fff',
     },
 
     // Options Modal

@@ -1,35 +1,69 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import React from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
+import { setQuizPlay } from 'src/slices/quizSlice';
+import { useDispatch } from 'react-redux';
 import { bgColors, colors } from 'src/styles/color';
+import { useGetUserQuery } from 'src/services/userApi';
+import { useSelector } from 'react-redux';
+import moment from 'moment/moment';
 
-3;
 const BoxQuiz = ({ navigation, ...props }) => {
+    const dispatch = useDispatch();
+
+    const userData = useSelector((state) => state.auths?.authData);
+    const accessToken = userData?.data?.accessToken;
+
+    const { data } = useGetUserQuery({
+        accessToken,
+        userId: props.quizData.creatorId,
+    });
+
     return (
         <TouchableOpacity
             style={styles.container}
-            onPress={() => {
+            onPress={async () => {
                 const quizData = props.quizData;
-                navigation.navigate(props.direct, quizData);
+                await dispatch(setQuizPlay(quizData));
+                navigation.navigate(props.direct, {
+                    quizData,
+                    mylibrary: props.mylibrary,
+                    avatar: data.avatar,
+                });
             }}
         >
             <Image
                 style={styles.image}
                 source={{
                     // uri: 'https://us.123rf.com/450wm/sn333g/sn333g1608/sn333g160800029/65791205-math-round-bright-symbol-vector-colorful-mathematics-school-subject-bright-sign-in-thin-line-style.jpg?ver=6',
-                    uri:
-                        props.quizData?.backgroundImage !== undefined
-                            ? props.quizData?.backgroundImage
-                            : 'https://us.123rf.com/450wm/sn333g/sn333g1608/sn333g160800029/65791205-math-round-bright-symbol-vector-colorful-mathematics-school-subject-bright-sign-in-thin-line-style.jpg?ver=6',
+                    uri: props.quizData?.backgroundImage
+                        ? props.quizData?.backgroundImage
+                        : 'https://us.123rf.com/450wm/sn333g/sn333g1608/sn333g160800029/65791205-math-round-bright-symbol-vector-colorful-mathematics-school-subject-bright-sign-in-thin-line-style.jpg?ver=6',
                 }}
             />
 
-            <View style={styles.info}>
+            <View style={{ ...styles.info, padding: 7 }}>
                 <Text style={styles.textHeader}>{props.quizData.name}</Text>
-                <Text style={styles.numberRank}>
-                    {props.quizData.numberOfQuestions} * questions
-                </Text>
+                {props.mylibrary ? (
+                    <Text style={styles.numberRank}>
+                        {props.quizData.numberOfQuestions} * questions
+                    </Text>
+                ) : (
+                    <>
+                        <Text style={styles.numberRank}>
+                            {props.quizData.creatorName}
+                        </Text>
+                        <Text style={styles.numberRank}>
+                            {props.quizData.updatedAt
+                                ? `UpdatedCreate:${moment(
+                                      props.quizData.updatedAt,
+                                  ).fromNow()}`
+                                : `DateCreate:${moment(
+                                      props.quizData.dateCreated,
+                                  ).fromNow()}`}
+                        </Text>
+                    </>
+                )}
             </View>
             <Ionicons
                 name="chevron-forward"
@@ -71,7 +105,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         marginLeft: 10,
         flexDirection: 'column',
-        padding: 7,
+        // alignItems: 'center',
     },
 
     textHeader: {

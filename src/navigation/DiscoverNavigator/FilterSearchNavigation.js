@@ -4,7 +4,7 @@ import {
     CatogoriesFilter,
     FriendsFilter,
     QuizFilter,
-    TopFilter,
+    UsersFilter,
 } from 'src/components/discover';
 
 const Tab = createMaterialTopTabNavigator();
@@ -12,7 +12,7 @@ const Tab = createMaterialTopTabNavigator();
 const FilterSearchNavigation = () => {
     return (
         <Tab.Navigator
-            initialRouteName="Top"
+            initialRouteName="Users"
             style={{
                 display: 'flex',
                 paddingTop: 20,
@@ -30,8 +30,8 @@ const FilterSearchNavigation = () => {
             }}
         >
             <Tab.Screen
-                name="Top"
-                component={TopFilter}
+                name="Users"
+                component={UsersFilter}
                 options={{
                     title: ({ color, focused }) => (
                         <View style={styles.container}>
@@ -41,7 +41,7 @@ const FilterSearchNavigation = () => {
                                     color: focused ? 'blue' : 'gray',
                                 }}
                             >
-                                Top
+                                Users
                             </Text>
                             <Text
                                 style={{
@@ -123,7 +123,7 @@ const FilterSearchNavigation = () => {
                                     color: focused ? 'blue' : 'gray',
                                 }}
                             >
-                                Friends
+                                Follows
                             </Text>
                             <Text
                                 style={{

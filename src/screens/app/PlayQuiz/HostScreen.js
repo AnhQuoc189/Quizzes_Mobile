@@ -25,21 +25,30 @@ const InitQuizData = {
 
 let CorrectAnswer = [];
 
-export default function HostScreen({ navigation, ...props }) {
-    // console.log(props.route.params);
-    const quizData = props.route.params.quizData;
-    const game = props.route.params.newGame;
-    const leaderboard = props.route.params.newLeaderboard;
+export default function HostScreen({ navigation }) {
+    // const game = props.route.params.newGame;
+    // const leaderboard = props.route.params.newLeaderboard;
+
+    // const [quizData, setQuizData] = useState(props.route.params.quizData);
+    // const [game, setGame] = useState(props.route.params.quizData);
+    // const [leaderboard, setLeaderboard] = useState(
+    //     props.route.params.newLeaderboard,
+    // );
 
     const [correct, setCorrect] = useState();
     const socket = useSelector((state) => state.sockets.socket);
-    // console.log(socket);
-    // const game = useSelector((state) => state.games);
-    // console.log(game);
+
+    const quiz = useSelector((state) => state.quizs.quiz);
+    console.log(quiz.name);
+    const game = useSelector((state) => state.games.game);
+    console.log(game._id);
+
+    const leaderboard = useSelector((state) => state.leaderboards.leaderboard);
+    console.log(leaderboard._id);
 
     useEffect(() => {
         CorrectAnswer = [];
-        quizData.questionList.map((question) => {
+        quiz.questionList.map((question) => {
             question.answerList.map((answer) => {
                 if (answer.isCorrect === true) {
                     return (
@@ -62,18 +71,19 @@ export default function HostScreen({ navigation, ...props }) {
     const [timer, setTimer] = useState(10);
 
     const StartGame = () => {
-        socket?.emit('start-game', quizData, game, leaderboard);
+        socket?.emit('start-game', quiz, game, leaderboard);
         socket?.emit('countdown-preview', game?.pin, () => {
             StartCountDownPreview(10, currentQuestionIndex);
         });
 
         setTimeAlready(true);
         setIsStaretedGame(true);
+        // console.log(game);
     };
 
     const cancelGame = () => {
         socket?.emit('host-leave-room', game.pin);
-        navigation.navigate('DetailQuiz', quizData);
+        navigation.navigate('DetailQuiz', { quizData: quiz, mylibrary: true });
     };
 
     const StartCountDownPreview = (seconds, index) => {
@@ -91,20 +101,19 @@ export default function HostScreen({ navigation, ...props }) {
     };
 
     const displayQuestion = (index) => {
-        if (index === quizData.questionList.length) {
+        if (index === quiz.questionList.length) {
             displayCurrentLeaderBoard(index);
         } else {
-            setQuestionData(quizData.questionList[index]);
+            setQuestionData(quiz.questionList[index]);
             setCurrentQuestionIndex((prevstate) => prevstate + 1);
-            let time = quizData.questionList[index].answerTime;
+            let time = quiz.questionList[index].answerTime;
             let question = {
-                questionData: quizData.questionList[index],
-                answerList: quizData.questionList[index].answerList,
-                questionIndex: quizData.questionList[index].questionIndex,
-                correctAnswersCount: quizData.questionList[
-                    index
-                ].answerList.filter((answer) => answer.isCorrect === true)
-                    .length,
+                questionData: quiz.questionList[index],
+                answerList: quiz.questionList[index].answerList,
+                questionIndex: quiz.questionList[index].questionIndex,
+                correctAnswersCount: quiz.questionList[index].answerList.filter(
+                    (answer) => answer.isCorrect === true,
+                ).length,
             };
             socket.emit(
                 'start-question-timer',
@@ -144,16 +153,9 @@ export default function HostScreen({ navigation, ...props }) {
     const displayCurrentLeaderBoard = (index) => {
         setIsQuestionResultScreen(false);
         setIsLeaderboardScreen(true);
-        if (index >= quizData.questionList.length - 1) {
+        if (index >= quiz.questionList.length - 1) {
             // socket.emit('host-end-game', playerList, currentLeaderboard);
             socket.emit('host-end-game', game?.pin);
-
-            // toast.info('Game ended!', {
-            //     position: 'top-right',
-            //     autoClose: 2000,
-            //     pauseOnFocusLoss: false,
-            // });
-            // window.location.reload();
             console.log('Dung co noi nhieu');
         } else {
             setTimeout(() => {
@@ -172,7 +174,7 @@ export default function HostScreen({ navigation, ...props }) {
                 <WaitingRoom
                     pin={game.pin}
                     socket={socket}
-                    quizData={quizData}
+                    quizData={quiz}
                     navigation={navigation}
                     onPressLetgo={StartGame}
                     onPressCanCel={cancelGame}
@@ -195,7 +197,7 @@ export default function HostScreen({ navigation, ...props }) {
                 <QuestionScreen
                     timer={questionData.answerTime}
                     questionData={questionData}
-                    lengthQuiz={quizData.questionList.length}
+                    lengthQuiz={quiz.questionList.length}
                     host={true}
                     correctAnswer={correct}
                 />
@@ -208,8 +210,9 @@ export default function HostScreen({ navigation, ...props }) {
 
 const styles = StyleSheet.create({
     container: {
-        height: '100%',
-        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#fff',
     },
     viewTimerAlready: {
         width: '100%',
@@ -220,5 +223,17 @@ const styles = StyleSheet.create({
         height: '100%',
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    containerAnswer: {
+        width: '100%',
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: 100,
+    },
+
+    imageAnswer: {
+        width: '50%',
+        height: '24%',
     },
 });

@@ -1,38 +1,40 @@
 import React from 'react';
-import { useEffect } from 'react';
-import { View, StyleSheet, Text, Image } from 'react-native';
-import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
-import Question from 'src/components/playquiz/Question';
+import {
+    SafeAreaView,
+    View,
+    Text,
+    Image,
+    StyleSheet,
+    Dimensions,
+} from 'react-native';
+import Question from './Question';
 
-export default function QuestionScreen({
-    questionData,
-    lengthQuiz,
-    timer,
-    host,
-    correctAnswer,
-    isAnswerSelect,
-    onClick,
-}) {
+const screenWidth = Dimensions.get('screen').width;
+
+export default function QuestionScreen({ questionData, length, result }) {
+    console.log(result);
+    const arrayCorrect = questionData.answerList.map((item) => {
+        if (item.isCorrect === true) {
+            return item.name;
+        }
+    });
     return (
-        <View style={styles.container}>
-            <View style={{ width: '80%', alignItems: 'center' }}>
-                <View style={styles.viewTimer}>
-                    <CountdownCircleTimer
-                        isPlaying
-                        duration={timer}
-                        colors={['#004777', '#F7B801', '#A30000', '#A30000']}
-                        colorsTime={[7, 5, 2, 0]}
-                        size={100}
-                    >
-                        {({ remainingTime }) => <Text>{remainingTime}</Text>}
-                    </CountdownCircleTimer>
-                </View>
+        <View style={{ ...styles.container, width: screenWidth }}>
+            <View
+                style={{
+                    width: '80%',
+                    alignItems: 'center',
+                    height: '100%',
+                }}
+            >
                 <View style={styles.viewQuestionTitle}>
                     <Text style={styles.textSub}>
-                        Question {questionData?.questionIndex} of {lengthQuiz}
+                        Question {questionData?.questionIndex} of {length}
+                        {/* Question 1 of 3 */}
                     </Text>
                     <Text style={styles.textSub}>
                         {questionData?.optionQuestion} Choice
+                        {/* Single Choice */}
                     </Text>
                     <View
                         style={{
@@ -59,17 +61,19 @@ export default function QuestionScreen({
                         />
                     </View>
                 </View>
-                <View>
+                <View style={{ marginTop: 40, width: '100%' }}>
                     <Question
                         questionData={questionData}
-                        host={host}
-                        onClick={onClick}
-                        isAnswerSelect={isAnswerSelect}
-                        Correct={
-                            host
-                                ? correctAnswer[questionData?.questionIndex - 1]
-                                : ''
-                        }
+                        arrayCorrect={arrayCorrect}
+                        result={result}
+                        // host={host}
+                        // onClick={onClick}
+                        // isAnswerSelect={isAnswerSelect}
+                        // Correct={
+                        //     host
+                        //         ? correctAnswer[questionData?.questionIndex - 1]
+                        //         : ''
+                        // }
                     />
                 </View>
             </View>
@@ -79,16 +83,11 @@ export default function QuestionScreen({
 
 const styles = StyleSheet.create({
     container: {
-        height: '100%',
-        width: '100%',
-        backgroundColor: '#F1FDFF',
+        height: '50%',
         alignItems: 'center',
-    },
-    viewTimer: {
-        height: '12%',
         justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 30,
+        flex: 1,
+        width: '100%',
     },
 
     viewQuestionTitle: {

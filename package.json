@@ -26,6 +26,8 @@
         "expo-image-picker": "^14.1.1",
         "expo-linear-gradient": "^12.1.2",
         "expo-status-bar": "~1.4.4",
+        "lodash.filter": "^4.6.0",
+        "moment": "^2.29.4",
         "react": "18.2.0",
         "react-native": "0.71.6",
         "react-native-chart-kit": "^6.12.0",
@@ -40,12 +42,14 @@
         "react-native-screens": "~3.20.0",
         "react-native-svg": "13.4.0",
         "react-native-tab-view": "^3.5.1",
+        "react-native-toast-message": "^2.1.6",
         "react-native-vector-icons": "^9.2.0",
         "react-navigation": "^4.4.4",
         "react-redux": "^8.0.5",
         "redux": "^4.2.1",
         "redux-thunk": "^2.4.2",
-        "socket.io-client": "^4.6.1"
+        "socket.io-client": "^4.6.1",
+        "socket.io-stream": "^0.9.1"
     },
     "devDependencies": {
         "@babel/core": "^7.20.0"

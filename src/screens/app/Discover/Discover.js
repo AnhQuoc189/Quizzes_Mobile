@@ -1,81 +1,114 @@
 // Library
-import { SafeAreaView, View, StyleSheet } from 'react-native';
+import { SafeAreaView, View, StyleSheet, TextInput } from 'react-native';
 import { SimpleLineIcons } from '@expo/vector-icons';
-import { TextInput } from 'react-native-paper';
+// import { TextInput } from 'react-native-paper';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useState } from 'react';
 
+//redux
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchAllQuizes } from 'src/slices/quizSlice';
+import { useGetPublicQuizzesQuery } from 'src/services/quizApi';
+import { searchQuery } from 'src/slices/searchSlice';
+
 //component
 import Header from 'src/components/auth/Header';
+import { API } from 'src/constants/api';
 
 //styles
 import { colors } from 'src/styles/color';
 import { DisplayDiscover, FilterSearch } from 'src/components/discover';
-import { useEffect } from 'react';
+import { fetchAllUsers } from 'src/slices/usersSlice';
+import { useEffect, useCallback } from 'react';
 import { BackHandler } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 export default function Discover({ navigation }) {
-    const [isSearch, setIsSearch] = useState(false);
+    const dispatch = useDispatch();
     const [isFocus, setIsFocus] = useState(false);
-    const [inputSearch, setInputSearch] = useState('');
+
+    const userData = useSelector((state) => state.auths?.authData);
+    const accessToken = userData?.data?.accessToken;
+
+    // const { data, loading } = useGetPublicQuizzesQuery(accessToken);
+
+    // useEffect(() => {
+    //     if (data) {
+    //         console.log('All');
+    //         dispatch(fetchAllQuizes(data));
+    //     }
+    // }, [data]);
+
+    useFocusEffect(
+        useCallback(() => {
+            if (!isFocus) {
+                const handleGetApiUser = () => {
+                    fetch(`${API}api/users`, {
+                        method: 'GET',
+                        headers: new Headers({
+                            Authorization: `Bearer ${accessToken}`,
+                            'user-agent': 'Mozilla/4.0 MDN Example',
+                            'content-type': 'application/json',
+                        }),
+                    })
+                        .then((data) => data.json())
+                        .then((json) => {
+                            dispatch(fetchAllUsers(json));
+                        })
+                        .catch((error) => console(error));
+                };
+                handleGetApiUser();
+
+                const handleGetApiQuizes = () => {
+                    fetch(`${API}api/quizzes/public`, {
+                        method: 'GET',
+                        headers: new Headers({
+                            Authorization: `Bearer ${accessToken}`,
+                            'user-agent': 'Mozilla/4.0 MDN Example',
+                            'content-type': 'application/json',
+                        }),
+                    })
+                        .then((data) => data.json())
+                        .then((json) => {
+                            dispatch(fetchAllQuizes(json));
+                            // setData(json);
+                        })
+                        .catch((error) => console(error));
+                };
+                handleGetApiQuizes();
+            }
+        }, [isFocus]),
+    );
 
     const handleSearcrBar = (value) => {
-        setInputSearch(value);
-        setIsSearch(true);
+        dispatch(searchQuery(value));
     };
-
-    useEffect(() => {
-        const backAction = () => {
-            setIsSearch(false);
-            // console.log('state', isSearch);
-            return true;
-        };
-
-        const backHandler = BackHandler.addEventListener(
-            'hardwareBackPress',
-            backAction,
-        );
-
-        return () => backHandler.remove();
-    }, []);
 
     return (
         <SafeAreaView style={styles.container}>
-            <ScrollView>
-                <View style={styles.fisrtSection}>
-                    <Header
-                        title="Discover"
-                        direct={isFocus ? 'Discover' : 'Home'}
-                        color="white"
-                        navigation={navigation}
-                        setFocus={() => setIsFocus(false)}
+            <View style={styles.fisrtSection}>
+                <Header
+                    title="Discover"
+                    direct={isFocus ? 'Discover' : 'Home'}
+                    color="white"
+                    navigation={navigation}
+                    setFocus={() => setIsFocus(false)}
+                />
+                <View style={styles.searchBar}>
+                    <SimpleLineIcons name="magnifier" size={24} color="white" />
+                    <TextInput
+                        onFocus={() => {
+                            setIsFocus(true);
+                        }}
+                        placeholderTextColor="gray"
+                        textColor="gray"
+                        onChangeText={(value) => handleSearcrBar(value)}
+                        placeholder="Quiz, categories, friends"
+                        style={styles.textInput}
                     />
-                    <View style={styles.searchBar}>
-                        <SimpleLineIcons
-                            name="magnifier"
-                            size={24}
-                            color="white"
-                        />
-                        <TextInput
-                            // focusable={(value) => console.log(value)}
-                            onFocus={() => {
-                                setIsFocus(true);
-                            }}
-                            placeholderTextColor="gray"
-                            textColor="gray"
-                            value={inputSearch}
-                            onChangeText={(value) => handleSearcrBar(value)}
-                            activeUnderlineColor="transparent"
-                            underlineColor="transparent"
-                            placeholder="Quiz, categories, friends"
-                            style={styles.textInput}
-                        />
-                    </View>
                 </View>
-                {/* Main Content */}
+            </View>
 
-                {isFocus ? <FilterSearch /> : <DisplayDiscover />}
-                {/* {display && <DisplayDiscover />} */}
-            </ScrollView>
+            {isFocus ? <FilterSearch /> : <DisplayDiscover />}
         </SafeAreaView>
     );
 }
@@ -110,9 +143,11 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         alignItems: 'center',
         flexDirection: 'row',
+        justifyContent: 'space-between',
     },
     textInput: {
-        width: '100%',
+        width: '90%',
+        height: '100%',
         backgroundColor: 'transparent',
     },
     boxTopPick: {

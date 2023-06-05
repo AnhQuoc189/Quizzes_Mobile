@@ -17,37 +17,34 @@ import filter from 'lodash.filter';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
 import { useIsFocused } from '@react-navigation/native';
+import { users } from 'src/constants/user.constant';
+import { API } from 'src/constants/api';
+import { upDated } from 'src/slices/authSlice';
 
-const FriendsFilter = () => {
+const UsersFilter = () => {
     const dispatch = useDispatch();
     const isFocused = useIsFocused();
+    const [data, setData] = useState();
+    const [follow, setFollow] = useState([]);
     const [result, setResults] = useState([]);
     const [showData, setShowData] = useState(true);
-    const [data, setData] = useState();
+
     const info = useSelector((state) => state.auths?.user);
-    let follow = info.follow;
-
+    let follows = info.follow;
     const searchQuery = useSelector((state) => state.searchs.searchQuery);
-
-    // const handleUnfriend = (friendId) => {
-    //     const newFriends = result.filter((item) => item._id !== friendId);
-    //     setData(newFriends);
-    // };
-
     const users = useSelector((state) => state.users.users);
 
+    // const followUser = (newInfo) => {
+    //     dispatch(upDated(newInfo));
+    // };
+
+    // console.log('Cac');
+
     useEffect(() => {
-        if (info) {
-            setShowData(true);
-            const arrayFriend = [];
-            users.map((user) => {
-                if (follow?.includes(user.userName)) {
-                    arrayFriend.push(user);
-                }
-            });
-            setData(arrayFriend);
+        if (users) {
+            setData(users);
         }
-    }, [info]);
+    }, [users]);
 
     useEffect(() => {
         if (isFocused && data) {
@@ -61,7 +58,7 @@ const FriendsFilter = () => {
                 }
                 return false;
             };
-            const fotmatQuery = searchQuery?.toLowerCase();
+            const fotmatQuery = searchQuery.toLowerCase();
             const filterData = filter(data, (user) => {
                 return contains(user, fotmatQuery);
             });
@@ -72,11 +69,14 @@ const FriendsFilter = () => {
     return (
         <SafeAreaView style={styles.container}>
             {!data && <ActivityIndicator size="large" color="#333" />}
-
-            {/* {!result.length && <Text>You no have friends</Text>} */}
-
+            {/* {!result.length && !data && (
+                <Text style={{ fontSize: 20, textAlign: 'center' }}>
+                    No users here
+                </Text>
+            )} */}
             <FlatList
                 showsVerticalScrollIndicator={false}
+                // data={result ? result : data}
                 data={showData ? data : result}
                 keyExtractor={(result) => result._id}
                 renderItem={({ item }) => (
@@ -84,8 +84,8 @@ const FriendsFilter = () => {
                         key={item}
                         normal={true}
                         user={item}
-                        follow={true}
-                        // Unfriend={handleUnfriend}
+                        follows={follows}
+                        // handleFollow={followUser}
                     />
                 )}
             />
@@ -93,7 +93,7 @@ const FriendsFilter = () => {
     );
 };
 
-export default FriendsFilter;
+export default UsersFilter;
 
 const styles = StyleSheet.create({
     container: {
@@ -101,6 +101,5 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         display: 'flex',
         paddingHorizontal: 15,
-        marginBottom: 80,
     },
 });

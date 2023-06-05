@@ -24,31 +24,12 @@ import { Switch } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Settings({ navigation }) {
-    console.log('bb');
-
-    // useEffect(() => {
-    //     const Show = async () => {
-    //         const infoUserJson = await AsyncStorage.getItem('profile');
-    //         const { data } = JSON.parse(infoUserJson);
-    //         const userName = data.user.userName;
-    //         console.log(userName);
-    //     };
-    //     Show();
-    // }, []);
-
     const dispatch = useDispatch();
 
     const logout = () => {
         dispatch(logOut());
-        // navigation.dispatch(
-        //     CommonActions.reset({
-        //         index: 1,
-        //         routeNames: [{ name: 'Home' }],
-        //     }),
-        // );
+        navigation.goBack();
         navigation.navigate('AuthNavigator');
-        // navigation.dispatch(StackActions.popToTop());
-        // navigation.reset([NavigationAction.navigate({ routeName: 'Home' })], 0);
     };
 
     return (

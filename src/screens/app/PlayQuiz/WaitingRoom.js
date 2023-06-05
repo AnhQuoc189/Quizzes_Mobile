@@ -15,6 +15,7 @@ import logo from 'src/assets/images/logo.png';
 
 export default function WaitingRoom({
     pin,
+    solo,
     socket,
     quizData,
     navigation,
@@ -29,10 +30,11 @@ export default function WaitingRoom({
             }
         });
     }, [playerList, socket, pin]);
+
     return (
         <SafeAreaView style={styles.container}>
-            <View style={styles.viewAll}>
-                <Text style={styles.viewPin}>Show PIN: {pin}</Text>
+            <View style={{ ...styles.viewAll, gap: solo ? 100 : 20 }}>
+                {pin && <Text style={styles.viewPin}>Show PIN: {pin}</Text>}
                 <View style={styles.viewHeader}>
                     <View style={styles.viewQuiz}>
                         <View style={styles.viewQuizHeader}>
@@ -42,14 +44,15 @@ export default function WaitingRoom({
                             <Image
                                 style={styles.viewImage}
                                 source={{
-                                    uri: quizData.backgroundImage
-                                        ? quizData.backgroundImage
-                                        : logo,
+                                    uri: quizData?.backgroundImage
+                                        ? quizData?.backgroundImage
+                                        : 'https://us.123rf.com/450wm/sn333g/sn333g1608/sn333g160800029/65791205-math-round-bright-symbol-vector-colorful-mathematics-school-subject-bright-sign-in-thin-line-style.jpg?ver=6',
                                 }}
                             />
                             <Text style={{ textAlign: 'center' }}>
-                                What will you do when your girlfriend go to
-                                hotel with another man
+                                {/* What will you do when your girlfriend go to
+                                hotel with another man */}
+                                {quizData.description}
                             </Text>
                         </View>
                         {/* <Divider color="gray"></Divider> */}
@@ -61,24 +64,26 @@ export default function WaitingRoom({
                         </View>
                     </View>
                 </View>
-                <View style={styles.viewPlayer}>
-                    <Text style={{ fontSize: 20, textAlign: 'center' }}>
-                        Player List
-                    </Text>
-                    {!playerList.length && <Text>No player here</Text>}
-                    <FlatList
-                        showsVerticalScrollIndicator={false}
-                        data={playerList}
-                        renderItem={({ item }) => (
-                            <View style={{ alignItems: 'center' }}>
-                                <UserJoin index={item} />
-                            </View>
-                        )}
-                        ItemSeparatorComponent={() => (
-                            <View style={{ height: 20 }} />
-                        )}
-                    />
-                </View>
+                {!solo && (
+                    <View style={styles.viewPlayer}>
+                        <Text style={{ fontSize: 20, textAlign: 'center' }}>
+                            Player List
+                        </Text>
+                        {!playerList.length && <Text>No player here</Text>}
+                        <FlatList
+                            showsVerticalScrollIndicator={false}
+                            data={playerList}
+                            renderItem={({ item }) => (
+                                <View style={{ alignItems: 'center' }}>
+                                    <UserJoin index={item} />
+                                </View>
+                            )}
+                            ItemSeparatorComponent={() => (
+                                <View style={{ height: 20 }} />
+                            )}
+                        />
+                    </View>
+                )}
 
                 <View style={styles.viewButton}>
                     <TouchableOpacity onPress={onPressCanCel}>

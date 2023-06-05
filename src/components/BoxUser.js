@@ -1,56 +1,173 @@
 import { View, Text, StyleSheet, Image } from 'react-native';
 import React from 'react';
 import { colors } from 'src/styles/color';
-import goldbadge from 'src/assets/images/goldbadge.png';
 import { TouchableOpacity } from 'react-native';
+import { useFollowMutation, useUnFollowMutation } from 'src/services/userApi';
+import { useDispatch, useSelector } from 'react-redux';
+import { SimpleLineIcons } from '@expo/vector-icons';
+import { upDated } from 'src/slices/authSlice';
 
-const BoxUser = ({ ...props }) => {
+const BoxUser = ({
+    normal,
+    user,
+    follows,
+    follow,
+    // handleUnFollow,
+    // handleFollow,
+}) => {
+    const dispatch = useDispatch();
+    const userData = useSelector((state) => state.auths?.authData);
+    const accessToken = userData?.data?.accessToken;
+    const userName = userData?.data?.user.userName;
+
+    const myId = userData?.data?.user?._id;
+    const [Follow] = useFollowMutation();
+
+    const [unFollow] = useUnFollowMutation();
+
+    const handlefollow = async () => {
+        const { data } = await Follow({
+            accessToken,
+            myId,
+            friendId: user._id,
+        });
+        if (data) {
+            dispatch(upDated(data));
+        }
+    };
+
+    const handleUnfollow = async () => {
+        const { data } = await unFollow({
+            accessToken,
+            myId,
+            friendId: user._id,
+        });
+        if (data) {
+            dispatch(upDated(data));
+        }
+    };
+
     return (
         <TouchableOpacity
             style={{
                 ...styles.container,
-                backgroundColor: props.normal ? 'white' : colors.primary,
+                backgroundColor: normal ? 'white' : colors.primary,
             }}
         >
-            {props.number ? (
-                <View style={styles.number}>
-                    <Text style={{ color: 'white' }}>1</Text>
+            <View
+                style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                }}
+            >
+                <View>
+                    <Image
+                        style={styles.image}
+                        source={{
+                            uri: user?.avatar
+                                ? user.avatar
+                                : 'https://i0.wp.com/thatnhucuocsong.com.vn/wp-content/uploads/2023/02/Hinh-anh-avatar-cute.jpg?ssl\u003d1',
+                        }}
+                    />
                 </View>
+
+                <View style={styles.info}>
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            gap: 20,
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Text
+                            style={{
+                                ...styles.name,
+                                color: normal ? 'black' : 'white',
+                            }}
+                        >
+                            {user?.userName}
+                        </Text>
+                        {follow && (
+                            <View style={styles.viewPoint}>
+                                <Text
+                                    style={{
+                                        ...styles.name,
+                                        color: normal ? 'black' : 'white',
+                                    }}
+                                >
+                                    {user?.point}
+                                </Text>
+                            </View>
+                        )}
+                    </View>
+                    <Text
+                        style={{
+                            ...styles.numberRank,
+                            color: normal ? 'gray' : '#F5F5FD',
+                        }}
+                    >
+                        {user?.mail}
+                    </Text>
+                </View>
+            </View>
+            {follow ? (
+                <TouchableOpacity
+                    style={styles.follow}
+                    onPress={handleUnfollow}
+                >
+                    <SimpleLineIcons
+                        name="user-unfollow"
+                        size={24}
+                        color="#695AE0"
+                    />
+                    <Text style={{ color: '#695AE0' }}>unfollow</Text>
+                </TouchableOpacity>
             ) : (
-                <View />
+                <View style={styles.follow}>
+                    {follows.includes(user.userName) ? (
+                        <Text style={{ color: '#D21312' }}>following</Text>
+                    ) : (
+                        !(userName === user.userName) && (
+                            <TouchableOpacity
+                                style={{ ...styles.follow, width: 40 }}
+                                onPress={handlefollow}
+                            >
+                                <View style={{ flexDirection: 'row' }}>
+                                    <SimpleLineIcons
+                                        name="user-follow"
+                                        size={24}
+                                        color="black"
+                                    />
+                                    <Text style={{ color: '#333' }}>
+                                        follow
+                                    </Text>
+                                </View>
+                            </TouchableOpacity>
+                        )
+                    )}
+                </View>
+
+                // <View>
+                //     {follows.includes(user.userName) ? (
+                //         <View>
+                //             {' '}
+                //             <Text style={{ color: '#333' }}>following</Text>
+                //         </View>
+                //     ) : (
+                //         <TouchableOpacity style={styles.follow}>
+                //             <View style={{ flexDirection: 'row' }}>
+                //                 <SimpleLineIcons
+                //                     name="user-follow"
+                //                     size={24}
+                //                     color="black"
+                //                 />
+                //                 <Text style={{ color: '#333' }}>follow</Text>
+                //             </View>
+                //         </TouchableOpacity>
+                //     )}
+                // </View>
             )}
-
-            <View>
-                <Image
-                    style={styles.image}
-                    source={{
-                        uri: 'https://i0.wp.com/thatnhucuocsong.com.vn/wp-content/uploads/2023/02/Hinh-anh-avatar-cute.jpg?ssl\u003d1',
-                    }}
-                />
-            </View>
-
-            <View style={styles.info}>
-                <Text
-                    style={{
-                        ...styles.name,
-                        color: props.normal ? 'black' : 'white',
-                    }}
-                >
-                    Tuan Nguyen
-                </Text>
-                <Text
-                    style={{
-                        ...styles.numberRank,
-                        color: props.normal ? 'gray' : '#F5F5FD',
-                    }}
-                >
-                    124 points
-                </Text>
-            </View>
-            <Image
-                style={{ ...styles.image, marginLeft: 40 }}
-                source={goldbadge}
-            />
         </TouchableOpacity>
     );
 };
@@ -63,7 +180,7 @@ const styles = StyleSheet.create({
         marginTop: 15,
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'flex-start',
+        justifyContent: 'space-between',
         alignItems: 'center',
         paddingHorizontal: 10,
         paddingVertical: 18,
@@ -97,6 +214,24 @@ const styles = StyleSheet.create({
         display: 'flex',
         height: '100%',
         marginLeft: 15,
+    },
+    follow: {
+        alignItems: 'center',
+        height: '100%',
+        // backgroundColor: '#695AE0',
+        width: '20%',
+        borderRadius: 10,
+        alignItems: 'center',
+        flexDirection: 'row',
+    },
+
+    viewPoint: {
+        backgroundColor: '#B4ACEF',
+        width: 30,
+        height: 30,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 50,
     },
 });
 

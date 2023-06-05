@@ -30,11 +30,19 @@ export const apiQuiz = createApi({
             }),
         }),
         createQuiz: builder.mutation({
-            query: ({ accessToken, newQuiz }) => ({
+            query: ({ accessToken, quizData }) => ({
                 url: `api/quizzes`,
                 method: 'POST',
                 headers: { Authorization: `Bearer ${accessToken}` },
-                body: newQuiz,
+                body: quizData,
+            }),
+        }),
+        importQuiz: builder.mutation({
+            query: ({ accessToken, quizData, userId }) => ({
+                url: `api/quizzes/import`,
+                method: 'POST',
+                headers: { Authorization: `Bearer ${accessToken}` },
+                body: { quizData, userId },
             }),
         }),
         updateQuiz: builder.mutation({
@@ -70,7 +78,7 @@ export const apiQuiz = createApi({
 
         addQuestion: builder.mutation({
             query: ({ accessToken, quizId, newQuestion }) => ({
-                url: `api/${quizId}/questions`,
+                url: `api/quizzes/${quizId}/questions`,
                 method: 'POST',
                 headers: { Authorization: `Bearer ${accessToken}` },
                 body: newQuestion,
@@ -79,7 +87,7 @@ export const apiQuiz = createApi({
 
         getQuestions: builder.query({
             query: ({ accessToken, quizId }) => ({
-                url: `api/${quizId}/questions`,
+                url: `api/quizzes/${quizId}/questions`,
                 method: 'GET',
                 headers: { Authorization: `Bearer ${accessToken}` },
             }),
@@ -87,15 +95,15 @@ export const apiQuiz = createApi({
 
         getQuestion: builder.query({
             query: ({ accessToken, quizId, questionId }) => ({
-                url: `api/${quizId}/questions/${questionId}`,
+                url: `api/quizzes/${quizId}/questions/${questionId}`,
                 method: 'GET',
                 headers: { Authorization: `Bearer ${accessToken}` },
             }),
         }),
 
         updateQuestion: builder.mutation({
-            query: ({ accessToken, quizId, questionId }) => ({
-                url: `api/${quizId}/questions/${questionId}`,
+            query: ({ accessToken, quizId, questionId, newQuestion }) => ({
+                url: `api/quizzes/${quizId}/questions/${questionId}`,
                 method: 'PUT',
                 headers: { Authorization: `Bearer ${accessToken}` },
                 body: newQuestion,
@@ -104,10 +112,9 @@ export const apiQuiz = createApi({
 
         deleteQuestion: builder.mutation({
             query: ({ accessToken, quizId, questionId }) => ({
-                url: `api/${quizId}/questions/${questionId}`,
+                url: `api/quizzes/${quizId}/questions/${questionId}`,
                 method: 'DELETE',
                 headers: { Authorization: `Bearer ${accessToken}` },
-                body: newQuestion,
             }),
         }),
     }),
@@ -117,12 +124,12 @@ export const {
     useGetAllQuizzesQuery,
     useGetPublicQuizzesQuery,
     useGetTeacherQuizzesQuery,
+    useImportQuizMutation,
     useCreateQuizMutation,
     useUpdateQuizMutation,
     useDeleteQuizMutation,
     useLikeQuizMutation,
     useCommentQuizMutation,
-
     useAddQuestionMutation,
     useGetQuestionsQuery,
     useGetQuestionQuery,
