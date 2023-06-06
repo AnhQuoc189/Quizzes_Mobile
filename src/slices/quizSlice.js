@@ -1,7 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
+    allquizes: [],
     quizes: [],
+    quiz: null,
 };
 
 const quizSlice = createSlice({
@@ -12,16 +14,25 @@ const quizSlice = createSlice({
             state.quizes = action.payload;
         },
         fetchAllQuizes: (state, action) => {
-            state.quizes = action.payload;
+            state.allquizes = action.payload;
         },
         fetchTeacherQuizes: (state, action) => {
             state.quizes = action.payload;
         },
+        setQuizPlay: (state, action) => {
+            state.quiz = action.payload;
+        },
         fetchQuizesBySearch: (state, action) => {
             state.quizes = action.payload;
         },
+        addLibrayQuiz: (state, action) => {
+            state.quizes.push(action.payload);
+        },
         createQuiz: (state, action) => {
             state.quizes.push(action.payload);
+            if (action.payload.isPublic === true) {
+                state.allquizes.push(action.payload);
+            }
         },
         updateQuiz: (state, action) => {
             state.quizes = state.quizes.map((quiz) => {
@@ -42,6 +53,10 @@ const quizSlice = createSlice({
             state.quizes = state.quizes.filter((quiz) => {
                 return quiz._id !== action.payload._id;
             });
+
+            state.allquizes = state.allquizes.filter((quiz) => {
+                return quiz._id !== action.payload._id;
+            });
         },
         fetchQuiz: (state, action) => {
             state.quiz = action.payload.quiz;
@@ -60,6 +75,8 @@ export const {
     commentQuiz,
     deleteQuiz,
     fetchQuiz,
+    setQuizPlay,
+    addLibrayQuiz,
 } = quizSlice.actions;
 
 const quizReducer = quizSlice.reducer;

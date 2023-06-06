@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -8,6 +8,8 @@ import {
     View,
     Text,
     Image,
+    ToastAndroid,
+    Platform,
 } from 'react-native';
 import { ActivityIndicator } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -32,10 +34,11 @@ let nameIcontime;
 let timeCurrent;
 
 import { fetchTeacherQuizes } from 'src/slices/quizSlice';
-import { useCallback } from 'react';
-import { useState } from 'react';
+// import ToastManager, { Toast } from 'toastify-react-native';
+import { Toast } from 'react-native-toast-message/lib/src/Toast';
+
 export default function Home({ navigation }) {
-    const SOCKET_URL = 'http://192.168.71.18:3001';
+    const SOCKET_URL = 'http://192.168.40.18:3001';
     const dispatch = useDispatch();
 
     const userData = useSelector((state) => state.auths?.authData);
@@ -44,8 +47,6 @@ export default function Home({ navigation }) {
     const teacherId = userData?.data?.user?._id;
 
     const accessToken = userData?.data?.accessToken;
-
-    const isFocused = useIsFocused();
 
     useEffect(() => {
         if (userData) {
@@ -63,36 +64,29 @@ export default function Home({ navigation }) {
         teacherId,
     });
 
-    console.log('AnhQuoc');
+    useFocusEffect(
+        useCallback(() => {
+            const today = new Date();
+            const hour = today.getHours();
+            timeCurrent = `GOOD ${
+                (hour < 12 && hour > 5 && 'MORNING') ||
+                (hour < 17 && hour > 12 && 'AFTERNOON') ||
+                'EVENING'
+            } `;
 
-    useEffect(() => {
-        const today = new Date();
-        const hour = today.getHours();
-        timeCurrent = `GOOD ${
-            (hour < 12 && hour > 5 && 'MORNING') ||
-            (hour < 17 && hour > 12 && 'AFTERNOON') ||
-            'EVENING'
-        } `;
-
-        nameIcontime = `${
-            (hour < 12 && 'weather-sunny') ||
-            (hour < 17 && 'weather-cloud') ||
-            'weather-night'
-        } `;
-        nameIcontime =
-            hour < 12 && hour > 5
-                ? 'weather-sunny'
-                : hour < 17 && hour > 12
-                ? 'weather-cloudy'
-                : 'weather-night';
-    }, []);
-
-    // useFocusEffect(
-    //     useCallback(() => {
-    //         console.log('focus');
-    //         setD(3);
-    //     }, []),
-    // );
+            nameIcontime = `${
+                (hour < 12 && 'weather-sunny') ||
+                (hour < 17 && 'weather-cloud') ||
+                'weather-night'
+            } `;
+            nameIcontime =
+                hour < 12 && hour > 5
+                    ? 'weather-sunny'
+                    : hour < 17 && hour > 12
+                    ? 'weather-cloudy'
+                    : 'weather-night';
+        }, []),
+    );
     useEffect(() => {
         if (data) {
             dispatch(fetchTeacherQuizes(data));
@@ -100,19 +94,18 @@ export default function Home({ navigation }) {
     }, [data]);
 
     const quizes = useSelector((state) => state.quizs.quizes);
-
-    // quizes.map((item) => {
-    //     console.log(item.name);
-    // });
-
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView
                 style={{ width: '100%' }}
                 contentContainerStyle={{ flexGrow: 1 }}
+                showsVerticalScrollIndicator={false}
             >
+                {/* <ToastManager /> */}
+
                 <View style={styles.firstSection}>
                     {/* Status User */}
+
                     <View style={styles.userHeader}>
                         <View
                             style={{
@@ -168,10 +161,10 @@ export default function Home({ navigation }) {
                                     color: '#B76C79',
                                 }}
                             >
-                                Recent Quiz
+                                Have Good Day
                             </Text>
                             <Text style={styles.textTiltle}>
-                                A Basic Music Quiz
+                                Let's Start to Relax
                             </Text>
                         </View>
                     </View>
@@ -255,6 +248,11 @@ export default function Home({ navigation }) {
                                     paddingVertical: 2,
                                     paddingLeft: 3,
                                 }}
+                                onPress={() =>
+                                    navigation.navigate('CheckResult', {
+                                        quizData: quizes[0],
+                                    })
+                                }
                             >
                                 <Text style={styles.buttonText}>See All</Text>
                             </TouchableOpacity>
@@ -272,6 +270,7 @@ export default function Home({ navigation }) {
                                         quizData={quizData}
                                         navigation={navigation}
                                         direct="DetailQuiz"
+                                        mylibrary={true}
                                     />
                                 ))}
                             </View>
@@ -279,6 +278,7 @@ export default function Home({ navigation }) {
                     </SubLayout>
                 </View>
             </ScrollView>
+            <Toast />
         </SafeAreaView>
     );
 }
@@ -326,7 +326,7 @@ const styles = StyleSheet.create({
         width: 50,
         height: 50,
         borderRadius: 25,
-        resizeMode: 'contain',
+        resizeMode: 'cover',
     },
     recentQuiz: {
         height: 80,

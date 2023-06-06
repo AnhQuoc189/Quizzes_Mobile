@@ -19,9 +19,7 @@ export default function AuthNavigator(props) {
         >
             <AuthStack.Screen name="Onboard" component={Onboard} />
             <AuthStack.Screen name="Login" component={Login} />
-
             <AuthStack.Screen name="Register" component={Register} />
-
             <AuthStack.Screen name="SendOTP" component={SendOTP} />
             <AuthStack.Screen name="Reset" component={Reset} />
             <AuthStack.Screen name="Newpass" component={Newpass} />

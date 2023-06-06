@@ -69,16 +69,12 @@ export default function PlayerScreen({ navigation, ...props }) {
 
     useEffect(() => {
         socket?.on('host-countdown-preview', () => {
-            console.log(quizData.questionList.length);
             // setIsPreviewScreen(true);
             // setIsResultScreen(false);
             setTimeAlready(true);
             StartCountDownPreview(10);
         });
         socket?.on('host-start-question-timer', (time, question) => {
-            console.log(time, question.questionData.answerTime);
-            // // console.log(question, 'ccc');
-            // console.log('AnhQuoc');
             setTimerQuestion(time);
             setIsResultScreen(false);
             setQuestionData(question.questionData);

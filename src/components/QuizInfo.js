@@ -4,6 +4,7 @@ import {
     View,
     TouchableOpacity,
     ScrollView,
+    Modal,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Feather from 'react-native-vector-icons/Feather';
@@ -16,12 +17,17 @@ import BoxQuestion from './BoxQuestion';
 import { Button } from './creator';
 import { FlatList } from 'react-native';
 
+import { ModalNote } from 'src/screens/app/Creator/Modal';
+
 import { useCreateGameMutation } from 'src/services/gameApi';
 import { useCreateLeaderboardMutation } from 'src/services/leaderboardApi';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { createGame } from 'src/slices/gamesSlice';
 import { createLeaderboard } from 'src/slices/leaderboardSlice';
+import { setQuizPlay } from 'src/slices/quizSlice';
+
+import { setGame } from 'src/slices/gamesSlice';
 
 const QuizInfo = ({
     isMine,
@@ -33,19 +39,20 @@ const QuizInfo = ({
     questionList,
     navigation,
     quizData,
+    mylibrary,
 }) => {
     const dispatch = useDispatch();
-    const [InitGame] = useCreateGameMutation();
+    const [InitGame, { isLoading }] = useCreateGameMutation();
+
+    const [isStartGameModal, setIsStartGameModal] = useState(false);
 
     const [InitLeaderboard] = useCreateLeaderboardMutation();
 
     const socket = useSelector((state) => state.sockets.socket);
 
     const StartGame = async () => {
-        // navigation.navigate('HostScreen', quizData);
-        // console.log(quizData);
         if (questionsData.length === 0) {
-            console.log('Lam gi co quiz ma choi ha thang ngu');
+            setIsStartGameModal(!isStartGameModal);
         } else {
             let gameData = {
                 hostId: quizData.creatorId,
@@ -66,13 +73,11 @@ const QuizInfo = ({
             const newLeaderboard = newLeaderboardData.data;
             dispatch(createLeaderboard(newLeaderboard));
 
-            navigation.navigate('HostScreen', {
-                quizData,
-                newGame,
-                newLeaderboard,
-            });
+            // dispatch(setQuizPlay(quizData));
 
-            socket.emit('init-game', newGame, newLeaderboard);
+            navigation.navigate('HostScreen');
+
+            socket.emit('init-game', quizData, newGame, newLeaderboard);
         }
     };
 
@@ -81,6 +86,22 @@ const QuizInfo = ({
     return (
         <View style={styles.container}>
             {/* First section */}
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={isStartGameModal}
+                onRequestClose={() => {
+                    setIsStartGameModal(!isStartGameModal);
+                }}
+            >
+                <ModalNote
+                    title="Ok I get"
+                    note="Hold on - You can start a game with 0 quesion"
+                    stateModal={isStartGameModal}
+                    setStateModal={setIsStartGameModal}
+                    handlePress={() => setIsStartGameModal(!isStartGameModal)}
+                />
+            </Modal>
             <View style={styles.fisrtSection}>
                 <View>
                     {/* category of quiz and number */}
@@ -134,8 +155,13 @@ const QuizInfo = ({
                     )}
                 </View>
 
+                {!quizData.questionList.length && (
+                    <Text style={styles.noquestion}>No question here</Text>
+                )}
+
                 <View style={{ height: '70%' }}>
                     <FlatList
+                        showsVerticalScrollIndicator={false}
                         keyExtractor={(item) => item._id}
                         data={questionsData}
                         renderItem={({ item }) => (
@@ -144,8 +170,8 @@ const QuizInfo = ({
                                     title="Which mathematical symbol was the title of Ed Sheeran's
                         first album in 2011"
                                     number="1"
-                                    type="Multiple Choices"
                                     questionData={item}
+                                    mylibrary={mylibrary}
                                 />
                             </View>
                         )}
@@ -159,7 +185,13 @@ const QuizInfo = ({
                     {isCreator ? (
                         <Button title="Save" />
                     ) : (
-                        <Button title="Play" handleOnPress={StartGame} />
+                        mylibrary && (
+                            <Button
+                                title="Start a Game"
+                                handlePress={StartGame}
+                                loading={isLoading}
+                            />
+                        )
                     )}
                 </View>
             </View>
@@ -248,5 +280,10 @@ const styles = StyleSheet.create({
         backgroundColor: bgColors.second,
         paddingVertical: 20,
         paddingHorizontal: 10,
+    },
+
+    noquestion: {
+        textAlign: 'center',
+        fontSize: 20,
     },
 });

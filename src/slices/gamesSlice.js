@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     games: [],
+    game: null,
 };
 
 const gameSlice = createSlice({
@@ -10,6 +11,7 @@ const gameSlice = createSlice({
     reducers: {
         createGame: (state, action) => {
             state.games.push(action.payload);
+            state.game = action.payload;
         },
         fetchGame: (state, action) => {
             state.game = action.payload.game;
@@ -22,7 +24,7 @@ const gameSlice = createSlice({
     },
 });
 
-export const { createGame, fetchGame, addPlayer } = gameSlice.actions;
+export const { createGame, fetchGame, addPlayer, setGame } = gameSlice.actions;
 
 const gameReducer = gameSlice.reducer;
 export default gameReducer;

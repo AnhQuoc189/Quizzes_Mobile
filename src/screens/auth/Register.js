@@ -87,7 +87,6 @@ export default function Register({ navigation }) {
         }
         if (isError) {
             const errorText = error?.data?.message;
-            console.log(errorText);
             switch (errorText) {
                 case 'All fields are mandatory!':
                     console.log('Vui long nhap day du thong tin');
@@ -131,8 +130,6 @@ export default function Register({ navigation }) {
         });
         setFormData({ ...formData, userType: name });
     };
-
-    // console.log(formData);
 
     const handleRegister = () => {
         if (!noClick) {

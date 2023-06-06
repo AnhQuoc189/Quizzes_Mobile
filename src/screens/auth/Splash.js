@@ -9,17 +9,23 @@ import {
 import background from 'src/assets/images/background.png';
 import logo from 'src/assets/images/logo.png';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useDispatch } from 'react-redux';
-import { loGin } from 'src/slices/authSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { loGin, upDated } from 'src/slices/authSlice';
 
 export default function Splash({ navigation }) {
     const dispatch = useDispatch();
+
     useEffect(() => {
         getUser = async () => {
             const store = await AsyncStorage.getItem('profile');
+            const storeInfo = await AsyncStorage.getItem('info');
             if (store) {
                 const data = JSON.parse(store);
                 dispatch(loGin(data));
+
+                const dataInfo = JSON.parse(storeInfo);
+                dispatch(upDated(dataInfo));
+
                 setTimeout(() => {
                     navigation.navigate('AppNavigator');
                 }, 5000);

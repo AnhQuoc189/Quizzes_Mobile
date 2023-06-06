@@ -14,15 +14,24 @@ import { changeQuizInfo } from 'src/slices/creatorSlice';
 // Component
 import { CategoryCard } from 'src/components';
 import { Header, Button } from 'src/components/creator';
+import { useState } from 'react';
 
 const ChooseCategory = ({ navigation }) => {
-    // const activeCategory = useSelector((state) => state.creator.activeCategory);
-
     const dispatch = useDispatch();
 
-    // const handlePress = (value) => {
-    //     dispatch(changeQuizInfo(value));
-    // };
+    const [cates, setCates] = useState([]);
+
+    const handlePress = (value) => {
+        navigation.navigate('Creator', { cate: cates });
+    };
+
+    const handleAddCate = (cate) => {
+        if (!cates.includes(cate)) {
+            setCates([...cates, cate]);
+        } else {
+            setCates(cates.filter((item) => item !== cate));
+        }
+    };
 
     return (
         <MainLayout
@@ -41,8 +50,10 @@ const ChooseCategory = ({ navigation }) => {
                     <CategoryCard
                         key={category.name}
                         category={category}
+                        creator={true}
                         // activeCategory={category.name === activeCategory}
                         width="47%"
+                        AddCate={() => handleAddCate(category.name)}
                     />
                 ))}
             </ScrollView>
@@ -51,12 +62,7 @@ const ChooseCategory = ({ navigation }) => {
                 <Button
                     title="Next"
                     navigation={navigation}
-                    direct="Creator"
-                    // handlePress={handlePress}
-                    // value={{
-                    //     type: 'category',
-                    //     value: activeCategory,
-                    // }}
+                    handlePress={handlePress}
                 />
             </View>
         </MainLayout>

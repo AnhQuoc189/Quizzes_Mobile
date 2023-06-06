@@ -1,29 +1,30 @@
 // Library
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import {
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    ActivityIndicator,
+} from 'react-native';
 
 // Color
 import { colors } from 'src/styles/color';
 
-const Button = ({ navigation, ...props }) => {
-    // const handleOnPress = () => {
-    //     // handlePress && !value && handlePress();
-    //     // value && handlePress(value);
-    //     // navigation && navigation.navigate(direct, params);
-    //     // console.log('cc');
-    //     // console.log(direct);
-    //     navigation.navigate(direct);
-    // };
-
+const Button = ({ navigation, title, handlePress, loading, width }) => {
     return (
         <TouchableOpacity
             style={{
                 ...styles.container,
-                width: '100%',
+                width: width,
                 backgroundColor: colors.lightPurple,
+                // height: '0%',
             }}
-            onPress={props.handleOnPress}
+            onPress={handlePress}
         >
-            <Text style={{ ...styles.text, color: '#fff' }}>{props.title}</Text>
+            {loading ? (
+                <ActivityIndicator size="large" color="#fff" />
+            ) : (
+                <Text style={{ ...styles.text, color: '#fff' }}>{title}</Text>
+            )}
         </TouchableOpacity>
     );
 };

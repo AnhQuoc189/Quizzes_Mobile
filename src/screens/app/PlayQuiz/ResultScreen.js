@@ -12,18 +12,6 @@ import {
 import champion from 'src/assets/images/champion.png';
 import { LineChart } from 'react-native-chart-kit';
 
-const data = {
-    labels: ['1', '2', '3', '4', '5'],
-    datasets: [
-        {
-            data: [1, 2, 6, 3, 4],
-            color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
-            strokeWidth: 2, // optional
-        },
-    ],
-    legend: ['Time Answer'], // optional
-};
-
 const screenWidth = Dimensions.get('window').width;
 
 const chartConfig = {
@@ -37,7 +25,44 @@ const chartConfig = {
     useShadowColorFromDataset: false, // optional
 };
 
-export default function ResultScreen() {
+export default function ResultScreen({
+    solo,
+    navigation,
+    finish,
+    result,
+    answer,
+    quizData,
+}) {
+    const {
+        correctAnswer,
+        incorrectAnswer,
+        listIndexQuestion,
+        listTimerAnswer,
+        noAnswer,
+        pointSum,
+    } = result;
+
+    const arrayAnswer = answer.map((item) => item.answers);
+
+    const data = {
+        labels: listIndexQuestion,
+        datasets: [
+            {
+                data: listTimerAnswer ? listTimerAnswer : [1, 2, 3, 4],
+                color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
+                strokeWidth: 2, // optional
+            },
+        ],
+        legend: ['Time Answer'], // optional
+    };
+
+    const handleCheckRusult = () => {
+        navigation.navigate('CheckResult', {
+            quizData,
+            checkRestult: arrayAnswer,
+        });
+    };
+
     return (
         <SafeAreaView style={styles.safeAreaView}>
             <View style={styles.container}>
@@ -46,10 +71,24 @@ export default function ResultScreen() {
                 </View>
                 <View style={styles.viewImage}>
                     <Image style={styles.image} source={champion} />
-                    <Text style={styles.textImage}>
-                        You get +80 Quiz Points
-                    </Text>
-                    <TouchableOpacity style={styles.viewCheckCorrect}>
+                    {solo ? (
+                        <View style={{ alignItems: 'center' }}>
+                            <Text style={styles.textImage}>
+                                Congratulations
+                            </Text>
+                            <Text style={styles.textImage}>
+                                You finish quiz with {pointSum} Point
+                            </Text>
+                        </View>
+                    ) : (
+                        <Text style={styles.textImage}>
+                            You get +80 Quiz Points
+                        </Text>
+                    )}
+                    <TouchableOpacity
+                        style={styles.viewCheckCorrect}
+                        onPress={handleCheckRusult}
+                    >
                         <Text style={styles.textImage}>
                             Check Corect Answer
                         </Text>
@@ -69,31 +108,47 @@ export default function ResultScreen() {
                             CORRECT ANSWER
                         </Text>
                         <Text style={styles.textInfoItemResult}>
-                            7 question
+                            {correctAnswer} question
                         </Text>
                     </View>
                     <View style={styles.viewInfoItem}>
                         <Text style={styles.textInfoItemName}>COMPLETION</Text>
-                        <Text style={styles.textInfoItemResult}>80%</Text>
+                        <Text style={styles.textInfoItemResult}>
+                            {Math.floor(
+                                ((correctAnswer + incorrectAnswer) * 100) /
+                                    listIndexQuestion.length,
+                            )}
+                            %
+                        </Text>
                     </View>
                 </View>
 
                 <View style={styles.viewInfo}>
                     <View style={styles.viewInfoItem}>
                         <Text style={styles.textInfoItemName}>NO ANSWER</Text>
-                        <Text style={styles.textInfoItemResult}>2</Text>
+                        <Text style={styles.textInfoItemResult}>
+                            {noAnswer}
+                        </Text>
                     </View>
                     <View style={styles.viewInfoItem}>
                         <Text style={styles.textInfoItemName}>
                             INCORRECT ANSWER
                         </Text>
-                        <Text style={styles.textInfoItemResult}>1</Text>
+                        <Text style={styles.textInfoItemResult}>
+                            {incorrectAnswer}
+                        </Text>
                     </View>
                 </View>
 
-                <TouchableOpacity style={styles.footer}>
-                    <Text style={styles.textFooter}>LeaderBoard</Text>
-                </TouchableOpacity>
+                {solo ? (
+                    <TouchableOpacity style={styles.footer} onPress={finish}>
+                        <Text style={styles.textFooter}>Exit</Text>
+                    </TouchableOpacity>
+                ) : (
+                    <TouchableOpacity style={styles.footer}>
+                        <Text style={styles.textFooter}>LeaderBoard</Text>
+                    </TouchableOpacity>
+                )}
             </View>
         </SafeAreaView>
     );

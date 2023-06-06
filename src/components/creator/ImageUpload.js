@@ -8,13 +8,23 @@ import {
     View,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { colors, bgColors } from 'src/styles/color';
 
 import * as ImagePicker from 'expo-image-picker';
 
 import { useState } from 'react';
+import { useEffect } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
 
-function ImageUpload({ style, onChange, width = 360, height = 270 }) {
+function ImageUpload({ creator, onChange, picture }) {
     const [image, setImage] = useState();
+
+    useFocusEffect(
+        useCallback(() => {
+            setImage(picture);
+        }, [picture]),
+    );
 
     const chooseImage = async () => {
         const permissionResult =
@@ -43,52 +53,51 @@ function ImageUpload({ style, onChange, width = 360, height = 270 }) {
         // setFile(pickerResult.assets[0].base64);
     };
 
-    return (
+    return !image ? (
         <TouchableOpacity
-            style={[
-                style || styles.container,
-                //height width to customize size of image
-                width && height && { width: width, height: height },
-            ]}
+            style={{ ...styles.coverImage, height: creator ? '26%' : '16%' }}
+            // style={styles.coverImage}
             onPress={chooseImage}
         >
-            {!image ? (
-                <>
-                    <Ionicons
-                        name="image-outline"
-                        size={50}
-                        style={{
-                            color: '#8F87E5',
-                        }}
-                    />
-                    <Text
-                        style={{
-                            color: '#8F87E5',
-                            fontSize: 20,
-                            marginTop: 5,
-                            fontWeight: 600,
-                        }}
-                    >
-                        Add Cover Image
-                    </Text>
-                </>
-            ) : (
-                <Image
-                    style={{
-                        width: '100%',
-                        height: '100%',
-                        borderRadius: 20,
-                    }}
-                    resizeMode="cover"
-                    source={{
-                        uri: `${
-                            image
-                                ? image
-                                : 'https://phutungnhapkhauchinhhang.com/wp-content/uploads/2020/06/default-thumbnail.jpg'
-                        }`,
-                    }}
-                />
-            )}
+            <Ionicons
+                name="image-outline"
+                size={50}
+                style={{
+                    color: colors.lightPurple,
+                }}
+            />
+            <Text
+                style={{
+                    color: colors.lightPurple,
+                    fontSize: 20,
+                    marginTop: 5,
+                    fontWeight: 600,
+                }}
+            >
+                Add Cover Image
+            </Text>
+        </TouchableOpacity>
+    ) : (
+        <TouchableOpacity
+            style={{ ...styles.coverImage, height: creator ? '26%' : '16%' }}
+            onPress={chooseImage}
+        >
+            <Image
+                style={{
+                    width: '100%',
+                    height: '100%',
+                    borderRadius: 20,
+                    resizeMode: 'cover',
+                }}
+                // resizeMode="cover"
+                source={{
+                    uri: `${
+                        image
+                            ? image
+                            : 'https://phutungnhapkhauchinhhang.com/wp-content/uploads/2020/06/default-thumbnail.jpg'
+                    }`,
+                }}
+            />
         </TouchableOpacity>
     );
 }
@@ -101,6 +110,26 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: '#EFEEFC',
+        paddingVertical: 70,
+        borderRadius: 25,
+        // backgroundColor: 'red',
+        width: '20%',
+    },
+
+    viewImage: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: bgColors.lightPurple,
+        paddingVertical: 100,
+        borderRadius: 25,
+        resizeMode: 'contain',
+    },
+    coverImage: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: bgColors.lightPurple,
         // paddingVertical: 70,
         borderRadius: 25,
     },

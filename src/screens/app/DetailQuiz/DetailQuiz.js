@@ -5,24 +5,29 @@ import {
     TouchableOpacity,
     SafeAreaView,
     Modal,
+    Pressable,
+    Alert,
 } from 'react-native';
 import React, { useState } from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
 import Header from 'src/components/auth/Header';
 import EditOrDelete from './EditOrDelete';
 
-import { BlurView } from 'expo-blur';
+import { useSelector } from 'react-redux';
 
 import { QuizInfo } from 'src/components';
 import { colors } from 'src/styles/color';
 
 const DetailQuiz = ({ navigation, ...props }) => {
-    const quizData = props.route.params;
+    const quizData = props.route.params.quizData;
+    const mylibrary = props.route.params.mylibrary;
+    const avatar = props.route.params.avatar;
 
     const [modalOption, setModalOption] = useState(false);
 
     const handleOption = () => {
         setModalOption(true);
+        // console.log(avatar);
     };
 
     return (
@@ -36,7 +41,8 @@ const DetailQuiz = ({ navigation, ...props }) => {
                     setModalOption(!modalOption);
                 }}
             >
-                <View
+                <Pressable
+                    onPress={() => setModalOption(!modalOption)}
                     style={{
                         height: '100%',
                         flex: 1,
@@ -44,21 +50,20 @@ const DetailQuiz = ({ navigation, ...props }) => {
                         alignItems: 'center',
                         backgroundColor: 'rgba(105,105,105, 0.6)',
                     }}
-                    onPress={() => {
-                        console.log('AAA');
-                    }}
                 >
                     <EditOrDelete
                         onClose={() => setModalOption(false)}
                         quizData={quizData}
                         navigation={navigation}
+                        mylibrary={mylibrary}
+                        avatar={avatar}
                     />
-                </View>
+                </Pressable>
             </Modal>
             <View style={{ width: '100%', flex: 1 }}>
                 <Header
                     title="Question"
-                    direct="Home"
+                    direct={mylibrary ? 'Home' : 'Discover'}
                     navigation={navigation}
                     option={true}
                     handleOption={handleOption}
@@ -73,6 +78,7 @@ const DetailQuiz = ({ navigation, ...props }) => {
                     isCreator={false}
                     navigation={navigation}
                     quizData={quizData}
+                    mylibrary={mylibrary}
                 />
             </View>
         </SafeAreaView>

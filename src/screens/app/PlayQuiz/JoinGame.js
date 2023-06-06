@@ -34,8 +34,6 @@ export default function JoinGame({ navigation }) {
         socket?.on(
             'move-to-game-page',
             (gameId, gamePin, leaderboardID, quizData) => {
-                // console.log(gameId, gamePin);
-
                 // dispatch(
                 //     createPlayerResult({
                 //         playerId: user.result._id,
@@ -94,7 +92,6 @@ export default function JoinGame({ navigation }) {
                 result(message, playerId, gameId);
             },
         );
-        // console.log(userData);
     };
 
     return (

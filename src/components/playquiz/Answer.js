@@ -13,35 +13,60 @@ import { FontAwesome } from '@expo/vector-icons';
     /* <Ionicons name="ios-checkbox" size={24} color="black" /> */
 }
 
-export default function Answer({ name, body, host, isCorrect }) {
+export default function Answer({
+    name,
+    body,
+    host,
+    isCorrect,
+    onClick,
+    isAnswerSelect,
+}) {
     return (
         <TouchableOpacity
             style={{
                 ...styles.viewAnswer,
                 backgroundColor:
-                    isCorrect && host ? '#16FF00' : bgColors.second,
+                    // isCorrect && host ? '#16FF00' : bgColors.second,
+                    host
+                        ? isCorrect
+                            ? '#16FF00'
+                            : '#fff'
+                        : isAnswerSelect
+                        ? '#E0DEF9'
+                        : '#fff',
+                borderColor: !isAnswerSelect ? '#EEEEEE' : 'transparent',
             }}
+            onPress={!host ? onClick : () => {}}
         >
             <View style={styles.viewAnswerDetails}>
-                {!host && (
-                    <MaterialCommunityIcons
-                        name="checkbox-blank-outline"
-                        size={26}
-                        color={colors.primary}
-                    />
-                )}
-                <Text
-                    style={{
-                        width: '90%',
-                        color: isCorrect && host ? '#fff' : '#000',
-                        fontWeight: 700,
-                    }}
-                >
-                    {name}. {body}
-                </Text>
-                {isCorrect && host && (
-                    <FontAwesome name="check" size={24} color="#fff" />
-                )}
+                {!host &&
+                    (!isAnswerSelect ? (
+                        <MaterialCommunityIcons
+                            name="checkbox-blank-outline"
+                            size={26}
+                            color={colors.primary}
+                        />
+                    ) : (
+                        <Ionicons
+                            name="checkbox-outline"
+                            size={24}
+                            color={colors.primary}
+                        />
+                    ))}
+                <View style={{ width: '100%', flexDirection: 'row' }}>
+                    <Text
+                        style={{
+                            width: '80%',
+                            color: isCorrect && host ? '#fff' : '#000',
+                            fontWeight: 700,
+                        }}
+                    >
+                        {name}. {body}
+                    </Text>
+                    {isCorrect && host && (
+                        <FontAwesome name="check" size={24} color="#fff" />
+                    )}
+                </View>
             </View>
         </TouchableOpacity>
     );

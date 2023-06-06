@@ -13,10 +13,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import CreatorNavigator from './CreatorNavigator';
+import { TouchableOpacity } from 'react-native';
+import AddQuestion from 'src/screens/app/Creator/AddQuestion';
+import Creator from 'src/screens/app/Creator/Creator';
 
 const Tab = createBottomTabNavigator();
 
-export default function BottomNavigator() {
+export default function BottomNavigator({ navigation }) {
     return (
         <Tab.Navigator
             initialRouteName="Home"
@@ -52,29 +55,38 @@ export default function BottomNavigator() {
                                 </View>
                             );
 
-                        case 'CreatorNavigator':
+                        case 'Creator':
                             return (
-                                <View
-                                    style={{
-                                        width: 60,
-                                        height: 60,
-
-                                        backgroundColor: '#865DFF',
-                                        // backgroundColor: transparent,
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        borderRadius: 50,
-                                        marginBottom: 70,
-                                        shadowRadius: 20,
-                                        shadowColor: 'red',
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        navigation.navigate('Creator', {
+                                            quiz: '',
+                                            creator: true,
+                                        });
                                     }}
                                 >
-                                    <Ionicons
-                                        name="add"
-                                        size={focused ? 28 : 24}
-                                        color="white"
-                                    />
-                                </View>
+                                    <View
+                                        style={{
+                                            width: 60,
+                                            height: 60,
+
+                                            backgroundColor: '#865DFF',
+                                            // backgroundColor: transparent,
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            borderRadius: 50,
+                                            marginBottom: 70,
+                                            shadowRadius: 20,
+                                            shadowColor: 'red',
+                                        }}
+                                    >
+                                        <Ionicons
+                                            name="add"
+                                            size={focused ? 28 : 24}
+                                            color="white"
+                                        />
+                                    </View>
+                                </TouchableOpacity>
                             );
 
                         case 'LeaderBoard':
@@ -114,12 +126,22 @@ export default function BottomNavigator() {
             <Tab.Screen name="Home" component={Home} />
             <Tab.Screen name="Discover" component={Discover} />
             <Tab.Screen
-                name="CreatorNavigator"
-                component={CreatorNavigator}
+                name="Creator"
+                component={Creator}
                 options={{ tabBarStyle: { display: 'none' } }}
             />
             <Tab.Screen name="LeaderBoard" component={LeaderBoard} />
             <Tab.Screen name="Profile" component={Profile} />
+            <Tab.Screen
+                name="AddQuestion"
+                component={AddQuestion}
+                options={() => ({
+                    tabBarStyle: {
+                        display: 'none',
+                    },
+                    tabBarButton: () => null,
+                })}
+            />
         </Tab.Navigator>
     );
 }

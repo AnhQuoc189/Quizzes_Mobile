@@ -13,6 +13,7 @@ import { apiPlayerResult } from './services/playerResultApi';
 // Slices
 import authReducer from './slices/authSlice';
 // import creatorReducer from './slices/creatorSlice';
+import searchReducer from './slices/searchSlice.js';
 import quizReducer from './slices/quizSlice';
 import userReducer from './slices/usersSlice';
 import socketReducer from './slices/socketSlice';
@@ -35,6 +36,7 @@ const store = configureStore({
         users: userReducer,
         sockets: socketReducer,
         games: gameReducer,
+        searchs: searchReducer,
         leaderboards: leaderboardReducer,
         playeResults: playeResultReducer,
     },
@@ -46,6 +48,7 @@ const store = configureStore({
                     'ignoredPath',
                     'ignoredNested.one',
                     'ignoredNested.two',
+                    'items.data',
                 ],
             },
         }).concat([

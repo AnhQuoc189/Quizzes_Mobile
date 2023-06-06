@@ -1,6 +1,10 @@
 // Library
+import { useEffect, useState } from 'react';
 import { TouchableOpacity, StyleSheet, Text, View } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
+//redux
+import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 
 // Actions
@@ -9,12 +13,32 @@ import { changeActiveCategory } from 'src/slices/creatorSlice';
 // Color
 import { colors, bgColors } from 'src/styles/color';
 
-const CategoryCard = ({ category, activeCategory, width }) => {
+const CategoryCard = ({
+    category,
+    activeCategory,
+    width,
+    showQuiz,
+    creator,
+    quizBest,
+}) => {
     const dispatch = useDispatch();
+    const [quality, setQuality] = useState();
+    const [quizCate, setQuizCate] = useState([]);
 
-    const handlePressCard = (name) => {
-        dispatch(changeActiveCategory(name));
-    };
+    const quizes = useSelector((state) => state.quizs.allquizes);
+
+    useEffect(() => {
+        let lc = 0;
+        let quizArray = [];
+        quizes.map((quiz) => {
+            if (quiz.tags.includes(category.name)) {
+                lc++;
+                quizArray.push(quiz);
+            }
+        });
+        setQuality(lc);
+        setQuizCate(quizArray);
+    }, [quizes]);
 
     return (
         <TouchableOpacity
@@ -25,7 +49,11 @@ const CategoryCard = ({ category, activeCategory, width }) => {
                     : bgColors.lightPurple,
                 width: width,
             }}
-            onPress={() => handlePressCard(category.name)}
+            onPress={() => {
+                if (showQuiz) {
+                    showQuiz(quizCate);
+                }
+            }}
         >
             <View
                 style={{
@@ -48,14 +76,16 @@ const CategoryCard = ({ category, activeCategory, width }) => {
             >
                 {category.name}
             </Text>
-            <Text
-                style={{
-                    ...styles.quizQuantity,
-                    color: activeCategory ? '#fff' : colors.lightPurple,
-                }}
-            >
-                21 Quizzes
-            </Text>
+            {!creator && (
+                <Text
+                    style={{
+                        ...styles.quizQuantity,
+                        color: activeCategory ? '#fff' : colors.lightPurple,
+                    }}
+                >
+                    {quality} Quizzes
+                </Text>
+            )}
         </TouchableOpacity>
     );
 };

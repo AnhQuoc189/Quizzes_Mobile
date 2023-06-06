@@ -22,7 +22,7 @@ import Header from 'src/components/auth/Header';
 import Button from 'src/components/auth/Button';
 import FormTextInput from 'src/components/auth/Input';
 import { useEffect } from 'react';
-import { loGin } from 'src/slices/authSlice';
+import { loGin, upDated } from 'src/slices/authSlice';
 
 //Web: 782625948070-5a1sertfems0ia4cedglharqqo44kqb4.apps.googleusercontent.com
 //IOS; 782625948070-dnqkej8k4movbj0j37lgjuuv435iucgb.apps.googleusercontent.com
@@ -51,7 +51,7 @@ export default function Login({ navigation }) {
     useEffect(() => {
         if (data) {
             dispatch(loGin(data));
-            console.log('CC');
+            dispatch(upDated(data?.data?.user));
             navigation.navigate('AppNavigator');
         }
         if (isError) {
