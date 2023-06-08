@@ -118,7 +118,11 @@ export default function BottomNavigator() {
                 component={CreatorNavigator}
                 options={{ tabBarStyle: { display: 'none' } }}
             />
-            <Tab.Screen name="LeaderBoard" component={LeaderBoard} />
+            <Tab.Screen
+                name="LeaderBoard"
+                component={LeaderBoard}
+                options={{ tabBarStyle: { display: 'none' } }}
+            />
             <Tab.Screen name="Profile" component={Profile} />
         </Tab.Navigator>
     );

@@ -1,5 +1,16 @@
-import React, { useEffect } from 'react';
-import { SafeAreaView, View, Text, TouchableOpacity } from 'react-native';
+// Libraries
+import React, { useEffect, useState } from 'react';
+import {
+    SafeAreaView,
+    View,
+    Text,
+    TouchableOpacity,
+    ScrollView,
+    RefreshControl,
+} from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
+
+// Actions
 import {
     useCommentQuizMutation,
     useCreateQuizMutation,
@@ -7,11 +18,22 @@ import {
     useLikeQuizMutation,
     useUpdateQuizMutation,
 } from 'src/services/quizApi';
-
 import { createQuiz } from 'src/slices/quizSlice';
 
-import { useSelector, useDispatch } from 'react-redux';
-export default function LeaderBoard() {
+// Components, colors, constants
+import {
+    Header,
+    DurationTabs,
+    Weekly,
+    AllTime,
+} from 'src/components/leaderboard';
+import { colors } from 'src/styles/color';
+import { userLeaderboard } from 'src/constants/userLeaderboard.constant';
+
+// 2 button Tab thời gian
+const durationTabs = ['Weekly', 'All Time'];
+
+export default function LeaderBoard({ navigation }) {
     const [formQuiz, { data, isLoading, error }] = useCreateQuizMutation();
     const dispatch = useDispatch();
     // const [likeQuiz, { data, isLoading, error }] = useLikeQuizMutation();
@@ -56,12 +78,62 @@ export default function LeaderBoard() {
         // deleteQuiz({ accessToken, quizId: '123123qate123123123a' });
     };
 
+    //
+    // NhatDev IS HERE
+
+    // Value refreshing sẽ đi với prop RefreshControl của ScrollView
+    // phía dưới để khi đang ở vị trí trên cùng của ScrollView
+    // mà mình kéo xuống thì sẽ load lại Api mới nhất (có thể xài hoặc bỏ đi)
+    const [refreshing, setRefreshing] = useState(false);
+
+    const [activeTab, setActiveTab] = useState(durationTabs[0]);
+
+    const displayTabContent = () => {
+        switch (activeTab) {
+            case 'Weekly':
+                return <Weekly data={userLeaderboard} />;
+            case 'All Time':
+                return <AllTime data={userLeaderboard} />;
+            default:
+                break;
+        }
+    };
+
     return (
-        <SafeAreaView>
-            <View style={{ marginTop: 100 }}>
-                <TouchableOpacity onPress={TestApi}>
-                    <Text>LeaderBoard</Text>
-                </TouchableOpacity>
+        <SafeAreaView
+            style={{
+                flex: 1,
+                backgroundColor: colors.primary,
+            }}
+        >
+            <View
+                style={{
+                    flex: 1,
+                    paddingTop: 16,
+                    paddingHorizontal: 10,
+                }}
+            >
+                <Header
+                    title="Leaderboard"
+                    navigation={navigation}
+                    direct="Home"
+                />
+
+                <DurationTabs
+                    durationTabs={durationTabs}
+                    activeTab={activeTab}
+                    setActiveTab={setActiveTab}
+                />
+
+                <ScrollView
+                    showsVerticalScrollIndicator={false}
+                    contentContainerStyle={{
+                        paddingBottom: 10,
+                    }}
+                    refreshControl={<RefreshControl refreshing={refreshing} />}
+                >
+                    {displayTabContent()}
+                </ScrollView>
             </View>
         </SafeAreaView>
     );
