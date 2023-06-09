@@ -11,6 +11,7 @@ import {
     TextInput,
     Pressable,
     ToastAndroid,
+    SafeAreaView,
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -83,6 +84,7 @@ const AddQuestion = ({ navigation, ...props }) => {
     const [questionList, setQuestionList] = useState([]);
     const quiz = props.route.params.quiz;
     const creator = props.route.params.creator;
+    const importQuiz = props.route.params?.import;
 
     const [initQuestion] = useAddQuestionMutation();
     const [deleteQuestion, { isLoading }] = useDeleteQuestionMutation();
@@ -138,9 +140,8 @@ const AddQuestion = ({ navigation, ...props }) => {
     };
 
     return (
-        <MainLayout
-            navigation={navigation}
-            header={
+        <SafeAreaView style={styles.container}>
+            <View style={styles.headers}>
                 <Header
                     add={true}
                     title="Add Question"
@@ -150,54 +151,82 @@ const AddQuestion = ({ navigation, ...props }) => {
                     creator={creator}
                     quiz={quiz}
                     addQuestion={handleAddQuestion}
+                    importQuiz={importQuiz}
                 />
-            }
-        >
-            {/* Pagination */}
-            <ScrollView
-                contentContainerStyle={styles.pagination}
-                horizontal={true}
-                pagingEnabled={true}
-            >
-                {questionList &&
-                    questionList.map((question) => (
-                        <Item
-                            quizId={quiz._id}
-                            key={question.questionIndex}
-                            data={question}
-                            length={questionList.length}
-                            handleAddQuestion={(InitQuestion) =>
-                                handleAddQuestion(InitQuestion)
-                            }
-                            handleDeleteQuestion={(InitQuestion) =>
-                                handleDeleteQuestion(InitQuestion)
-                            }
-                            loadingDelete={isLoading}
-                        />
-                    ))}
-                {!questionList.length && (
-                    <Text
-                        style={{
-                            textAlign: 'center',
-                            justifyContent: 'center',
-                            fontSize: 20,
-                        }}
-                    >
-                        No question here
-                    </Text>
-                )}
-            </ScrollView>
-        </MainLayout>
+            </View>
+            <View style={styles.mainContent}>
+                <ScrollView
+                    contentContainerStyle={styles.pagination}
+                    horizontal={true}
+                    pagingEnabled={true}
+                >
+                    {questionList &&
+                        questionList.map((question) => (
+                            <Item
+                                key={question.questionIndex}
+                                quizId={quiz._id}
+                                data={question}
+                                length={questionList.length}
+                                handleAddQuestion={(InitQuestion) =>
+                                    handleAddQuestion(InitQuestion)
+                                }
+                                handleDeleteQuestion={(InitQuestion) =>
+                                    handleDeleteQuestion(InitQuestion)
+                                }
+                                loadingDelete={isLoading}
+                            />
+                        ))}
+                    {!questionList.length && (
+                        <Text
+                            style={{
+                                textAlign: 'center',
+                                justifyContent: 'center',
+                                fontSize: 20,
+                            }}
+                        >
+                            No question here
+                        </Text>
+                    )}
+                </ScrollView>
+            </View>
+        </SafeAreaView>
     );
 };
 
 export default AddQuestion;
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: colors.primary,
+        paddingTop: 16,
+        alignItems: 'center',
+    },
+    headers: {
+        marginTop: 25,
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
+    },
     header: {
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        width: '100%',
+    },
+    mainContent: {
+        flex: 1,
+        width: '100%',
+        height: '100%',
+        backgroundColor: '#695AE0',
+        // backgroundColor: '#fff',
+
+        borderRadius: 35,
+        marginTop: 25,
+        padding: 15,
+        marginBottom: 10,
+        justifyContent: 'center',
         alignItems: 'center',
     },
     pagination: {
@@ -205,11 +234,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: 12,
         overflow: 'scroll',
-        paddingVertical: 6,
-        height: 1020,
-        // backgroundColor: 'red',
+        height: 1000,
     },
     questionIndex: {
         display: 'flex',
@@ -240,7 +266,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         gap: 3,
-        width: '31%',
     },
     label: {
         fontSize: 20,

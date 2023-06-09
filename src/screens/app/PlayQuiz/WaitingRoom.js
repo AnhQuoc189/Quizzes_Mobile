@@ -21,15 +21,40 @@ export default function WaitingRoom({
     navigation,
     onPressLetgo,
     onPressCanCel,
+    handlePlayerJoin,
+    handlePlayerLeave,
 }) {
     const [playerList, setPlayerList] = useState([]);
     useEffect(() => {
         socket?.on('player-added', (player, pinGameCurrent) => {
             if (pin === pinGameCurrent) {
+                handlePlayerJoin(player);
                 setPlayerList([...playerList, player]);
             }
         });
+        return () => {
+            socket?.off('player-added');
+        };
     }, [playerList, socket, pin]);
+
+    useEffect(() => {
+        socket?.on(
+            'notify-student-leave-JoinRoom',
+            (player, pinGameCurrent) => {
+                if (pin === pinGameCurrent) {
+                    handlePlayerLeave(player);
+                    setPlayerList(
+                        playerList.filter(
+                            (item) => item.userName !== player.userName,
+                        ),
+                    );
+                }
+            },
+        );
+        return () => {
+            socket?.off('notify-studen-leave-JoinRoom');
+        };
+    }, [[playerList, socket, pin]]);
 
     return (
         <SafeAreaView style={styles.container}>
@@ -159,7 +184,7 @@ const styles = StyleSheet.create({
 
     viewPin: {
         // marginTop: 10,
-        color: '#000',
+        color: '#fff',
         fontSize: 24,
     },
 

@@ -6,13 +6,18 @@ import {
     Image,
     StyleSheet,
     Dimensions,
+    TouchableOpacity,
 } from 'react-native';
 import Question from './Question';
+import { AntDesign } from '@expo/vector-icons';
 
 const screenWidth = Dimensions.get('screen').width;
-
-export default function QuestionScreen({ questionData, length, result }) {
-    console.log(result);
+export default function QuestionScreen({
+    questionData,
+    length,
+    result,
+    handleBack,
+}) {
     const arrayCorrect = questionData.answerList.map((item) => {
         if (item.isCorrect === true) {
             return item.name;
@@ -20,13 +25,10 @@ export default function QuestionScreen({ questionData, length, result }) {
     });
     return (
         <View style={{ ...styles.container, width: screenWidth }}>
-            <View
-                style={{
-                    width: '80%',
-                    alignItems: 'center',
-                    height: '100%',
-                }}
-            >
+            <View style={styles.viewAll}>
+                <TouchableOpacity onPress={handleBack} style={styles.viewBack}>
+                    <AntDesign name="arrowleft" size={35} color="#fff" />
+                </TouchableOpacity>
                 <View style={styles.viewQuestionTitle}>
                     <Text style={styles.textSub}>
                         Question {questionData?.questionIndex} of {length}
@@ -41,6 +43,7 @@ export default function QuestionScreen({ questionData, length, result }) {
                             width: '100%',
                             flexDirection: 'row',
                             alignItems: 'center',
+                            justifyContent: 'space-around',
                         }}
                     >
                         <Text style={styles?.textTitle}>
@@ -83,16 +86,32 @@ export default function QuestionScreen({ questionData, length, result }) {
 
 const styles = StyleSheet.create({
     container: {
-        height: '50%',
+        height: '70%',
         alignItems: 'center',
         justifyContent: 'center',
         flex: 1,
         width: '100%',
     },
 
+    viewAll: {
+        width: '80%',
+        height: '100%',
+        gap: 50,
+        // backgroundColor: 'red',
+    },
+
+    viewBack: {
+        width: '20%',
+        height: '10%',
+        backgroundColor: '#FF8FA2',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 10,
+    },
+
     viewQuestionTitle: {
         width: '100%',
-        height: '20%',
+        height: '10%',
         justifyContent: 'center',
         alignContent: 'center',
     },
@@ -103,9 +122,10 @@ const styles = StyleSheet.create({
     },
 
     textTitle: {
-        width: '60%',
+        width: '40%',
         color: '#000',
         fontSize: 20,
+        height: '100%',
     },
 
     viewQuestionAnswer: {

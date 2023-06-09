@@ -5,7 +5,7 @@ import UserLeader from 'src/components/playquiz/UserLeader';
 
 const a = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
-export default function QuesntionLeaderboard() {
+export default function QuesntionLeaderboard({ playerList, questionResult }) {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.viewQuestionResults}>
@@ -28,9 +28,17 @@ export default function QuesntionLeaderboard() {
                                 alignItems: 'center',
                             }}
                         >
-                            {a.map((i, index) => (
-                                <UserLeader key={index} index={index} />
-                            ))}
+                            {questionResult.questionResultList &&
+                                questionResult.questionResultList.map(
+                                    (player, index) => (
+                                        <UserLeader
+                                            key={index}
+                                            index={index}
+                                            playerList={playerList}
+                                            player={player}
+                                        />
+                                    ),
+                                )}
                         </View>
                     </ScrollView>
                 </View>

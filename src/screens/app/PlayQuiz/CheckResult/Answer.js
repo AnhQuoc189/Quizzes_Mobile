@@ -16,7 +16,7 @@ export default function Answer({ name, body, isCorrect, result }) {
             }}
         >
             <View style={styles.viewAnswerDetails}>
-                <Text style={{ fontSize: 20, width: '80%' }}>
+                <Text style={{ fontSize: 20, width: '90%' }}>
                     {name}. {body}
                 </Text>
                 {isCorrect && (
@@ -32,7 +32,7 @@ export default function Answer({ name, body, isCorrect, result }) {
 
 const styles = StyleSheet.create({
     viewAnswer: {
-        width: '90%',
+        width: '100%',
         height: '14%',
         borderWidth: 2,
         borderColor: '#333',

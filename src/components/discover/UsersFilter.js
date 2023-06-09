@@ -34,12 +34,6 @@ const UsersFilter = () => {
     const searchQuery = useSelector((state) => state.searchs.searchQuery);
     const users = useSelector((state) => state.users.users);
 
-    // const followUser = (newInfo) => {
-    //     dispatch(upDated(newInfo));
-    // };
-
-    // console.log('Cac');
-
     useEffect(() => {
         if (users) {
             setData(users);

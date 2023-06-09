@@ -3,11 +3,12 @@ import React from 'react';
 import QuestionScreen from './QuestionScreen';
 import { SafeAreaView, ScrollView, StyleSheet } from 'react-native';
 
-export default function CheckResultScreen({ navigation, ...props }) {
-    // console.log(props.route.params.quizData.name);
-
-    const questionList = props.route.params.quizData.questionList;
-    const result = props.route.params.checkRestult;
+export default function CheckResultScreen({
+    questionList,
+    answer,
+    handleBack,
+}) {
+    const arrayAnswer = answer.map((item) => item.answers);
 
     return (
         <SafeAreaView style={styles.viewSafe}>
@@ -21,7 +22,8 @@ export default function CheckResultScreen({ navigation, ...props }) {
                         key={question.questionIndex}
                         length={questionList.length}
                         questionData={question}
-                        result={result[question.questionIndex - 1]}
+                        result={arrayAnswer[question.questionIndex - 1]}
+                        handleBack={handleBack}
                     />
                 ))}
             </ScrollView>

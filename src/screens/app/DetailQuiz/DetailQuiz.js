@@ -27,7 +27,6 @@ const DetailQuiz = ({ navigation, ...props }) => {
 
     const handleOption = () => {
         setModalOption(true);
-        // console.log(avatar);
     };
 
     return (

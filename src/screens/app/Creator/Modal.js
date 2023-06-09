@@ -124,7 +124,9 @@ export function ModalNote({
     setStateModal,
     handlePress,
     loading,
+    handleImportQuiz,
     showQuestionDetail,
+    importQuiz,
 }) {
     return (
         <Pressable
@@ -162,7 +164,14 @@ export function ModalNote({
                         right: 60,
                     }}
                 >
-                    {!creator && (
+                    {creator && !importQuiz ? (
+                        <Button
+                            title="Import File"
+                            width="90%"
+                            backgroundColor={colors.pink}
+                            handlePress={handleImportQuiz}
+                        />
+                    ) : (
                         <Button
                             title="Edit Question"
                             width="90%"

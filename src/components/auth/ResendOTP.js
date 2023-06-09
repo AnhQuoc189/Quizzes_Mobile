@@ -6,8 +6,6 @@ export default function ResendOTP({ navigation, ...props }) {
     const userEmail = props.userEmail;
     const userName = props.userName;
 
-    // console.log(typeof props.setTime);
-
     const [generateOTP, { data, isError, error }] = useGenerateOtpMutation();
 
     useEffect(() => {
@@ -31,7 +29,6 @@ export default function ResendOTP({ navigation, ...props }) {
             //     default:
             //         break;
             // }
-            console.log('cc');
         }
     }, [data, isError]);
 

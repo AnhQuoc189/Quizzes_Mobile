@@ -77,7 +77,7 @@ const QuizInfo = ({
 
             navigation.navigate('HostScreen');
 
-            socket.emit('init-game', quizData, newGame, newLeaderboard);
+            socket.emit('init-game', newGame, newLeaderboard);
         }
     };
 

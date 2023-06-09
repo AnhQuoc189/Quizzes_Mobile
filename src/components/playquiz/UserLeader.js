@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Text, Image } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
-export default function UserLeader({ index }) {
+export default function UserLeader({ index, playerList, player, leaderboard }) {
     return (
         <View style={styles.viewUser}>
             <View style={styles.viewCount}>
@@ -10,15 +10,46 @@ export default function UserLeader({ index }) {
                 </View>
             </View>
             <View style={styles.viewUserImage}>
-                <Image
-                    style={styles.imageUser}
-                    source={{
-                        uri: 'https://i0.wp.com/thatnhucuocsong.com.vn/wp-content/uploads/2023/02/Hinh-anh-avatar-cute.jpg?ssl\u003d1',
-                    }}
-                />
-                <View>
-                    <Text>Davis Curtis</Text>
-                    <Text>2.596 point</Text>
+                {playerList &&
+                    playerList
+                        .filter((item) => item.playerId === player.playerId)
+                        .map((player, index) => (
+                            <Image
+                                key={index}
+                                style={styles.imageUser}
+                                source={{
+                                    uri: player.avatar
+                                        ? player.avatar
+                                        : 'https://i0.wp.com/thatnhucuocsong.com.vn/wp-content/uploads/2023/02/Hinh-anh-avatar-cute.jpg?ssl\u003d1',
+                                }}
+                            />
+                        ))}
+                <View style={{ gap: 10 }}>
+                    {playerList &&
+                        playerList
+                            .filter((item) => item.playerId === player.playerId)
+                            .map((player, index) => (
+                                <Text
+                                    key={index}
+                                    style={{
+                                        fontSize: 14,
+                                        fontWeight: 500,
+                                        fontStyle: 'italic',
+                                    }}
+                                >
+                                    {player.userName}
+                                </Text>
+                            ))}
+
+                    {leaderboard ? (
+                        <Text style={{ fontSize: 20, fontWeight: 500 }}>
+                            {player.playerCurrentScore} point
+                        </Text>
+                    ) : (
+                        <Text style={{ fontSize: 20, fontWeight: 500 }}>
+                            {player.playerPoints} point
+                        </Text>
+                    )}
                 </View>
             </View>
             <View style={styles.rank}>
@@ -69,6 +100,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'row',
+        gap: 20,
     },
 
     imageUser: {

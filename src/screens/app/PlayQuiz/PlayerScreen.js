@@ -8,69 +8,152 @@ import ResultScreen from './ResultScreen';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { LinearGradient } from 'expo-linear-gradient';
-import correct from 'src/assets/images/correctfull.png';
+import correctAnswer from 'src/assets/images/correctAnsswer.png';
 import wrong from 'src/assets/images/wrong.png';
+import CheckResultScreen from './CheckResult/CheckResultScreen';
+
+let arrayAnswer = [];
 
 export default function PlayerScreen({ navigation, ...props }) {
-    const quizData = props.route.params.quizData;
+    const userData = useSelector((state) => state.auths?.authData);
+    const playerId = userData?.data?.user?._id;
 
-    const [isStartedGame, setIsStaretedGame] = useState(false);
+    const lengthQuiz = props.route.params.length;
+    const poitperQuestion = props.route.params.pointsPerQuestion;
+    const pinGame = props.route.params.gamePin;
+    const gameId = props.route.params.gameId;
+    const leaderboardID = props.route.params.leaderboardID;
+    const playerList = props.route.params.playerList;
+
+    const [questionSend, setQuestionSend] = useState([]);
+
+    const [questionData, setQuestionData] = useState();
     const [timeAlready, setTimeAlready] = useState(true);
     const [isQuestionScreen, setIsQuestionScreen] = useState(false);
-    const [isQuestionResultScreen, setIsQuestionResultScreen] = useState(false);
-    const [isLeaderboardScreen, setIsLeaderboardScreen] = useState(false);
-    const [isResultFinal, setIsResultFinal] = useState(false);
-    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [isResultScreen, setIsResultScreen] = useState(false);
-    const [questionData, setQuestionData] = useState();
-    const [timer, setTimer] = useState(10);
+    const [isResultFinal, setIsResultFinal] = useState(false);
+    const [isCheckAnswerScreen, setIsCheckAnswerScreen] = useState(false);
+    const [seenLeaderboard, setSeenLeaderboard] = useState(false);
+
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+    const [questionOptionCurrent, setQuestionOptionCurrent] = useState();
+    const [questionpointType, setQuestionpointType] = useState();
+    const [scorePlayer, setScorePlayer] = useState([]);
+    const [expireTimeQuestion, setExpireTimeQuestion] = useState(false);
+    const [trueAnswer, setTrueAnswer] = useState(true);
+
     const [timerQuestion, setTimerQuestion] = useState(0);
     const [correctAnswerCount, setCorrectAnswerCount] = useState(1);
-    const [answerTime, setAnswerTime] = useState(0);
 
-    const [answer, setAnswer] = useState({
-        questionIndex: 0,
-        answers: [],
-        time: 0,
+    const [timer, setTimer] = useState(10);
+    const [answer, setAnswer] = useState([]);
+
+    const [resultDetail, setResultDetails] = useState({
+        correctAnswer: 0,
+        noAnswer: 0,
+        incorrectAnswer: 0,
+        pointSum: 0,
     });
 
     const socket = useSelector((state) => state.sockets.socket);
 
-    // const StartGame = () => {
-    //     setIsStaretedGame(true);
-    //     setTimeAlready(true);
-    //     StartCountDownPreview(10, currentQuestionIndex);
-    // };
+    const [addAnswer, setAddAnswers] = useState(false);
+    const [leaderboardResult, setLeaderboardResults] = useState([]);
 
-    // const StartCountDownPreview = (seconds, index) => {
-    //     let time = seconds;
-    //     let interval = setInterval(() => {
-    //         setTimer(time);
-    //         if (time === 0) {
-    //             clearInterval(interval);
-    //             displayQuestion(index);
-    //             setTimeAlready(false);
-    //             setIsQuestionScreen(true);
-    //         }
-    //         time--;
-    //     }, 1000);
-    // };
+    useEffect(() => {
+        if (isResultFinal) {
+            const listTimerAnswer = answer.map((item) => item.time);
+            const listIndexQuestion = answer.map((item) => item.questionIndex);
+            setResultDetails({
+                ...resultDetail,
+                listTimerAnswer,
+                listIndexQuestion,
+            });
+        }
+    }, [isResultFinal]);
 
-    // useEffect(() => {
-    //     setTimeAlready(true);
-    //     StartCountDownPreview(10);
-    // }, []);
+    useEffect(() => {
+        arrayAnswer = [];
+    }, [currentQuestionIndex]);
 
-    // useEffect(() => {
-    //     socket?.on('host-end-gamee', () => {
-    //         console.log('Dau bui');
-    //     });
-    // }, [socket]);
+    useEffect(() => {
+        if (scorePlayer.length) {
+            let data = {
+                questionIndex: answer[currentQuestionIndex - 1]?.questionIndex,
+                playerId,
+                playerPoints: scorePlayer[currentQuestionIndex - 1],
+            };
+            let score = resultDetail.pointSum;
+            socket.emit(
+                'send-answer-to-host',
+                data,
+                score,
+                pinGame,
+                leaderboardID,
+            );
+        }
+    }, [scorePlayer]);
+
+    const calculPoint = () => {
+        switch (questionpointType) {
+            case 'Standard':
+                return poitperQuestion;
+            case 'Double':
+                return poitperQuestion * 2;
+            default:
+                break;
+        }
+    };
+
+    useEffect(() => {
+        if (expireTimeQuestion) {
+            const answerPlayer = answer[currentQuestionIndex - 1].answers;
+            const answerQuestion = questionData.answerCorrect;
+
+            let wrong = false;
+            if (answerPlayer.length === answerQuestion.length) {
+                answerPlayer.map((item) => {
+                    if (!answerQuestion.includes(item)) {
+                        wrong = true;
+                        setResultDetails({
+                            ...resultDetail,
+                            incorrectAnswer: resultDetail.incorrectAnswer + 1,
+                        });
+                    }
+                });
+
+                if (wrong === true) {
+                    setTrueAnswer(false);
+                    setScorePlayer([...scorePlayer, 0]);
+                } else {
+                    const score = calculPoint();
+                    setResultDetails({
+                        ...resultDetail,
+                        correctAnswer: resultDetail.correctAnswer + 1,
+                        pointSum: resultDetail.pointSum + score,
+                    });
+                    setScorePlayer([...scorePlayer, score]);
+                }
+            } else {
+                setTrueAnswer(false);
+                if (answerPlayer.length === 0) {
+                    setResultDetails({
+                        ...resultDetail,
+                        noAnswer: resultDetail.noAnswer + 1,
+                    });
+                } else {
+                    setResultDetails({
+                        ...resultDetail,
+                        incorrectAnswer: resultDetail.incorrectAnswer + 1,
+                    });
+                }
+                setScorePlayer([...scorePlayer, 0]);
+            }
+        }
+    }, [expireTimeQuestion]);
 
     useEffect(() => {
         socket?.on('host-countdown-preview', () => {
-            // setIsPreviewScreen(true);
-            // setIsResultScreen(false);
             setTimeAlready(true);
             StartCountDownPreview(10);
         });
@@ -78,21 +161,29 @@ export default function PlayerScreen({ navigation, ...props }) {
             setTimerQuestion(time);
             setIsResultScreen(false);
             setQuestionData(question.questionData);
-            setIsQuestionScreen(true);
-            startQuestionCountdown(time);
-            setAnswer((prevstate) => ({
+            setQuestionSend((prevstate) => [
                 ...prevstate,
-                questionIndex: question.questionIndex,
-                answers: [],
-                time: 0,
-            }));
+                question.questionData,
+            ]);
+            setQuestionOptionCurrent(question.questionData.optionQuestion);
+            setQuestionpointType(question.questionData.pointType);
+            setCurrentQuestionIndex((prevstate) => prevstate + 1);
+            setIsQuestionScreen(true);
+            setAnswer((prevstate) => [
+                ...prevstate,
+                {
+                    questionIndex: question.questionIndex,
+                    answers: [],
+                    time: 0,
+                },
+            ]);
             setCorrectAnswerCount(question.correctAnswersCount);
+            startQuestionCountdown(time);
         });
         socket?.on('host-end-gamee', () => {
             setIsResultScreen(false);
             setIsResultFinal(true);
         });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [socket]);
 
     const StartCountDownPreview = (seconds) => {
@@ -110,13 +201,17 @@ export default function PlayerScreen({ navigation, ...props }) {
     };
 
     const startQuestionCountdown = (seconds) => {
+        setTrueAnswer(true);
+        setExpireTimeQuestion(false);
+        setIsQuestionScreen(true);
+
         let time = seconds;
         let answerSeconds = 0;
         let interval = setInterval(() => {
             setTimer(time);
-            setAnswerTime(answerSeconds);
             if (time === 0) {
                 clearInterval(interval);
+                setExpireTimeQuestion(true);
                 setIsQuestionScreen(false);
                 setIsResultScreen(true);
             }
@@ -125,73 +220,57 @@ export default function PlayerScreen({ navigation, ...props }) {
         }, 1000);
     };
 
-    // const displayQuestion = (index) => {
-    //     if (index === quizData.questionList.length) {
-    //         displayCurrentLeaderBoard(index);
-    //     } else {
-    //         setQuestionData(quizData.questionList[index]);
-    //         setCurrentQuestionIndex((prevstate) => prevstate + 1);
-    //         let time = quizData.questionList[index].answerTime;
-    //         let question = {
-    //             questionData: quizData.questionList[index],
-    //             answerList: quizData.questionList[index].answerList,
-    //             questionIndex: quizData.questionList[index].questionIndex,
-    //             correctAnswersCount: quizData.questionList[
-    //                 index
-    //             ].answerList.filter((answer) => answer.isCorrect === true)
-    //                 .length,
-    //         };
-    //         //   socket.emit("start-question-timer", time, question, () => {
-    //         //     startQuestionCountdown(time, index)
-    //         //   })
-    //         startQuestionCountdown(time, index);
-    //     }
-    // };
+    const handleAnswer = (key) => {
+        if (!arrayAnswer.includes(key)) {
+            arrayAnswer.push(key);
+        } else {
+            arrayAnswer = arrayAnswer.filter((item) => item !== key);
+        }
+        setAnswer([
+            ...answer.slice(0, currentQuestionIndex - 1),
+            {
+                answers:
+                    questionOptionCurrent === 'Single' ? [key] : arrayAnswer,
+                questionIndex: currentQuestionIndex,
+                time: timer,
+            },
+            ...answer.slice(currentQuestionIndex + 1, answer.length),
+        ]);
+    };
 
-    // const startQuestionCountdown = (seconds, index) => {
-    //     setIsLeaderboardScreen(false);
-    //     setIsQuestionScreen(true);
-    //     let time = seconds;
-    //     let interval = setInterval(() => {
-    //         setTimer(time);
-    //         if (time === 0) {
-    //             clearInterval(interval);
-    //             displayQuestionResult(index);
-    //         }
-    //         time--;
-    //     }, 1000);
-    // };
+    const handleExit = () => {
+        navigation.navigate('JoinGame');
+    };
 
-    // const displayQuestionResult = (index) => {
-    //     setIsQuestionScreen(false);
-    //     setIsQuestionResultScreen(true);
-    //     setTimeout(() => {
-    //         displayCurrentLeaderBoard(index);
-    //     }, 5000);
-    // };
+    const handleFinish = () => {
+        console.log('End ha');
+    };
 
-    // const displayCurrentLeaderBoard = (index) => {
-    //     setIsQuestionResultScreen(false);
-    //     setIsLeaderboardScreen(true);
-    //     if (index >= quizData.questionList.length - 1) {
-    //         // socket.emit('host-end-game', playerList, currentLeaderboard);
-    //         // toast.info('Game ended!', {
-    //         //     position: 'top-right',
-    //         //     autoClose: 2000,
-    //         //     pauseOnFocusLoss: false,
-    //         // });
-    //         // window.location.reload();
-    //         console.log('Dung co noi nhieu');
-    //     } else {
-    //         setTimeout(() => {
-    //             // socket.emit('question-preview', () => {
-    //             //     startPreviewCountdown(5, index + 1);
-    //             //     // index !== quiz.questionList.length - 1 && setPlayerList([])
-    //             // });
-    //             displayQuestion(index + 1);
-    //         }, 5000);
-    //     }
-    // };
+    const handleCompareResult = () => {
+        setIsResultFinal(false);
+        setIsCheckAnswerScreen(true);
+    };
+
+    const handleSeenLeaderBoard = (leaderboard) => {
+        setLeaderboardResults(leaderboard);
+    };
+
+    const handleOpenLeaderScreen = () => {
+        setIsResultFinal(false);
+        setSeenLeaderboard(true);
+    };
+
+    const handleBackResult = () => {
+        setIsResultFinal(true);
+        setSeenLeaderboard(false);
+        setIsCheckAnswerScreen(false);
+    };
+
+    const handleBackLeaderboard = () => {
+        setIsResultFinal(true);
+        setSeenLeaderboard(false);
+        setIsCheckAnswerScreen(false);
+    };
 
     return (
         <SafeAreaView style={styles.container}>
@@ -208,47 +287,88 @@ export default function PlayerScreen({ navigation, ...props }) {
                     </LinearGradient>
                 </View>
             )}
-            {/* {timeAlready && <AnswerWrong />} */}
-
             {isQuestionScreen && (
                 <QuestionScreen
                     timer={timerQuestion}
                     questionData={questionData}
-                    lengthQuiz={quizData.questionList.length}
+                    lengthQuiz={lengthQuiz}
                     host={false}
+                    isAnswerSelect={(key) =>
+                        answer[currentQuestionIndex - 1]?.answers.includes(key)
+                    }
+                    onClick={(key) => handleAnswer(key)}
                 />
-                // <Text>AAAAAAAAAAAAAAAAA</Text>
             )}
-            {/* {isResultScreen && <AnswerCorrect />} */}
-            {isResultScreen && <AnswerWrong />}
-            {isResultFinal && <ResultScreen />}
-
-            {/* {isQuestionResultScreen && <QuesntionLeaderboard />}
-            {isLeaderboardScreen && <LeaderBoardCurrent />} */}
+            {isResultScreen &&
+                (trueAnswer ? (
+                    <AnswerCorrect
+                        point={scorePlayer[currentQuestionIndex - 1]}
+                    />
+                ) : (
+                    <AnswerWrong
+                        point={scorePlayer[currentQuestionIndex - 1]}
+                    />
+                ))}
+            {isResultFinal && (
+                <ResultScreen
+                    solo={false}
+                    navigation={navigation}
+                    finish={handleFinish}
+                    result={resultDetail}
+                    compareResult={handleCompareResult}
+                    handleSeenLeaderBoard={handleSeenLeaderBoard}
+                    playerId={playerId}
+                    answer={answer}
+                    leaderboardID={leaderboardID}
+                    gameId={gameId}
+                    scorePerQuestion={scorePlayer}
+                    addAnswer={addAnswer}
+                    handleExit={handleExit}
+                    setAddAnswers={setAddAnswers}
+                    handleOpenLeaderScreen={handleOpenLeaderScreen}
+                />
+            )}
+            {isCheckAnswerScreen && (
+                <CheckResultScreen
+                    questionList={questionSend}
+                    answer={answer}
+                    handleBack={handleBackResult}
+                />
+            )}
+            {seenLeaderboard && leaderboardResult && (
+                <LeaderBoardCurrent
+                    playerList={playerList}
+                    currentLeaderboard={leaderboardResult}
+                    handleBackLeaderboard={handleBackLeaderboard}
+                />
+            )}
         </SafeAreaView>
     );
 }
 
-const AnswerCorrect = () => {
+const AnswerCorrect = ({ point }) => {
     return (
         <View style={{ ...styles.containerAnswer, backgroundColor: '#F1FDFF' }}>
-            <Image style={{ width: '50%', height: '24%' }} source={correct} />
+            <Image
+                style={{ width: '90%', height: '24%' }}
+                source={correctAnswer}
+            />
             <Text style={{ fontSize: 30, fontWeight: 800 }}>
                 Your answer is correct
             </Text>
-            <Text style={{ fontSize: 20 }}>Point Question: 5</Text>
+            <Text style={{ fontSize: 20 }}>Point Question: {point}</Text>
         </View>
     );
 };
 
-const AnswerWrong = () => {
+const AnswerWrong = ({ point }) => {
     return (
         <View style={{ ...styles.containerAnswer, backgroundColor: '#F69A2B' }}>
             <Image style={{ width: '80%', height: '30%' }} source={wrong} />
             <Text style={{ fontSize: 30, fontWeight: 800 }}>
                 Your answer is wrong!
             </Text>
-            <Text style={{ fontSize: 20 }}>Point Question: 0</Text>
+            <Text style={{ fontSize: 20 }}>Point Question: {point}</Text>
         </View>
     );
 };
