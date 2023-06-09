@@ -17,7 +17,7 @@ import { useEffect } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
 
-function ImageUpload({ creator, onChange, picture }) {
+function ImageUpload({ creator, picture, setFile }) {
     const [image, setImage] = useState();
 
     useFocusEffect(
@@ -39,18 +39,41 @@ function ImageUpload({ creator, onChange, picture }) {
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             allowsMultipleSelection: false,
-            aspect: [4, 3],
+            aspect: [5, 4],
             quality: 1,
             base64: true,
         });
         if (pickerResult.canceled === true) {
-            console.log('Canceled!');
             return;
+        } else {
+            let newFile = {
+                uri: pickerResult.assets[0].uri,
+                type: `test/${pickerResult.assets[0].uri.split('.')[1]}`,
+                name: `test/${pickerResult.assets[0].uri.split('.')[1]}`,
+            };
+            uploadImage(newFile);
+            setImage(`data:image/jpeg;base64,${pickerResult.assets[0].base64}`);
         }
-        // console.log(pickerResult.assets[0]);
-        setImage(`data:image/jpeg;base64,${pickerResult.assets[0].base64}`);
-        onChange(`data:image/jpeg;base64,${pickerResult.assets[0].base64}`);
-        // setFile(pickerResult.assets[0].base64);
+    };
+
+    const uploadImage = (newFile) => {
+        const formData = new FormData();
+        formData.append('file', newFile);
+        formData.append('upload_preset', 'imagequizapp');
+        formData.append('cloud_name', 'dfl3qnj7z');
+        fetch(`https://api.cloudinary.com/v1_1/dfl3qnj7z/image/upload`, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                setFile(data?.secure_url);
+            })
+            .catch((error) => console.error(error));
     };
 
     return !image ? (

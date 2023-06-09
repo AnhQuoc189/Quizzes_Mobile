@@ -25,24 +25,6 @@ const QuizFilter = ({ navigation }) => {
     const accessToken = userData?.data?.accessToken;
 
     const quizes = useSelector((state) => state.quizs.allquizes);
-    // useEffect(() => {
-    //     if (isFocused) {
-    //         fetch(`${API}api/quizzes/public`, {
-    //             method: 'GET',
-    //             headers: new Headers({
-    //                 Authorization: `Bearer ${accessToken}`,
-    //                 'user-agent': 'Mozilla/4.0 MDN Example',
-    //                 'content-type': 'application/json',
-    //             }),
-    //         })
-    //             .then((data) => data.json())
-    //             .then((json) => {
-    //                 dispatch(fetchAllQuizes(json));
-    //                 setData(json);
-    //             })
-    //             .catch((error) => console(error));
-    //     }
-    // }, [isFocused]);
 
     useEffect(() => {
         if (quizes) {

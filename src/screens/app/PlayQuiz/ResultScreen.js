@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
     Image,
     SafeAreaView,
@@ -9,8 +9,14 @@ import {
     Dimensions,
     ScrollView,
 } from 'react-native';
+
+import { useAddPlayerResultMutation } from 'src/services/playerResultApi';
+import { useGetLeaderBoardQuery } from 'src/services/leaderboardApi';
 import champion from 'src/assets/images/champion.png';
 import { LineChart } from 'react-native-chart-kit';
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
+import { useState } from 'react';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -32,6 +38,16 @@ export default function ResultScreen({
     result,
     answer,
     quizData,
+    playerId,
+    leaderboardID,
+    gameId,
+    compareResult,
+    scorePerQuestion,
+    addAnswer,
+    handleExit,
+    setAddAnswers,
+    handleSeenLeaderBoard,
+    handleOpenLeaderScreen,
 }) {
     const {
         correctAnswer,
@@ -42,9 +58,44 @@ export default function ResultScreen({
         pointSum,
     } = result;
 
-    const arrayAnswer = answer.map((item) => item.answers);
+    const { data } = useGetLeaderBoardQuery(leaderboardID);
 
-    const data = {
+    useEffect(() => {
+        if (data) {
+            console.log(
+                data.currentLeaderboard[data.currentLeaderboard.length - 1],
+            );
+            handleSeenLeaderBoard(
+                data.currentLeaderboard[data.currentLeaderboard.length - 1],
+            );
+        } else {
+            console.log('Khong co');
+        }
+    }, [data]);
+
+    const [addPlayerResult] = useAddPlayerResultMutation();
+
+    useEffect(() => {
+        if (!addAnswer && !solo) {
+            answer.map((element) => {
+                if (element.time !== 0) {
+                    element.answered = true;
+                } else {
+                    element.answered = false;
+                }
+                element.points = scorePerQuestion[element.questionIndex - 1];
+            });
+
+            const resultPlayer = {
+                score: pointSum,
+                answers: answer,
+            };
+            addPlayerResult({ playerId, gameId, results: resultPlayer });
+            setAddAnswers(true);
+        }
+    }, []);
+
+    const dataChart = {
         labels: listIndexQuestion,
         datasets: [
             {
@@ -56,12 +107,9 @@ export default function ResultScreen({
         legend: ['Time Answer'], // optional
     };
 
-    const handleCheckRusult = () => {
-        navigation.navigate('CheckResult', {
-            quizData,
-            checkRestult: arrayAnswer,
-        });
-    };
+    // const handleCompare = () => {
+    //     compareResult();
+    // };
 
     return (
         <SafeAreaView style={styles.safeAreaView}>
@@ -82,12 +130,12 @@ export default function ResultScreen({
                         </View>
                     ) : (
                         <Text style={styles.textImage}>
-                            You get +80 Quiz Points
+                            You get +{pointSum} Quiz Points
                         </Text>
                     )}
                     <TouchableOpacity
                         style={styles.viewCheckCorrect}
-                        onPress={handleCheckRusult}
+                        onPress={compareResult}
                     >
                         <Text style={styles.textImage}>
                             Check Corect Answer
@@ -96,7 +144,7 @@ export default function ResultScreen({
                 </View>
                 <View style={styles.accuration}>
                     <LineChart
-                        data={data}
+                        data={dataChart}
                         width={screenWidth}
                         height={170}
                         chartConfig={chartConfig}
@@ -114,10 +162,11 @@ export default function ResultScreen({
                     <View style={styles.viewInfoItem}>
                         <Text style={styles.textInfoItemName}>COMPLETION</Text>
                         <Text style={styles.textInfoItemResult}>
-                            {Math.floor(
-                                ((correctAnswer + incorrectAnswer) * 100) /
-                                    listIndexQuestion.length,
-                            )}
+                            {listIndexQuestion &&
+                                Math.floor(
+                                    ((correctAnswer + incorrectAnswer) * 100) /
+                                        listIndexQuestion.length,
+                                )}
                             %
                         </Text>
                     </View>
@@ -145,9 +194,27 @@ export default function ResultScreen({
                         <Text style={styles.textFooter}>Exit</Text>
                     </TouchableOpacity>
                 ) : (
-                    <TouchableOpacity style={styles.footer}>
-                        <Text style={styles.textFooter}>LeaderBoard</Text>
-                    </TouchableOpacity>
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            height: '7%',
+                            width: '80%',
+                        }}
+                    >
+                        <TouchableOpacity
+                            style={styles.footer}
+                            onPress={handleExit}
+                        >
+                            <Text style={styles.textFooter}>Exit</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.footer}
+                            onPress={handleOpenLeaderScreen}
+                        >
+                            <Text style={styles.textFooter}>LeaderBoard</Text>
+                        </TouchableOpacity>
+                    </View>
                 )}
             </View>
         </SafeAreaView>
@@ -240,8 +307,8 @@ const styles = StyleSheet.create({
     },
 
     footer: {
-        width: '90%',
-        height: '7%',
+        width: '42%',
+        height: '100%',
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 20,
@@ -249,7 +316,7 @@ const styles = StyleSheet.create({
     },
 
     textFooter: {
-        fontSize: 20,
+        fontSize: 16,
         fontWeight: 700,
         color: '#fff',
     },

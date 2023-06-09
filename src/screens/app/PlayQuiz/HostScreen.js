@@ -8,6 +8,11 @@ import { useState } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSelector } from 'react-redux';
 
+import {
+    useUpdateQuestionleaderboardMutation,
+    useUpdateCurrentleaderboardMutation,
+} from 'src/services/leaderboardApi';
+
 const InitQuizData = {
     questionType: 'Quiz',
     pointType: 'Standard',
@@ -36,15 +41,16 @@ export default function HostScreen({ navigation }) {
     // );
 
     const [correct, setCorrect] = useState();
+
     const socket = useSelector((state) => state.sockets.socket);
-
     const quiz = useSelector((state) => state.quizs.quiz);
-    console.log(quiz.name);
+    const length = quiz.questionList.length;
     const game = useSelector((state) => state.games.game);
-    console.log(game._id);
-
     const leaderboard = useSelector((state) => state.leaderboards.leaderboard);
-    console.log(leaderboard._id);
+
+    const [updateQuestion] = useUpdateQuestionleaderboardMutation();
+    const [updateCurrent] = useUpdateCurrentleaderboardMutation();
+    const [playerList, setPlayerList] = useState([]);
 
     useEffect(() => {
         CorrectAnswer = [];
@@ -70,19 +76,86 @@ export default function HostScreen({ navigation }) {
     const [questionData, setQuestionData] = useState(InitQuizData);
     const [timer, setTimer] = useState(10);
 
+    const [questionResult, setQuestionResult] = useState(
+        leaderboard?.questionLeaderboard[0],
+    );
+    const [currentLeaderboard, setCurrentLeaderboard] = useState(
+        leaderboard?.currentLeaderboard[0],
+    );
+
+    useEffect(() => {
+        socket?.on(
+            'get-answer-from-player',
+            (data, leaderboardId, score, player) => {
+                updateLeaderboard(data, leaderboardId, score);
+                let playerData = {
+                    id: data.playerId,
+                    userName: player.userName,
+                };
+                setPlayerList((prevstate) => [...prevstate, playerData]);
+            },
+        );
+        return () => {
+            socket.off('get-answer-from-player');
+        };
+    }, [socket]);
+
+    const updateLeaderboard = async (data, id, score) => {
+        let questionleaderboard = await updateQuestion({
+            leaderboardId: id,
+            update: data,
+        });
+
+        setQuestionResult(
+            questionleaderboard.data.questionLeaderboard[
+                data.questionIndex - 1
+            ],
+        );
+
+        let leaderboardData = {
+            questionIndex: data.questionIndex,
+            playerId: data.playerId,
+            playerCurrentScore: score,
+        };
+        let currentleaderboard = await updateCurrent({
+            leaderboardId: id,
+            update: leaderboardData,
+        });
+
+        setCurrentLeaderboard(
+            currentleaderboard.data.currentLeaderboard[data.questionIndex - 1],
+        );
+    };
+
+    const handlePlayerJoin = (playerData) => {
+        setPlayerList((prevstate) => [...prevstate, playerData]);
+    };
+
+    const handlePlayerLeave = (playerData) => {
+        setPlayerList(
+            playerList.filter((item) => item.userName !== playerData.userName),
+        );
+    };
+
     const StartGame = () => {
-        socket?.emit('start-game', quiz, game, leaderboard);
+        socket?.emit(
+            'start-game',
+            game,
+            leaderboard,
+            length,
+            playerList,
+            quiz.pointsPerQuestion,
+        );
         socket?.emit('countdown-preview', game?.pin, () => {
             StartCountDownPreview(10, currentQuestionIndex);
         });
 
         setTimeAlready(true);
         setIsStaretedGame(true);
-        // console.log(game);
     };
 
     const cancelGame = () => {
-        socket?.emit('host-leave-room', game.pin);
+        socket?.emit('host-leave-WattingRoom', game?.pin);
         navigation.navigate('DetailQuiz', { quizData: quiz, mylibrary: true });
     };
 
@@ -124,7 +197,6 @@ export default function HostScreen({ navigation }) {
                     startQuestionCountdown(time, index);
                 },
             );
-            // startQuestionCountdown(time, index);
         }
     };
 
@@ -147,25 +219,23 @@ export default function HostScreen({ navigation }) {
         setIsQuestionResultScreen(true);
         setTimeout(() => {
             displayCurrentLeaderBoard(index);
-        }, 5000);
+        }, 4000);
     };
 
     const displayCurrentLeaderBoard = (index) => {
         setIsQuestionResultScreen(false);
         setIsLeaderboardScreen(true);
         if (index >= quiz.questionList.length - 1) {
-            // socket.emit('host-end-game', playerList, currentLeaderboard);
             socket.emit('host-end-game', game?.pin);
-            console.log('Dung co noi nhieu');
         } else {
             setTimeout(() => {
-                // socket.emit('question-preview', () => {
-                //     startPreviewCountdown(5, index + 1);
-                //     // index !== quiz.questionList.length - 1 && setPlayerList([])
-                // });
                 displayQuestion(index + 1);
-            }, 5000);
+            }, 4000);
         }
+    };
+
+    const handleExitGame = () => {
+        navigation.navigate('DetailQuiz', { quizData: quiz, mylibrary: true });
     };
 
     return (
@@ -178,6 +248,8 @@ export default function HostScreen({ navigation }) {
                     navigation={navigation}
                     onPressLetgo={StartGame}
                     onPressCanCel={cancelGame}
+                    handlePlayerJoin={handlePlayerJoin}
+                    handlePlayerLeave={handlePlayerLeave}
                 />
             )}
             {timeAlready && (
@@ -202,8 +274,21 @@ export default function HostScreen({ navigation }) {
                     correctAnswer={correct}
                 />
             )}
-            {isQuestionResultScreen && <QuesntionLeaderboard />}
-            {isLeaderboardScreen && <LeaderBoardCurrent />}
+            {isQuestionResultScreen && questionResult && (
+                <QuesntionLeaderboard
+                    playerList={playerList}
+                    questionResult={questionResult}
+                />
+            )}
+            {isLeaderboardScreen && currentLeaderboard && (
+                <LeaderBoardCurrent
+                    playerList={playerList}
+                    currentLeaderboard={currentLeaderboard}
+                    lengthQuiz={quiz.questionList.length}
+                    handleExitGame={handleExitGame}
+                    host={true}
+                />
+            )}
         </SafeAreaView>
     );
 }

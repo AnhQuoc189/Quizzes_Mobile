@@ -36,9 +36,10 @@ let timeCurrent;
 import { fetchTeacherQuizes } from 'src/slices/quizSlice';
 // import ToastManager, { Toast } from 'toastify-react-native';
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
+import { PlatformColor } from 'react-native';
 
 export default function Home({ navigation }) {
-    const SOCKET_URL = 'http://192.168.40.18:3001';
+    const SOCKET_URL = 'http://192.168.41.18:3001';
     const dispatch = useDispatch();
 
     const userData = useSelector((state) => state.auths?.authData);
@@ -143,6 +144,8 @@ export default function Home({ navigation }) {
                                     uri: avatar
                                         ? avatar
                                         : 'https://i0.wp.com/thatnhucuocsong.com.vn/wp-content/uploads/2023/02/Hinh-anh-avatar-cute.jpg?ssl\u003d1',
+
+                                    // uri: 'https://i0.wp.com/thatnhucuocsong.com.vn/wp-content/uploads/2023/02/Hinh-anh-avatar-cute.jpg?ssl\u003d1',
                                 }}
                             />
                         </TouchableOpacity>
@@ -248,11 +251,6 @@ export default function Home({ navigation }) {
                                     paddingVertical: 2,
                                     paddingLeft: 3,
                                 }}
-                                onPress={() =>
-                                    navigation.navigate('CheckResult', {
-                                        quizData: quizes[0],
-                                    })
-                                }
                             >
                                 <Text style={styles.buttonText}>See All</Text>
                             </TouchableOpacity>

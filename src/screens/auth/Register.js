@@ -86,7 +86,7 @@ export default function Register({ navigation }) {
             navigation.navigate('LetterScreen', letter);
         }
         if (isError) {
-            const errorText = error?.data?.message;
+            const errorText = error?.data;
             switch (errorText) {
                 case 'All fields are mandatory!':
                     console.log('Vui long nhap day du thong tin');

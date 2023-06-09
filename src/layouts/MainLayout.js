@@ -25,10 +25,13 @@ const styles = StyleSheet.create({
         backgroundColor: colors.primary,
         paddingTop: 16,
         paddingHorizontal: 10,
+        alignItems: 'center',
     },
     header: {
         marginTop: 25,
-        paddingHorizontal: 20,
+        // paddingHorizontal: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     mainContent: {
         flex: 1,

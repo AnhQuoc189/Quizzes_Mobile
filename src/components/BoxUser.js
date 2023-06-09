@@ -76,7 +76,7 @@ const BoxUser = ({
                     <View
                         style={{
                             flexDirection: 'row',
-                            gap: 20,
+                            gap: 10,
                             alignItems: 'center',
                         }}
                     >
@@ -126,7 +126,9 @@ const BoxUser = ({
             ) : (
                 <View style={styles.follow}>
                     {follows.includes(user.userName) ? (
-                        <Text style={{ color: '#D21312' }}>following</Text>
+                        <Text style={{ color: '#D21312', width: 70 }}>
+                            following
+                        </Text>
                     ) : (
                         !(userName === user.userName) && (
                             <TouchableOpacity
@@ -194,8 +196,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     image: {
-        width: 50,
-        height: 50,
+        width: 40,
+        height: 40,
         borderRadius: 25,
         marginLeft: 10,
     },
@@ -208,6 +210,7 @@ const styles = StyleSheet.create({
         fontSize: 13,
         justifyContent: 'space-between',
         color: 'white',
+        width: '100%',
     },
     info: {
         justifyContent: 'space-between',
@@ -219,7 +222,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         height: '100%',
         // backgroundColor: '#695AE0',
-        width: '20%',
+        width: '24%',
         borderRadius: 10,
         alignItems: 'center',
         flexDirection: 'row',

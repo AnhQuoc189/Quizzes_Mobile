@@ -13,9 +13,11 @@ import {
     Platform,
     ToastAndroid,
     AlertIOS,
+    Dimensions,
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+const screenWidth = Dimensions.get('screen').width;
 
 // Layout
 import { MainLayout } from 'src/layouts';
@@ -59,6 +61,7 @@ export default function Item({
     const dispatch = useDispatch();
     const userData = useSelector((state) => state.auths?.authData);
     const accessToken = userData?.data?.accessToken;
+    const [file, setFile] = useState(null);
 
     const [questionData, setQuestionData] = useState(data);
 
@@ -213,7 +216,7 @@ export default function Item({
             accessToken,
             questionId: questionData._id,
             quizId,
-            newQuestion: { ...questionData, backgroundImage: coverImage },
+            newQuestion: { ...questionData, backgroundImage: file },
         });
 
         if (data) {
@@ -223,144 +226,122 @@ export default function Item({
             );
             dispatch(updateQuiz(data));
         }
-        // console.log(questionData);
-        // const uploadImage = () => {
-        //     if (!coverImage) return alert('file not found!');
-        //     // else return console.log(file);
-        //     const formData = new FormData();
-        //     formData.append('file', `data:image/jpeg;base64,${file}`);
-        //     formData.append('upload_preset', 'xs3m3hri');
-        //     formData.append('folder', 'examples/test'); // Add this line to specify the folder
-        //     fetch(`https://api.cloudinary.com/v1_1/dg4vxltmf/image/upload`, {
-        //         method: 'POST',
-        //         body: formData,
-        //         headers: {
-        //             'Content-Type': 'multipart/form-data',
-        //             'X-Requested-With': 'XMLHttpRequest',
-        //         },
-        //     })
-        //         .then((response) => response.json())
-        //         .then((data) => {
-        //             console.log(data);
-        //             setResult(data?.secure_url);
-        //         })
-        //         .catch((error) => console.error(error));
-        // };
-        // uploadImage()
     };
 
     return (
-        <View style={{ height: 1000 }}>
-            <ScrollView
-                contentContainerStyle={styles.questionContainer}
-                showsVerticalScrollIndicator={false}
-            >
-                {/* Add Cover Image Question */}
-                <View
-                    style={{
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        marginBottom: 20,
-                    }}
+        <View style={styles.container}>
+            <View style={{ width: '90%' }}>
+                <ScrollView
+                    contentContainerStyle={styles.questionContainer}
+                    showsVerticalScrollIndicator={false}
                 >
-                    <Text
-                        style={{
-                            fontSize: 20,
-                            fontWeight: 800,
-                        }}
-                    >
-                        Question {data.questionIndex}
-                    </Text>
-                </View>
-                <ImageUpload
-                    onChange={setCoverImage}
-                    picture={backgroundImage}
-                    creator={false}
-                />
-
-                {/* Question Settings */}
-                <View style={styles.settings}>
-                    {/* Type Question Setting Button */}
+                    {/* Add Cover Image Question */}
                     <View
                         style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            width: '100%',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            marginBottom: 20,
                         }}
                     >
-                        <TouchableOpacity
-                            onPress={() =>
-                                setOptionsModalVisible(!optionsModalVisible)
-                            }
-                            // onPress={() => setQuestionTypeModalVisible(true)}
-                            style={{ ...styles.settingBtn, width: '40%' }}
+                        <Text
+                            style={{
+                                fontSize: 20,
+                                fontWeight: 800,
+                            }}
                         >
-                            <Text
-                                style={{
-                                    fontWeight: 700,
-                                }}
-                            >
-                                {optionQuestion}
-                            </Text>
-                            <MaterialCommunityIcons
-                                name="chevron-down"
-                                size={25}
-                                color={colors.lightPurple}
-                            />
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={() =>
-                                setQuestionTypeModalVisible(
-                                    !questionTypeModalVisible,
-                                )
-                            }
-                            // onPress={() => setQuestionTypeModalVisible(true)}
-                            style={{ ...styles.settingBtn, width: '44%' }}
-                        >
-                            <Text
-                                style={{
-                                    fontWeight: 700,
-                                }}
-                            >
-                                {questionType}
-                            </Text>
-                            <MaterialCommunityIcons
-                                name="chevron-down"
-                                size={25}
-                                color={colors.lightPurple}
-                            />
-                        </TouchableOpacity>
+                            Question {data.questionIndex}
+                        </Text>
                     </View>
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            width: '100%',
-                        }}
-                    >
-                        {/* Time Setting Button */}
-                        <TouchableOpacity
-                            onPress={() =>
-                                setTimeModalVisible(!timeModalVisible)
-                            }
-                            style={{ ...styles.settingBtn, width: '30%' }}
-                        >
-                            <MaterialCommunityIcons
-                                name="clock-outline"
-                                size={25}
-                                color={colors.lightPurple}
-                            />
-                            <Text
-                                style={{
-                                    fontWeight: 700,
-                                }}
-                            >
-                                {/* {activeQuestion.timeLimit} Sec */}
-                                {questionData.answerTime} Sec
-                            </Text>
-                        </TouchableOpacity>
+                    <ImageUpload
+                        onChange={setCoverImage}
+                        setFile={setFile}
+                        picture={backgroundImage}
+                        creator={false}
+                    />
 
-                        {/* {questionIndex === length && (
+                    {/* Question Settings */}
+                    <View style={styles.settings}>
+                        {/* Type Question Setting Button */}
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                width: '100%',
+                            }}
+                        >
+                            <TouchableOpacity
+                                onPress={() =>
+                                    setOptionsModalVisible(!optionsModalVisible)
+                                }
+                                // onPress={() => setQuestionTypeModalVisible(true)}
+                                style={{ ...styles.settingBtn, width: '40%' }}
+                            >
+                                <Text
+                                    style={{
+                                        fontWeight: 700,
+                                    }}
+                                >
+                                    {optionQuestion}
+                                </Text>
+                                <MaterialCommunityIcons
+                                    name="chevron-down"
+                                    size={25}
+                                    color={colors.lightPurple}
+                                />
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={() =>
+                                    setQuestionTypeModalVisible(
+                                        !questionTypeModalVisible,
+                                    )
+                                }
+                                // onPress={() => setQuestionTypeModalVisible(true)}
+                                style={{ ...styles.settingBtn, width: '44%' }}
+                            >
+                                <Text
+                                    style={{
+                                        fontWeight: 700,
+                                    }}
+                                >
+                                    {questionType}
+                                </Text>
+                                <MaterialCommunityIcons
+                                    name="chevron-down"
+                                    size={25}
+                                    color={colors.lightPurple}
+                                />
+                            </TouchableOpacity>
+                        </View>
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                width: '100%',
+                            }}
+                        >
+                            {/* Time Setting Button */}
+                            <TouchableOpacity
+                                onPress={() =>
+                                    setTimeModalVisible(!timeModalVisible)
+                                }
+                                style={{ ...styles.settingBtn, width: '30%' }}
+                            >
+                                <MaterialCommunityIcons
+                                    name="clock-outline"
+                                    size={25}
+                                    color={colors.lightPurple}
+                                />
+                                <Text
+                                    style={{
+                                        fontWeight: 700,
+                                    }}
+                                >
+                                    {/* {activeQuestion.timeLimit} Sec */}
+                                    {questionData.answerTime} Sec
+                                </Text>
+                            </TouchableOpacity>
+
+                            {/* {questionIndex === length && (
                             <TouchableOpacity
                                 style={{
                                     ...styles.settingBtn,
@@ -385,248 +366,273 @@ export default function Item({
                             </TouchableOpacity>
                         )} */}
 
-                        <TouchableOpacity
-                            onPress={() =>
-                                setPointTypeModalVisible(!pointTypeModalVisible)
-                            }
-                            style={{ ...styles.settingBtn, width: '35%' }}
-                        >
-                            <MaterialCommunityIcons
-                                name="clock-outline"
-                                size={25}
-                                color={colors.lightPurple}
-                            />
-                            <Text
-                                style={{
-                                    fontWeight: 700,
-                                }}
+                            <TouchableOpacity
+                                onPress={() =>
+                                    setPointTypeModalVisible(
+                                        !pointTypeModalVisible,
+                                    )
+                                }
+                                style={{ ...styles.settingBtn, width: '35%' }}
                             >
-                                {/* {activeQuestion.timeLimit} Sec */}
-                                {questionData.pointType}
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
+                                <MaterialCommunityIcons
+                                    name="clock-outline"
+                                    size={25}
+                                    color={colors.lightPurple}
+                                />
+                                <Text
+                                    style={{
+                                        fontWeight: 700,
+                                    }}
+                                >
+                                    {/* {activeQuestion.timeLimit} Sec */}
+                                    {questionData.pointType}
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
 
-                    {/* Add Question Button */}
+                        {/* Add Question Button */}
 
-                    <Modal
-                        animationType="fade"
-                        transparent={true}
-                        visible={optionsModalVisible}
-                        onRequestClose={() => {
-                            setOptionsModalVisible(!optionsModalVisible);
-                        }}
-                    >
-                        <ModalQuiz
-                            title="Options Quetstion"
-                            arrayModal={optionQuestions}
-                            stateModal={optionsModalVisible}
-                            setStateModal={setOptionsModalVisible}
-                            handleQuizChange={(option) => {
-                                handleQuestionChange(option, 'optionQuestion');
-                                changeMaxCorrectAnswerCount(
-                                    option === 'Single' ? 1 : 4,
+                        <Modal
+                            animationType="fade"
+                            transparent={true}
+                            visible={optionsModalVisible}
+                            onRequestClose={() => {
+                                setOptionsModalVisible(!optionsModalVisible);
+                            }}
+                        >
+                            <ModalQuiz
+                                title="Options Quetstion"
+                                arrayModal={optionQuestions}
+                                stateModal={optionsModalVisible}
+                                setStateModal={setOptionsModalVisible}
+                                handleQuizChange={(option) => {
+                                    handleQuestionChange(
+                                        option,
+                                        'optionQuestion',
+                                    );
+                                    changeMaxCorrectAnswerCount(
+                                        option === 'Single' ? 1 : 4,
+                                    );
+                                }}
+                                value={optionQuestion}
+                            />
+                        </Modal>
+
+                        <Modal
+                            animationType="fade"
+                            transparent={true}
+                            visible={timeModalVisible}
+                            onRequestClose={() => {
+                                setTimeModalVisible(!timeModalVisible);
+                            }}
+                        >
+                            <ModalQuiz
+                                title="Time limit"
+                                arrayModal={timeLimit}
+                                stateModal={timeModalVisible}
+                                setStateModal={setTimeModalVisible}
+                                handleQuizChange={(time) =>
+                                    handleQuestionChange(time, 'answerTime')
+                                }
+                                value={answerTime}
+                            />
+                        </Modal>
+
+                        <Modal
+                            animationType="fade"
+                            transparent={true}
+                            visible={pointTypeModalVisible}
+                            onRequestClose={() => {
+                                setPointTypeModalVisible(
+                                    !pointTypeModalVisible,
                                 );
                             }}
-                            value={optionQuestion}
-                        />
-                    </Modal>
+                        >
+                            <ModalQuiz
+                                title="Point Types"
+                                arrayModal={pointTypes}
+                                stateModal={pointTypeModalVisible}
+                                setStateModal={setPointTypeModalVisible}
+                                handleQuizChange={(type) =>
+                                    handleQuestionChange(type, 'pointType')
+                                }
+                                value={pointType}
+                            />
+                        </Modal>
 
-                    <Modal
-                        animationType="fade"
-                        transparent={true}
-                        visible={timeModalVisible}
-                        onRequestClose={() => {
-                            setTimeModalVisible(!timeModalVisible);
-                        }}
-                    >
-                        <ModalQuiz
-                            title="Time limit"
-                            arrayModal={timeLimit}
-                            stateModal={timeModalVisible}
-                            setStateModal={setTimeModalVisible}
-                            handleQuizChange={(time) =>
-                                handleQuestionChange(time, 'answerTime')
-                            }
-                            value={answerTime}
-                        />
-                    </Modal>
-
-                    <Modal
-                        animationType="fade"
-                        transparent={true}
-                        visible={pointTypeModalVisible}
-                        onRequestClose={() => {
-                            setPointTypeModalVisible(!pointTypeModalVisible);
-                        }}
-                    >
-                        <ModalQuiz
-                            title="Point Types"
-                            arrayModal={pointTypes}
-                            stateModal={pointTypeModalVisible}
-                            setStateModal={setPointTypeModalVisible}
-                            handleQuizChange={(type) =>
-                                handleQuestionChange(type, 'pointType')
-                            }
-                            value={pointType}
-                        />
-                    </Modal>
-
-                    {/* Type Setting Modal */}
-                    <Modal
-                        animationType="fade"
-                        transparent={true}
-                        visible={questionTypeModalVisible}
-                        onRequestClose={() => {
-                            setQuestionTypeModalVisible(
-                                !questionTypeModalVisible,
-                            );
-                        }}
-                    >
-                        <ModalQuiz
-                            title="Question Types"
-                            arrayModal={questionTypes}
-                            stateModal={questionTypeModalVisible}
-                            setStateModal={setQuestionTypeModalVisible}
-                            handleQuizChange={(type) => {
-                                handleQuestionChange(type, 'questionType');
+                        {/* Type Setting Modal */}
+                        <Modal
+                            animationType="fade"
+                            transparent={true}
+                            visible={questionTypeModalVisible}
+                            onRequestClose={() => {
+                                setQuestionTypeModalVisible(
+                                    !questionTypeModalVisible,
+                                );
                             }}
-                            value={questionType}
-                        />
-                    </Modal>
+                        >
+                            <ModalQuiz
+                                title="Question Types"
+                                arrayModal={questionTypes}
+                                stateModal={questionTypeModalVisible}
+                                setStateModal={setQuestionTypeModalVisible}
+                                handleQuizChange={(type) => {
+                                    handleQuestionChange(type, 'questionType');
+                                }}
+                                value={questionType}
+                            />
+                        </Modal>
 
-                    {/* Modal PointType */}
-                </View>
-
-                {/* Question title */}
-                <View style={{ marginTop: 10 }}>
-                    <Text style={styles.label}>Title</Text>
-                    <View style={styles.viewInput}>
-                        <TextInput
-                            value={question}
-                            style={styles.input}
-                            placeholder="Enter your question"
-                            onChangeText={(value) =>
-                                handleQuestionChange(value, 'question')
-                            }
-                        />
+                        {/* Modal PointType */}
                     </View>
-                </View>
 
-                {/* Answer Choices */}
-                <View style={{ marginVertical: 10, width: '100%', gap: 10 }}>
-                    <Text style={styles.label}>Answers</Text>
-                    <AnswerInput
-                        name="A"
-                        body={answerList[0]?.body}
-                        isCorrect={answerList[0]?.isCorrect}
-                        onChangeText={(value) => {
-                            questionType !== 'Quiz'
-                                ? updateAnswer('A', 'True', 0)
-                                : updateAnswer('A', value, 0);
-                        }}
-                        onClick={() => {
-                            if (
-                                questionData.answerList[0].isCorrect ||
-                                correctAnswerCount < maxCorrectAnswer
-                            ) {
-                                setCorrectAnswer(0, 'A');
-                            }
-                        }}
-                    />
-                    <AnswerInput
-                        name="B"
-                        body={answerList[1]?.body}
-                        isCorrect={answerList[1]?.isCorrect}
-                        onChangeText={(value) => {
-                            questionType !== 'Quiz'
-                                ? updateAnswer('B', 'False', 1)
-                                : updateAnswer('B', value, 1);
-                        }}
-                        onClick={() => {
-                            if (
-                                questionData.answerList[1].isCorrect ||
-                                correctAnswerCount < maxCorrectAnswer
-                            ) {
-                                setCorrectAnswer(1, 'B');
-                            }
-                        }}
-                    />
-                    {questionType === 'Quiz' && (
-                        <>
-                            <AnswerInput
-                                name="C"
-                                body={answerList[2]?.body}
-                                isCorrect={answerList[2]?.isCorrect}
+                    {/* Question title */}
+                    <View style={{ marginTop: 10, width: '100%' }}>
+                        <Text style={styles.label}>Title</Text>
+                        <View style={styles.viewInput}>
+                            <TextInput
+                                value={question}
+                                style={styles.input}
+                                placeholder="Enter your question"
                                 onChangeText={(value) =>
-                                    updateAnswer('C', value, 2)
+                                    handleQuestionChange(value, 'question')
                                 }
-                                onClick={() => {
-                                    if (
-                                        questionData.answerList[2].isCorrect ||
-                                        correctAnswerCount < maxCorrectAnswer
-                                    ) {
-                                        setCorrectAnswer(2, 'C');
-                                    }
-                                }}
                             />
-                            <AnswerInput
-                                name="D"
-                                body={answerList[3]?.body}
-                                isCorrect={answerList[3]?.isCorrect}
-                                onChangeText={(value) =>
-                                    updateAnswer('D', value, 3)
-                                }
-                                onClick={() => {
-                                    if (
-                                        questionData.answerList[3].isCorrect ||
-                                        correctAnswerCount < maxCorrectAnswer
-                                    ) {
-                                        setCorrectAnswer(3, 'D');
-                                    }
-                                }}
-                            />
-                        </>
-                    )}
-                </View>
+                        </View>
+                    </View>
 
-                {/* Save Button */}
-                <View
-                    style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-around',
-                    }}
-                >
-                    <TouchableOpacity
+                    {/* Answer Choices */}
+                    <View
+                        style={{ marginVertical: 10, width: '100%', gap: 10 }}
+                    >
+                        <Text style={styles.label}>Answers</Text>
+                        <AnswerInput
+                            name="A"
+                            body={answerList[0]?.body}
+                            isCorrect={answerList[0]?.isCorrect}
+                            onChangeText={(value) => {
+                                questionType !== 'Quiz'
+                                    ? updateAnswer('A', 'True', 0)
+                                    : updateAnswer('A', value, 0);
+                            }}
+                            onClick={() => {
+                                if (
+                                    questionData.answerList[0].isCorrect ||
+                                    correctAnswerCount < maxCorrectAnswer
+                                ) {
+                                    setCorrectAnswer(0, 'A');
+                                }
+                            }}
+                        />
+                        <AnswerInput
+                            name="B"
+                            body={answerList[1]?.body}
+                            isCorrect={answerList[1]?.isCorrect}
+                            onChangeText={(value) => {
+                                questionType !== 'Quiz'
+                                    ? updateAnswer('B', 'False', 1)
+                                    : updateAnswer('B', value, 1);
+                            }}
+                            onClick={() => {
+                                if (
+                                    questionData.answerList[1].isCorrect ||
+                                    correctAnswerCount < maxCorrectAnswer
+                                ) {
+                                    setCorrectAnswer(1, 'B');
+                                }
+                            }}
+                        />
+                        {questionType === 'Quiz' && (
+                            <>
+                                <AnswerInput
+                                    name="C"
+                                    body={answerList[2]?.body}
+                                    isCorrect={answerList[2]?.isCorrect}
+                                    onChangeText={(value) =>
+                                        updateAnswer('C', value, 2)
+                                    }
+                                    onClick={() => {
+                                        if (
+                                            questionData.answerList[2]
+                                                .isCorrect ||
+                                            correctAnswerCount <
+                                                maxCorrectAnswer
+                                        ) {
+                                            setCorrectAnswer(2, 'C');
+                                        }
+                                    }}
+                                />
+                                <AnswerInput
+                                    name="D"
+                                    body={answerList[3]?.body}
+                                    isCorrect={answerList[3]?.isCorrect}
+                                    onChangeText={(value) =>
+                                        updateAnswer('D', value, 3)
+                                    }
+                                    onClick={() => {
+                                        if (
+                                            questionData.answerList[3]
+                                                .isCorrect ||
+                                            correctAnswerCount <
+                                                maxCorrectAnswer
+                                        ) {
+                                            setCorrectAnswer(3, 'D');
+                                        }
+                                    }}
+                                />
+                            </>
+                        )}
+                    </View>
+
+                    {/* Save Button */}
+                    <View
                         style={{
-                            ...styles.button,
-                            backgroundColor: '#ED2B2A',
+                            flexDirection: 'row',
+                            justifyContent: 'space-around',
                         }}
-                        onPress={() => handleDeleteQuestion(questionData._id)}
                     >
-                        {loadingDelete ? (
-                            <ActivityIndicator size="large" color="#fff" />
-                        ) : (
-                            <Text style={styles.text}>Delete</Text>
-                        )}
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={styles.button}
-                        onPress={handleSaveQuestion}
-                    >
-                        {isLoading ? (
-                            <ActivityIndicator size="large" color="#fff" />
-                        ) : (
-                            <Text style={styles.text}>Save</Text>
-                        )}
-                    </TouchableOpacity>
-                </View>
-            </ScrollView>
+                        <TouchableOpacity
+                            style={{
+                                ...styles.button,
+                                backgroundColor: '#ED2B2A',
+                            }}
+                            onPress={() =>
+                                handleDeleteQuestion(questionData._id)
+                            }
+                        >
+                            {loadingDelete ? (
+                                <ActivityIndicator size="small" color="#fff" />
+                            ) : (
+                                <Text style={styles.text}>Delete</Text>
+                            )}
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.button}
+                            onPress={handleSaveQuestion}
+                        >
+                            {isLoading ? (
+                                <ActivityIndicator size="small" color="#fff" />
+                            ) : (
+                                <Text style={styles.text}>Save</Text>
+                            )}
+                        </TouchableOpacity>
+                    </View>
+                </ScrollView>
+            </View>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
+    container: {
+        height: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flex: 1,
+        width: screenWidth - 30,
+        backgroundColor: '#fff',
+        borderRadius: 20,
+    },
     questionIndex: {
         display: 'flex',
         alignItems: 'center',
@@ -634,13 +640,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#000',
         width: 30,
         height: 30,
-        borderRadius: 999,
     },
     questionContainer: {
         width: '100%',
         height: '160%',
-        marginTop: 10,
-        paddingBottom: 10,
     },
     settings: {
         marginTop: 10,
@@ -658,7 +661,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         gap: 3,
-        width: '31%',
     },
     label: {
         fontSize: 20,
@@ -675,7 +677,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         alignItems: 'center',
         gap: 16,
-        width: 300,
+        width: '100%',
     },
     input: {
         width: '100%',

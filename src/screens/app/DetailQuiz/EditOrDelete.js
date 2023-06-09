@@ -42,7 +42,6 @@ export default function EditOrDelete({
 
     useEffect(() => {
         if (error) {
-            console.log(error.data);
             switch (error.data) {
                 case 'Quiz already exists':
                     if (Platform.OS === 'android') {
@@ -113,7 +112,7 @@ export default function EditOrDelete({
                         }
                         if (data) {
                             onClose();
-                            dispatch(addLibrayQuiz(quizData));
+                            dispatch(addLibrayQuiz(data));
                             if (Platform.OS === 'android') {
                                 ToastAndroid.show(
                                     'Import successfully!',
@@ -154,11 +153,15 @@ export default function EditOrDelete({
     );
 
     const handleDelete = () => {
+        console.log(quizData._id);
         showConfirmDialog();
     };
 
     const handleEdit = () => {
-        navigation.navigate('Creator', { quiz: quizData, creator: false });
+        navigation.navigate('Creator', {
+            quiz: quizData,
+            creator: false,
+        });
     };
 
     const handleSolo = () => {

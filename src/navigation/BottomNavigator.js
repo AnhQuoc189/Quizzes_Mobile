@@ -59,9 +59,11 @@ export default function BottomNavigator({ navigation }) {
                             return (
                                 <TouchableOpacity
                                     onPress={() => {
+                                        console.log('CC');
                                         navigation.navigate('Creator', {
                                             quiz: '',
                                             creator: true,
+                                            fresh: true,
                                         });
                                     }}
                                 >

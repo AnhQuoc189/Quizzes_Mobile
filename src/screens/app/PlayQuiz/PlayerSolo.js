@@ -3,6 +3,7 @@ import { View, Text, SafeAreaView, StyleSheet, Image } from 'react-native';
 import WaitingRoom from './WaitingRoom';
 import QuestionScreen from './QuestionScreen';
 import ResultScreen from './ResultScreen';
+import CheckResultScreen from './CheckResult/CheckResultScreen';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSelector } from 'react-redux';
 // import correct from 'src/assets/images/correctfull.png';
@@ -34,11 +35,13 @@ export default function PlayerSolo({ navigation }) {
     const [isQuestionScreen, setIsQuestionScreen] = useState(false);
     const [isResultScreen, setIsResultScreen] = useState(false);
     const [isResultFinal, setIsResultFinal] = useState(false);
+    const [isCheckAnswerScreen, setIsCheckAnswerScreen] = useState(false);
+
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [questionOptionCurrent, setQuestionOptionCurrent] = useState();
     const [questionpointType, setQuestionpointType] = useState();
     const [scorePlayer, setScorePlayer] = useState([]);
-    const [expireTimeQuestion, setExpireTimeQuestioni] = useState(false);
+    const [expireTimeQuestion, setExpireTimeQuestion] = useState(false);
     const [trueAnswer, setTrueAnswer] = useState(true);
 
     const [timer, setTimer] = useState(10);
@@ -126,8 +129,6 @@ export default function PlayerSolo({ navigation }) {
         }
     };
 
-    useEffect(() => {}, [scorePlayer]);
-
     useEffect(() => {
         if (expireTimeQuestion) {
             const answerPlayer = answer[currentQuestionIndex - 1].answers;
@@ -178,14 +179,14 @@ export default function PlayerSolo({ navigation }) {
 
     const startQuestionCountdown = (seconds, index) => {
         setTrueAnswer(true);
-        setExpireTimeQuestioni(false);
+        setExpireTimeQuestion(false);
         setIsQuestionScreen(true);
         let time = seconds;
         let interval = setInterval(() => {
             setTimer(time);
             if (time === 0) {
                 clearInterval(interval);
-                setExpireTimeQuestioni(true);
+                setExpireTimeQuestion(true);
                 displayQuestionResult(index);
             }
             time--;
@@ -225,6 +226,16 @@ export default function PlayerSolo({ navigation }) {
             },
             ...answer.slice(currentQuestionIndex + 1, answer.length),
         ]);
+    };
+
+    const handleCompareResult = () => {
+        setIsResultFinal(false);
+        setIsCheckAnswerScreen(true);
+    };
+
+    const handleBackResult = () => {
+        setIsResultFinal(true);
+        setIsCheckAnswerScreen(false);
     };
 
     return (
@@ -279,8 +290,14 @@ export default function PlayerSolo({ navigation }) {
                     navigation={navigation}
                     finish={handleFinish}
                     result={resultDetail}
-                    quizData={quiz}
+                    compareResult={handleCompareResult}
+                />
+            )}
+            {isCheckAnswerScreen && (
+                <CheckResultScreen
+                    questionList={quiz.questionList}
                     answer={answer}
+                    handleBack={handleBackResult}
                 />
             )}
         </SafeAreaView>

@@ -11,10 +11,9 @@ const Header = ({
     navigation,
     direct,
     options,
-    setConfirmSaveModalVisible,
-    creator,
     addQuestion,
     loading,
+    importQuiz,
 }) => {
     // const isSaved = useSelector((state) => state.creator.isSaved);
 
@@ -23,7 +22,11 @@ const Header = ({
             {/* Back button */}
             <TouchableOpacity
                 onPress={() => {
-                    navigation.navigate(direct, { quiz, creator: false });
+                    navigation.navigate(direct, {
+                        quiz,
+                        creator: false,
+                        importQuizData: importQuiz,
+                    });
                 }}
             >
                 <AntDesign name="arrowleft" size={25} color="#fff" />
@@ -46,12 +49,10 @@ const Header = ({
             )}
 
             {/* Options */}
-            {options ? (
+            {options && (
                 <TouchableOpacity onPress={options}>
                     <SimpleLineIcons name="options" size={24} color="#fff" />
                 </TouchableOpacity>
-            ) : (
-                <View />
             )}
         </View>
     );

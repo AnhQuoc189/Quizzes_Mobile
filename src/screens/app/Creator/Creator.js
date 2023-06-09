@@ -7,41 +7,54 @@ import {
     TextInput,
     ScrollView,
     Modal,
-    Pressable,
     ToastAndroid,
+    SafeAreaView,
 } from 'react-native';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
+
+//HandleFile
+import * as DocumentPicker from 'expo-document-picker';
+import {
+    cacheDirectory,
+    readAsStringAsync,
+    copyAsync,
+    getInfoAsync,
+    makeDirectoryAsync,
+} from 'expo-file-system';
+
+const createCacheFile = async ({ name, uri }) => {
+    if (!(await getInfoAsync(cacheDirectory + 'uploads/')).exists) {
+        await makeDirectoryAsync(cacheDirectory + 'uploads/');
+    }
+    const cacheFilePath = cacheDirectory + 'uploads/' + name;
+    await copyAsync({ from: uri, to: cacheFilePath });
+    return cacheFilePath;
+};
 
 //Redux
 import { useDispatch, useSelector } from 'react-redux';
+import { createQuiz, updateQuiz } from 'src/slices/quizSlice';
 
 //Icon
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { MaterialIcons } from '@expo/vector-icons';
-import ImageUpload from 'src/components/creator/imageUpload';
+
 //constant Modal
 import { typeQuiz } from 'src/constants/public.constant';
 import { PointsPer } from 'src/constants/pointPerQuestion.constant';
 import { categories } from 'src/constants/category.constant';
 import { bgColors, colors } from 'src/styles/color';
 
-// Layout
-import { MainLayout } from 'src/layouts';
-
-// Actions
-import { changeQuizInfo } from 'src/slices/creatorSlice';
+// Component
+import { Header } from 'src/components/creator';
+import { ModalQuiz, ModalQuizArray, ModalNote } from './Modal';
+import ImageUpload from 'src/components/creator/imageUpload';
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
 
-// Component
-import { Header, Button, CoverImage } from 'src/components/creator';
-import { useFocusEffect } from '@react-navigation/native';
-import { useCallback } from 'react';
-import { ModalQuiz, ModalQuizArray, ModalNote } from './Modal';
-
+//Call api
 import { useCreateQuizMutation } from 'src/services/quizApi';
 import { useUpdateQuizMutation } from 'src/services/quizApi';
-import { createQuiz } from 'src/slices/quizSlice';
-import { updateQuiz } from 'src/slices/quizSlice';
 
 const categorieArary = categories.map((item) => item.name);
 const InitQuizData = {
@@ -57,13 +70,26 @@ const InitQuizData = {
 
 export default Creator = ({ navigation, ...props }) => {
     const [coverImage, setCoverImage] = useState(null);
+    const [file, setFile] = useState(null);
+
+    const [importQuiz, setImportQuiz] = useState(false);
 
     const quiz = props.route.params.quiz;
     const creator = props.route.params.creator;
+    const fresh = props.route.params.fresh;
+
+    useFocusEffect(
+        useCallback(() => {
+            setImportQuiz(false);
+            setFile(null);
+        }, [fresh]),
+    );
 
     const dispatch = useDispatch();
     const userData = useSelector((state) => state.auths?.authData);
     const userName = userData?.data?.user?.userName;
+    const creatorId = userData?.data?.user?._id;
+
     const accessToken = userData?.data?.accessToken;
 
     const [quizData, setQuizData] = useState({
@@ -88,13 +114,12 @@ export default Creator = ({ navigation, ...props }) => {
                     ...Quiz,
                     _id: quiz._id,
                     creatorName: userName,
-                    backgroundImage: quiz.backgroundImage,
                 });
             } else {
                 setQuizData({
                     ...InitQuizData,
                     creatorName: userName,
-                    backgroundColor: '',
+                    backgroundColor: file,
                 });
             }
         }, [quiz]),
@@ -112,8 +137,6 @@ export default Creator = ({ navigation, ...props }) => {
         questionList,
     } = quizData;
 
-    // const { backgroundImage } = creator ? '' : quizData.backgroundImage;
-
     const quizType = isPublic ? 'Public' : 'Private';
 
     const [isPublicQuizModal, setIsPublicQuizModal] = useState(false);
@@ -127,7 +150,6 @@ export default Creator = ({ navigation, ...props }) => {
 
     useEffect(() => {
         if (error) {
-            console.log(error.data);
             switch (error.data) {
                 case 'Quiz already exists':
                     ToastAndroid;
@@ -169,12 +191,14 @@ export default Creator = ({ navigation, ...props }) => {
                 accessToken,
                 quizData: {
                     ...quizData,
-                    backgroundImage: coverImage,
+                    backgroundImage: file,
                     creatorName: userName,
                 },
             });
             if (data) {
+                setCoverImage(null);
                 setSaveQuizModal(!saveQuizModal);
+                setImportQuiz(true);
                 ToastAndroid.show(
                     'Creat Quiz successfully',
                     ToastAndroid.SHORT,
@@ -193,7 +217,10 @@ export default Creator = ({ navigation, ...props }) => {
             const { data, isLoading } = await InitUpdate({
                 accessToken,
                 quizId: quizData._id,
-                updateQuiz: { ...quizData, backgroundImage: coverImage },
+                updateQuiz: {
+                    ...quizData,
+                    backgroundImage: file ? file : quizData.backgroundImage,
+                },
             });
             if (data) {
                 setSaveQuizModal(!saveQuizModal);
@@ -205,54 +232,65 @@ export default Creator = ({ navigation, ...props }) => {
                 dispatch(updateQuiz(data));
             }
         }
-        // const uploadImage = () => {
-        //     if (!coverImage) return alert('file not found!');
-        //     // else return console.log(file);
-        //     const formData = new FormData();
-        //     formData.append('file', `data:image/jpeg;base64,${file}`);
-        //     formData.append('upload_preset', 'xs3m3hri');
-        //     formData.append('folder', 'examples/test'); // Add this line to specify the folder
-        //     fetch(`https://api.cloudinary.com/v1_1/dg4vxltmf/image/upload`, {
-        //         method: 'POST',
-        //         body: formData,
-        //         headers: {
-        //             'Content-Type': 'multipart/form-data',
-        //             'X-Requested-With': 'XMLHttpRequest',
-        //         },
-        //     })
-        //         .then((response) => response.json())
-        //         .then((data) => {
-        //             console.log(data);
-        //             setResult(data?.secure_url);
-        //         })
-        //         .catch((error) => console.error(error));
-        // };
-        // uploadImage();
     };
 
-    const showQuestionDetail = () => {
-        navigation.navigate('AddQuestion', { quiz, creator: false });
+    const handleImportQuiz = async () => {
+        setSaveQuizModal(!saveQuizModal);
+        let result = await DocumentPicker.getDocumentAsync({
+            copyToCacheDirectory: false,
+            type: 'application/json',
+            multiple: false,
+        });
+
+        const cacheFile = await createCacheFile({
+            name: result.name,
+            uri: result.uri,
+        });
+
+        const content = await readAsStringAsync(cacheFile, {
+            encoding: 'utf8',
+        });
+        const quiz = JSON.parse(content);
+        setQuizData({
+            ...quiz,
+            creatorId,
+            creatorName: userName,
+        });
         setSaveQuizModal(!saveQuizModal);
     };
 
+    const showQuestionDetail = () => {
+        setSaveQuizModal(!saveQuizModal);
+        navigation.navigate('AddQuestion', { quiz, creator: false });
+    };
+
+    const showQuestionDetailImport = () => {
+        setSaveQuizModal(!saveQuizModal);
+        navigation.navigate('AddQuestion', {
+            quiz: quizData,
+            creator: true,
+        });
+    };
+
     return (
-        <>
-            <MainLayout
-                navigation={navigation}
-                header={
-                    <Header
-                        title={creator ? 'Quiz Creator' : 'Quiz Edit'}
-                        style={styles.header}
-                        navigation={navigation}
-                        direct="Home"
-                        options={() => {
-                            setSaveQuizModal(!saveQuizModal);
-                        }}
-                        creator={creator}
-                        quiz={quiz}
-                    />
-                }
-            >
+        <SafeAreaView
+            style={styles.container}
+            // behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        >
+            <View style={styles.headers}>
+                <Header
+                    title={creator ? 'Quiz Creator' : 'Quiz Edit'}
+                    style={styles.header}
+                    navigation={navigation}
+                    direct="Home"
+                    options={() => {
+                        setSaveQuizModal(!saveQuizModal);
+                    }}
+                    creator={creator}
+                    quiz={quiz}
+                />
+            </View>
+            <View style={styles.mainContent}>
                 <ScrollView
                     contentContainerStyle={{
                         paddingBottom: 15,
@@ -264,8 +302,8 @@ export default Creator = ({ navigation, ...props }) => {
                     {/* Add Cover Image Quiz*/}
                     {/* <CoverImage backgroundImage={backgroundImage} /> */}
                     <ImageUpload
-                        onChange={setCoverImage}
                         picture={backgroundImage}
+                        setFile={setFile}
                         creator={true}
                     />
 
@@ -328,7 +366,6 @@ export default Creator = ({ navigation, ...props }) => {
                                     fontWeight: 700,
                                 }}
                             >
-                                {/* {activeQuestion.timeLimit} Sec */}
                                 {pointsPerQuestion} Point
                             </Text>
                         </TouchableOpacity>
@@ -371,9 +408,16 @@ export default Creator = ({ navigation, ...props }) => {
                                 setStateModal={setSaveQuizModal}
                                 handlePress={() => handleSaveQuiz()}
                                 // handleEditQuiz
-                                showQuestionDetail={() => showQuestionDetail()}
+                                showQuestionDetail={
+                                    !importQuiz
+                                        ? showQuestionDetail
+                                        : showQuestionDetailImport
+                                }
+                                // showQuestionDetail={showQuestionDetail}
+                                handleImportQuiz={handleImportQuiz}
                                 loading={isLoading}
                                 creator={creator}
+                                importQuiz={importQuiz}
                             />
                         </Modal>
                     </View>
@@ -483,26 +527,45 @@ export default Creator = ({ navigation, ...props }) => {
                         />
                     </View>
                 </ScrollView>
-
-                {/* <Button
-                title="Add question"
-                // direct="AddQuestion"
-                navigation={navigation}
-                handlePress={handleAddQuestion}
-            /> */}
-            </MainLayout>
+            </View>
             <Toast />
-        </>
+        </SafeAreaView>
     );
 };
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: colors.primary,
+        paddingTop: 16,
+        alignItems: 'center',
+    },
+    headers: {
+        marginTop: 25,
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
+    },
     header: {
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        width: '100%',
+    },
+    mainContent: {
+        flex: 1,
+        width: '90%',
+        height: '100%',
+        backgroundColor: '#fff',
+        borderRadius: 35,
+        marginTop: 25,
+        padding: 15,
+        marginBottom: 10,
+        justifyContent: 'center',
         alignItems: 'center',
     },
+
     label: {
         fontSize: 20,
         fontWeight: 600,
@@ -524,21 +587,8 @@ const styles = StyleSheet.create({
         fontSize: 18,
         height: '38%',
         paddingHorizontal: 20,
-        // paddingTop: 10,
-        // paddingBottom: 40,
     },
     chooseCategory: {
-        // marginTop: 5,
-        // width: '82%',
-        // display: 'flex',
-        // flexDirection: 'row',
-        // justifyContent: 'space-between',
-        // alignItems: 'center',
-        // borderColor: 'gray',
-        // borderWidth: 1,
-        // borderRadius: 15,
-        // paddingVertical: 10,
-        // paddingHorizontal: 20,
         width: '100%',
         flexDirection: 'row',
         marginTop: 5,
@@ -546,7 +596,6 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 15,
         paddingVertical: 10,
-        // paddingHorizontal: 20,
         fontSize: 18,
     },
     settings: {

@@ -5,6 +5,7 @@ import {
     TouchableOpacity,
     FlatList,
     ScrollView,
+    Image,
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Entypo } from '@expo/vector-icons';
@@ -14,70 +15,12 @@ import { bgColors, colors } from 'src/styles/color';
 import { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { useFocusEffect } from '@react-navigation/native';
-
-const rankCate = [
-    { name: 'Math', quality: 0 },
-    { name: 'Sports', quality: 0 },
-    { name: 'Music', quality: 0 },
-    { name: 'Science', quality: 0 },
-    { name: 'Art', quality: 0 },
-    { name: 'Travel', quality: 0 },
-    { name: 'History', quality: 0 },
-    { name: 'Tech', quality: 0 },
-];
+import golebadge from 'src/assets/images/goldbadge.png';
+import study from 'src/assets/images/study.png';
 
 const DisplayDiscover = () => {
-    const quizes = useSelector((state) => state.quizs.allquizes);
-
-    const [res, setRes] = useState([]);
-
-    // useFocusEffect(
-    //     useCallback(() => {
-    //         let lc = [];
-    //         rankCate.map((cate) => {
-    //             let a = 0;
-    //             quizes.map((quiz) => {
-    //                 if (quiz.tags.includes(cate.name)) {
-    //                     a++;
-    //                     cate.quality++;
-    //                 }
-    //             });
-    //             lc.push(a);
-    //         });
-    //         let result = [];
-    //         lc.sort().reverse();
-    //         rankCate.map((cate) => {
-    //             if (cate.quality === lc[0]) {
-    //                 result.push(cate);
-    //             }
-    //         });
-    //         setRes(result);
-    //     }, []),
-    // );
-
-    // useEffect(() => {
-    //     let lc = [];
-    //     rankCate.map((cate) => {
-    //         let a = 0;
-    //         quizes.map((quiz) => {
-    //             if (quiz.tags.includes(cate.name)) {
-    //                 a++;
-    //                 cate.quality++;
-    //             }
-    //         });
-    //         lc.push(a);
-    //     });
-
-    //     lc.sort().reverse();
-    //     let result = [];
-    //     rankCate.map((cate) => {
-    //         if (cate.quality === lc[0]) {
-    //             result.push(cate);
-    //         }
-    //     });
-    //     setRes(result);
-    // }, [quizes]);
-
+    const userData = useSelector((state) => state.auths?.authData);
+    const point = userData?.data?.user?.point;
     return (
         <View
             style={{ width: '100%', height: '100%' }}
@@ -85,43 +28,47 @@ const DisplayDiscover = () => {
         >
             <View style={styles.fisrtSection}>
                 {/* Top picks */}
-                <TouchableOpacity style={styles.boxTopPick}>
-                    <View style={styles.box}>
-                        <Text style={{ ...styles.textHeader, fontSize: 14 }}>
-                            TOP PICKS
-                        </Text>
-                    </View>
-
-                    <View
-                        style={{
-                            alignItems: 'center',
-                            display: 'flex',
-                            justifyContent: 'flex-start',
-                            alignSelf: 'baseline',
-                        }}
-                    >
-                        <Text style={styles.textName}>Travel Trivia Quiz</Text>
+                <View style={styles.boxTopPick}>
+                    <View style={styles.boxTopPickLeft}>
+                        <View style={styles.box}>
+                            <Text
+                                style={{ ...styles.textHeader, fontSize: 14 }}
+                            >
+                                TOP PICKS
+                            </Text>
+                        </View>
 
                         <View
                             style={{
-                                display: 'flex',
-                                justifyContent: 'center',
                                 alignItems: 'center',
-                                flexDirection: 'row',
-                                marginTop: 7,
+                                display: 'flex',
+                                justifyContent: 'flex-start',
+                                alignSelf: 'baseline',
                             }}
                         >
-                            <MaterialCommunityIcons
-                                name="headphones"
-                                size={20}
-                                color="#660012"
-                            />
-                            <Text style={styles.textSub}>
-                                Music . 5 Quizzes
+                            <Text style={styles.textName}>
+                                Travel Trivia Quiz
                             </Text>
+
+                            <View style={styles.header}>
+                                <MaterialCommunityIcons
+                                    name="headphones"
+                                    size={20}
+                                    color="#660012"
+                                />
+                                <Text style={styles.textSub}>
+                                    Music . 5 Quizzes
+                                </Text>
+                            </View>
                         </View>
                     </View>
-                </TouchableOpacity>
+                    <View>
+                        <Image
+                            style={{ ...styles.image, width: 100, height: 100 }}
+                            source={study}
+                        />
+                    </View>
+                </View>
             </View>
             {/* <ScrollView> */}
             <View style={styles.mainContent}>
@@ -131,34 +78,44 @@ const DisplayDiscover = () => {
                     showsVerticalScrollIndicator={false}
                 >
                     <View style={{ flexGrow: 1 }}>
-                        <Text style={[styles.textName, styles.textTitle]}>
-                            Top categories of the week
-                        </Text>
-
                         {/* <BoxUser number={true} normal={false} /> */}
-                        <View
-                            style={{
-                                backgroundColor: colors.pink,
-                                height: '8%',
-                                borderRadius: 16,
-                                alignItems: 'center',
-                                flexDirection: 'row',
-                                justifyContent: 'space-around',
-                            }}
-                        >
+                        <View style={styles.viewScore}>
                             <Entypo
                                 name="graduation-cap"
                                 size={30}
                                 color="black"
                             />
-                            <View style={{ width: '80%' }}>
+                            <View style={{ width: '40%' }}>
                                 <Text
                                     style={{ fontSize: 20, fontWeight: '800' }}
                                 >
-                                    {res && res.map((item) => item.name + ' ')}
+                                    Your Score
                                 </Text>
                             </View>
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        fontStyle: 'italic',
+                                        fontSize: 20,
+                                    }}
+                                >
+                                    {point} Point
+                                </Text>
+                                <Image
+                                    style={styles.image}
+                                    source={golebadge}
+                                />
+                            </View>
                         </View>
+
+                        <Text style={[styles.textName, styles.textTitle]}>
+                            Top categories of the week
+                        </Text>
 
                         <View style={styles.categoryContain}>
                             {categories.map((category) => (
@@ -201,9 +158,21 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         display: 'flex',
         justifyContent: 'space-between',
+        flexDirection: 'row',
+    },
+    boxTopPickLeft: {
+        height: '100%',
+        gap: 20,
+    },
+    header: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'row',
+        marginTop: 7,
     },
     box: {
-        height: 35,
+        height: '30%',
         backgroundColor: colors.pink,
         borderRadius: 10,
         alignItems: 'center',
@@ -217,6 +186,15 @@ const styles = StyleSheet.create({
         fontSize: 17,
         color: '#660012',
         fontWeight: '900',
+    },
+    viewScore: {
+        backgroundColor: colors.pink,
+        height: '8%',
+        borderRadius: 16,
+        alignItems: 'center',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        marginBottom: 10,
     },
     textSub: {
         fontSize: 12,
@@ -239,6 +217,12 @@ const styles = StyleSheet.create({
     textTitle: {
         fontSize: 20,
         color: 'black',
+    },
+    image: {
+        width: 50,
+        height: 50,
+        borderRadius: 25,
+        marginLeft: 10,
     },
     categoryContain: {
         display: 'flex',

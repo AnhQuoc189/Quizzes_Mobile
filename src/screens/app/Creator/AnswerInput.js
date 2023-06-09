@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         gap: 16,
-        width: 300,
+        width: '100%',
     },
     input: {
         width: '70%',

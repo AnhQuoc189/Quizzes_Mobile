@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { TextInput, TouchableOpacity } from 'react-native';
 import { SafeAreaView, View, Text, StyleSheet } from 'react-native';
 import Header from 'src/components/auth/Header';
@@ -8,6 +8,8 @@ import { useCreatePlayerResultMutation } from 'src/services/playerResultApi';
 import { createPlayerResults } from 'src/slices/playerResultSlice';
 import { useAddPlayerMutation } from 'src/services/gameApi';
 import { addPlayer } from 'src/slices/gamesSlice';
+import { Toast } from 'react-native-toast-message/lib/src/Toast';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function JoinGame({ navigation }) {
     const [pin, setPin] = useState();
@@ -31,39 +33,51 @@ export default function JoinGame({ navigation }) {
     }, [data]);
 
     useEffect(() => {
+        socket?.on('notify-host-leave-WattingRoom', (pin) => {
+            Toast.show({
+                type: 'error',
+                text1: 'Host leave room',
+                text2: 'You can not enter room',
+                visibilityTime: 2500,
+                topOffset: 60,
+            });
+        });
+        return () => {
+            socket.off('notify-host-leave-WattingRoom');
+        };
+    }, [socket]);
+
+    useEffect(() => {
         socket?.on(
             'move-to-game-page',
-            (gameId, gamePin, leaderboardID, quizData) => {
-                // dispatch(
-                //     createPlayerResult({
-                //         playerId: user.result._id,
-                //         gameId: gameId,
-                //         score: 0,
-                //         answers: [],
-                //     }),
-                // );
-                // history(`/games/player/${gameId}`, {
-                //     state: { gamePin, leaderboardID },
-                // });
+            (
+                gameId,
+                gamePin,
+                leaderboardID,
+                length,
+                playerList,
+                pointsPerQuestion,
+            ) => {
                 navigation.navigate('PlayerScreen', {
                     gameId,
                     gamePin,
                     leaderboardID,
-                    quizData,
+                    length,
+                    playerList,
+                    pointsPerQuestion,
                 });
-                // InitPlayerResult({
-                //     playerId: userData.data.user._id,
-                //     gameId: gameId,
-                //     score: 0,
-                //     answers: [],
-                // });
+                setIsPlayerAdded(false);
+                setPin();
             },
         );
+
+        return () => {
+            socket.off('move-to-game-page');
+        };
     }, [socket, dispatch, navigation, userData.data.user._id]);
 
     const result = async (message, playerId, gameId) => {
         if (message === 'correct') {
-            // dispatch(addPlayer(gameId, playerId));
             const { data } = await InitAddPlayer({ gameId, playerId });
             dispatch(addPlayer(data));
             setPinExist(true);
@@ -79,10 +93,6 @@ export default function JoinGame({ navigation }) {
     };
 
     const joinGame = () => {
-        // setIsPlayerAdded(true);
-        // setTimeout(() => {
-        //     navigation.navigate('PlayerScreen');
-        // }, 5000);
         socket?.emit(
             'add-player',
             userData.data.user,
@@ -92,6 +102,10 @@ export default function JoinGame({ navigation }) {
                 result(message, playerId, gameId);
             },
         );
+    };
+
+    const handleOutGame = () => {
+        socket.emit('studen-leave-JoinRoom', pin);
     };
 
     return (
@@ -138,6 +152,8 @@ export default function JoinGame({ navigation }) {
                         title="Join Game"
                         direct="Home"
                         navigation={navigation}
+                        join={true}
+                        handleOutGame={handleOutGame}
                     />
                     <View style={{ alignItems: 'center' }}>
                         <Text style={{ fontSize: 20, fontWeight: 600 }}>
@@ -150,6 +166,7 @@ export default function JoinGame({ navigation }) {
                     </View>
                 </View>
             )}
+            <Toast />
         </SafeAreaView>
     );
 }

@@ -16,6 +16,10 @@ export default function Header({ navigation, ...props }) {
                         if (props.setFocus) {
                             props.setFocus();
                         }
+                        if (props.handleOutGame && props.join) {
+                            props.handleOutGame();
+                        }
+
                         navigation.navigate(props.direct);
                     }}
                 >

@@ -70,7 +70,6 @@ export default function Discover({ navigation }) {
                         .then((data) => data.json())
                         .then((json) => {
                             dispatch(fetchAllQuizes(json));
-                            // setData(json);
                         })
                         .catch((error) => console(error));
                 };

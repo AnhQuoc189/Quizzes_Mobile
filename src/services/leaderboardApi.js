@@ -7,6 +7,12 @@ export const apiLeaderboard = createApi({
         baseUrl: API,
     }),
     endpoints: (builder) => ({
+        getLeaderBoard: builder.query({
+            query: (leaderboardId) => ({
+                url: `api/leaderboard/${leaderboardId}`,
+                method: 'GET',
+            }),
+        }),
         createLeaderboard: builder.mutation({
             query: (newLeaderboard) => ({
                 url: `api/leaderboard`,
@@ -14,7 +20,26 @@ export const apiLeaderboard = createApi({
                 body: newLeaderboard,
             }),
         }),
+        updateQuestionleaderboard: builder.mutation({
+            query: ({ leaderboardId, update }) => ({
+                url: `api/leaderboard/${leaderboardId}/questionleaderboard`,
+                method: 'PATCH',
+                body: update,
+            }),
+        }),
+        updateCurrentleaderboard: builder.mutation({
+            query: ({ leaderboardId, update }) => ({
+                url: `api/leaderboard/${leaderboardId}/currentleaderboard`,
+                method: 'PATCH',
+                body: update,
+            }),
+        }),
     }),
 });
 
-export const { useCreateLeaderboardMutation } = apiLeaderboard;
+export const {
+    useGetLeaderBoardQuery,
+    useCreateLeaderboardMutation,
+    useUpdateQuestionleaderboardMutation,
+    useUpdateCurrentleaderboardMutation,
+} = apiLeaderboard;
