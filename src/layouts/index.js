@@ -1,3 +1,4 @@
 import MainLayout from './MainLayout';
+import SubLayout from './SubLayout';
 
-export { MainLayout };
+export { MainLayout, SubLayout };

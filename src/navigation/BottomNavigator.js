@@ -130,7 +130,11 @@ export default function BottomNavigator({ navigation }) {
                 component={Creator}
                 options={{ tabBarStyle: { display: 'none' } }}
             />
-            <Tab.Screen name="LeaderBoard" component={LeaderBoard} />
+            <Tab.Screen
+                name="LeaderBoard"
+                component={LeaderBoard}
+                options={{ tabBarStyle: { display: 'none' } }}
+            />
             <Tab.Screen name="Profile" component={Profile} />
             <Tab.Screen
                 name="AddQuestion"
