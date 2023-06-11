@@ -16,6 +16,7 @@ import { StackActions, NavigationActions } from 'react-navigation';
 import SubLayout from 'src/layouts/SubLayout';
 
 import { colors } from 'src/styles/color';
+import ProfileNavigator from 'src/navigation/ProfileNavigator';
 
 export default function Profile({ navigation }) {
     console.log('AA');
@@ -120,7 +121,16 @@ export default function Profile({ navigation }) {
                                         <Text style={styles.score}>10</Text>
                                     </View>
                                 </View>
+
                                 {/* navigation */}
+                                <View
+                                    style={{
+                                        width: '100%',
+                                        flexGrow: 1,
+                                    }}
+                                >
+                                    <ProfileNavigator />
+                                </View>
                             </View>
                         </SubLayout>
                     </View>
@@ -135,7 +145,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: colors.primary,
         paddingTop: 50,
-        paddingHorizontal: 16,
+        paddingHorizontal: 8,
         alignItems: 'center',
     },
     header: {
