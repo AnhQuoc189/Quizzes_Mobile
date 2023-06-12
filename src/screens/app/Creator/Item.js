@@ -42,7 +42,7 @@ import {
 
 import { ModalQuiz } from './Modal';
 
-import ImageUpload from 'src/components/creator/imageUpload';
+import ImageUpload from 'src/components/creator/ImageUpload';
 
 import { bgColors, colors } from 'src/styles/color';
 import { useEffect } from 'react';

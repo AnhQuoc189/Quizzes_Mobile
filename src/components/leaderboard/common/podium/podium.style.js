@@ -4,16 +4,16 @@ import { colors } from 'src/styles/color';
 
 const podiumSpecifications = {
     first: {
-        podiumHeight: 150,
-        textSize: 100,
+        podiumHeight: 140,
+        textSize: 90,
     },
     second: {
-        podiumHeight: 120,
-        textSize: 80,
+        podiumHeight: 110,
+        textSize: 70,
     },
     third: {
-        podiumHeight: 90,
-        textSize: 60,
+        podiumHeight: 80,
+        textSize: 50,
     },
 };
 
@@ -27,18 +27,18 @@ const styles = StyleSheet.create({
         paddingHorizontal: 21,
         marginTop: 30,
     },
-    firstPodiumContainer: {
+    firstBodyPodiumContainer: {
         alignItems: 'center',
         justifyContent: 'center',
         height: podiumSpecifications.first.podiumHeight,
-        backgroundColor: '#c1bcf0',
+        // backgroundColor: '#c1bcf0',
     },
     firstPodiumText: {
         fontSize: podiumSpecifications.first.textSize,
         fontWeight: 'bold',
         color: '#fff',
     },
-    secondPodiumContainer: {
+    secondBodyPodiumContainer: {
         alignItems: 'center',
         justifyContent: 'center',
         height: podiumSpecifications.second.podiumHeight,
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#fff',
     },
-    thirdPodiumContainer: {
+    thirdBodyPodiumContainer: {
         alignItems: 'center',
         justifyContent: 'center',
         height: podiumSpecifications.third.podiumHeight,
@@ -59,6 +59,39 @@ const styles = StyleSheet.create({
         fontSize: podiumSpecifications.third.textSize,
         fontWeight: 'bold',
         color: '#fff',
+    },
+    firstTopPodium: {
+        width: '100%',
+        height: 0,
+        borderBottomWidth: 15,
+        borderBottomColor: '#cdc9f3',
+        borderLeftWidth: 15,
+        borderLeftColor: 'transparent',
+        borderRightWidth: 15,
+        borderRightColor: 'transparent',
+        borderStyle: 'solid',
+    },
+    secondTopPodium: {
+        width: '100%',
+        height: 0,
+        borderBottomWidth: 15,
+        borderBottomColor: '#aea7ec',
+        borderLeftWidth: 15,
+        borderLeftColor: 'transparent',
+        borderRightWidth: 0,
+        borderRightColor: 'transparent',
+        borderStyle: 'solid',
+    },
+    thirdTopPodium: {
+        width: '100%',
+        height: 0,
+        borderBottomWidth: 15,
+        borderBottomColor: '#aea7ec',
+        borderLeftWidth: 0,
+        borderLeftColor: 'transparent',
+        borderRightWidth: 15,
+        borderRightColor: 'transparent',
+        borderStyle: 'solid',
     },
 });
 

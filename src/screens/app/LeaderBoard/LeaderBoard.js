@@ -81,11 +81,6 @@ export default function LeaderBoard({ navigation }) {
     //
     // NhatDev IS HERE
 
-    // Value refreshing sẽ đi với prop RefreshControl của ScrollView
-    // phía dưới để khi đang ở vị trí trên cùng của ScrollView
-    // mà mình kéo xuống thì sẽ load lại Api mới nhất (có thể xài hoặc bỏ đi)
-    const [refreshing, setRefreshing] = useState(false);
-
     const [activeTab, setActiveTab] = useState(durationTabs[0]);
 
     const displayTabContent = () => {
@@ -104,37 +99,19 @@ export default function LeaderBoard({ navigation }) {
             style={{
                 flex: 1,
                 backgroundColor: colors.primary,
+                paddingTop: 16,
+                paddingHorizontal: 10,
             }}
         >
-            <View
-                style={{
-                    flex: 1,
-                    paddingTop: 16,
-                    paddingHorizontal: 10,
-                }}
-            >
-                <Header
-                    title="Leaderboard"
-                    navigation={navigation}
-                    direct="Home"
-                />
+            <Header title="Leaderboard" navigation={navigation} direct="Home" />
 
-                <DurationTabs
-                    durationTabs={durationTabs}
-                    activeTab={activeTab}
-                    setActiveTab={setActiveTab}
-                />
+            <DurationTabs
+                durationTabs={durationTabs}
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+            />
 
-                <ScrollView
-                    showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{
-                        paddingBottom: 10,
-                    }}
-                    refreshControl={<RefreshControl refreshing={refreshing} />}
-                >
-                    {displayTabContent()}
-                </ScrollView>
-            </View>
+            {displayTabContent()}
         </SafeAreaView>
     );
 }
