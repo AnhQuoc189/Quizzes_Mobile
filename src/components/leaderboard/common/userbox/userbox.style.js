@@ -34,8 +34,12 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     scoreContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
         marginTop: 10,
-        padding: 12,
+        width: '75%',
+        paddingVertical: 10,
         backgroundColor: colors.lightPurple,
         borderRadius: 16,
     },

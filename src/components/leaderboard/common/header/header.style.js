@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
         left: 0,
     },
     titleHeader: {
-        fontSize: 25,
+        fontSize: 22,
         color: '#fff',
         fontWeight: '600',
     },

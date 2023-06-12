@@ -17,9 +17,10 @@ const styles = StyleSheet.create({
     btn: (name, activeTab) => ({
         width: '45%',
         alignItems: 'center',
+        justifyContent: 'center',
         backgroundColor: name === activeTab ? colors.lightPurple : null,
         margin: 4,
-        paddingHorizontal: 20,
+        // paddingHorizontal: 20,
         paddingVertical: 10,
         borderRadius: 16,
         opacity: name === activeTab ? 1 : 0.7,

@@ -56,7 +56,13 @@ const UserBox = ({ avatar, name, score, isFirstUser }) => {
             {/* score */}
             <View style={styles.scoreContainer}>
                 <Text style={styles.score} numberOfLines={1}>
-                    {score} QP
+                    {score}
+                </Text>
+                {/* Score này nên hiển thị tối đa 4 số */}
+
+                <Text style={styles.score} numberOfLines={1}>
+                    {' '}
+                    QP
                 </Text>
             </View>
         </TouchableOpacity>

@@ -13,7 +13,7 @@ const Header = ({ title, navigation, direct }) => {
                 }}
                 style={styles.backBtnHeader}
             >
-                <Ionicons name="arrow-back-outline" color="#fff" size={25} />
+                <Ionicons name="arrow-back-outline" color="#fff" size={22} />
             </TouchableOpacity>
 
             {/* Header Title */}

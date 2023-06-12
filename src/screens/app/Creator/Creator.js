@@ -49,7 +49,7 @@ import { bgColors, colors } from 'src/styles/color';
 // Component
 import { Header } from 'src/components/creator';
 import { ModalQuiz, ModalQuizArray, ModalNote } from './Modal';
-import ImageUpload from 'src/components/creator/imageUpload';
+import ImageUpload from 'src/components/creator/ImageUpload';
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
 
 //Call api
