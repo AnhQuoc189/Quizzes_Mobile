@@ -1,26 +1,38 @@
 // Libraries
-import { View } from 'react-native';
+import { View, ScrollView, RefreshControl } from 'react-native';
 
 // Components, styles
 import styles from './alltime.style';
-import Podium from '../../common/podium/Podium';
-import UserCard from '../../common/usercard/UserCard';
+import { Podium, UserCard } from 'src/components/leaderboard';
 
-const AllTime = ({ leaderBoard }) => {
+const AllTime = ({ leaderBoard, refreshEvent }) => {
     return (
-        <View style={styles.container}>
-            <Podium
-                firstUser={leaderBoard[0]}
-                secondUser={leaderBoard[1]}
-                thirdUser={leaderBoard[2]}
-            />
+        <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{
+                paddingBottom: 10,
+            }}
+            refreshControl={
+                <RefreshControl
+                    refreshing={refreshEvent.refreshing}
+                    onRefresh={refreshEvent.onRefresh}
+                />
+            }
+        >
+            <View style={styles.container}>
+                <Podium
+                    firstUser={leaderBoard[0]}
+                    secondUser={leaderBoard[1]}
+                    thirdUser={leaderBoard[2]}
+                />
 
-            <View style={styles.userCardContainer}>
-                {leaderBoard?.slice(3)?.map((user, index) => (
-                    <UserCard key={index} index={index + 3} user={user} />
-                ))}
+                <View style={styles.userCardContainer}>
+                    {leaderBoard?.slice(3)?.map((user, index) => (
+                        <UserCard key={index} index={index + 3} user={user} />
+                    ))}
+                </View>
             </View>
-        </View>
+        </ScrollView>
     );
 };
 

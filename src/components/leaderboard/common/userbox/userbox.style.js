@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
         borderRadius: 30,
     },
     name: {
-        marginTop: 25,
+        marginTop: 16,
         fontWeight: 'bold',
         fontSize: 16,
         color: '#fff',
@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
         width: '75%',
         paddingVertical: 10,
+        paddingHorizontal: 10,
         backgroundColor: colors.lightPurple,
         borderRadius: 16,
     },
@@ -52,7 +53,7 @@ const styles = StyleSheet.create({
         zIndex: 1,
         width: 40,
         height: 40,
-        bottom: 45,
+        bottom: 50,
         borderRadius: 20,
     },
     badge: {
