@@ -149,7 +149,9 @@ export const UserJoin = ({ index }) => {
                 <Image
                     style={styles.imageUser}
                     source={{
-                        uri: index.avatar,
+                        uri: index.avatar
+                            ? index.avatar
+                            : 'https://i0.wp.com/thatnhucuocsong.com.vn/wp-content/uploads/2023/02/Hinh-anh-avatar-cute.jpg?ssl\u003d1',
                     }}
                 />
                 <View>
