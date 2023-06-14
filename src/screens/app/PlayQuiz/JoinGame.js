@@ -10,6 +10,7 @@ import { useAddPlayerMutation } from 'src/services/gameApi';
 import { addPlayer } from 'src/slices/gamesSlice';
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
 import { useFocusEffect } from '@react-navigation/native';
+import { Audio } from 'expo-av';
 
 export default function JoinGame({ navigation }) {
     const [pin, setPin] = useState();
@@ -31,6 +32,33 @@ export default function JoinGame({ navigation }) {
             dispatch(createPlayerResults(data));
         }
     }, [data]);
+
+    const [sound, setSound] = useState();
+
+    useEffect(() => {
+        const handlePlaySound = async () => {
+            console.log('Loading Sound');
+            const { sound } = await Audio.Sound.createAsync(
+                require('src/assets/video/quizzSound.mp3'),
+            );
+            setSound(sound);
+
+            console.log('Playing Sound');
+            await sound.playAsync();
+        };
+        handlePlaySound();
+    }, []);
+
+    useEffect(() => {
+        return sound
+            ? () => {
+                  console.log('Unloading Sound');
+                  sound.unloadAsync();
+              }
+            : () => {
+                  console.log('HAHAH');
+              };
+    }, [sound]);
 
     useEffect(() => {
         socket?.on('notify-host-leave-WattingRoom', (pin) => {

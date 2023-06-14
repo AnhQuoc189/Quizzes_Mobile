@@ -34,6 +34,8 @@ import { API } from 'src/constants/api';
 let nameIcontime;
 let timeCurrent;
 
+import { Audio } from 'expo-av';
+
 import { fetchTeacherQuizes } from 'src/slices/quizSlice';
 // import ToastManager, { Toast } from 'toastify-react-native';
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
@@ -111,6 +113,31 @@ export default function Home({ navigation }) {
             dispatch(fetchTeacherQuizes(data));
         }
     }, [data]);
+
+    const [sound, setSound] = useState();
+
+    const playSound = async () => {
+        console.log('Loading Sound');
+        const { sound } = await Audio.Sound.createAsync(
+            require('src/assets/video/quizzSound.mp3'),
+        );
+        setSound(sound);
+
+        console.log('Playing Sound');
+        await sound.playAsync();
+        // setSound(false);
+    };
+    useEffect(() => {
+        return sound
+            ? () => {
+                  console.log('Unloading Sound');
+                  sound.unloadAsync();
+              }
+            : () => {
+                  console.log('HAHAH');
+                  playSound();
+              };
+    }, [sound]);
 
     const quizes = useSelector((state) => state.quizs.quizes);
     return (
@@ -269,6 +296,7 @@ export default function Home({ navigation }) {
                                     paddingVertical: 2,
                                     paddingLeft: 3,
                                 }}
+                                onPress={playSound}
                             >
                                 <Text style={styles.buttonText}>See All</Text>
                             </TouchableOpacity>
