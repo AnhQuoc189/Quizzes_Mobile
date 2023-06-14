@@ -12,7 +12,14 @@ const Badge = ({ badge }) => (
     </View>
 );
 
-const UserBox = ({ avatar, name, score, isFirstUser }) => {
+const UserBox = ({
+    avatar,
+    name,
+    score,
+    isFirstUser,
+    isSecondUser,
+    isThirdUser,
+}) => {
     // Function check URL của hình ảnh có hợp lệ hay ko
     const checkImageURL = (url) => {
         if (!url) return false;
@@ -37,6 +44,8 @@ const UserBox = ({ avatar, name, score, isFirstUser }) => {
             {/* avtar */}
             <View style={styles.avatarContainer}>
                 {isFirstUser ? <Badge badge={images.goldBadge} /> : null}
+                {isSecondUser ? <Badge badge={images.silverBadge} /> : null}
+                {isThirdUser ? <Badge badge={images.bronzeBadge} /> : null}
 
                 <Image
                     style={styles.avatar}
@@ -56,13 +65,7 @@ const UserBox = ({ avatar, name, score, isFirstUser }) => {
             {/* score */}
             <View style={styles.scoreContainer}>
                 <Text style={styles.score} numberOfLines={1}>
-                    {score}
-                </Text>
-                {/* Score này nên hiển thị tối đa 4 số */}
-
-                <Text style={styles.score} numberOfLines={1}>
-                    {' '}
-                    QP
+                    {score} QP
                 </Text>
             </View>
         </TouchableOpacity>

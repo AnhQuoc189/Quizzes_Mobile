@@ -1,36 +1,18 @@
 // Libraries
 import { View, Text } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 
 // Components, styles
 import styles from './podium.style';
 import UserBox from '../userbox/UserBox';
 
-// Component thân bục
-const BodyPodium = ({ rank, containerStyle, textStyle }) => (
-    <>
-        {rank === 1 ? (
-            <LinearGradient
-                colors={['#9087e5', '#c1bcf0']}
-                locations={[0.2, 0.8]}
-                style={containerStyle}
-            >
-                <Text style={textStyle} numberOfLines={1}>
-                    {rank}
-                </Text>
-            </LinearGradient>
-        ) : (
-            <View style={containerStyle}>
-                <Text style={textStyle} numberOfLines={1}>
-                    {rank}
-                </Text>
-            </View>
-        )}
-    </>
+// Component cái bục đơn của rank 1, 2, 3
+const SinglePodium = ({ rank, containerStyle, textStyle }) => (
+    <View style={containerStyle}>
+        <Text style={textStyle} numberOfLines={1}>
+            {rank}
+        </Text>
+    </View>
 );
-
-// Component đỉnh bục
-const TopPodium = ({ style }) => <View style={style} />;
 
 const Podium = ({ firstUser, secondUser, thirdUser }) => {
     return (
@@ -43,15 +25,14 @@ const Podium = ({ firstUser, secondUser, thirdUser }) => {
             >
                 {secondUser ? (
                     <UserBox
-                        avatar={secondUser.avatarUrl}
-                        name={secondUser.name}
-                        score={secondUser.score}
+                        avatar={secondUser.avatar}
+                        name={secondUser.userName}
+                        score={secondUser.point}
+                        isSecondUser={true}
                     />
                 ) : null}
 
-                <TopPodium style={styles.secondTopPodium} />
-
-                <BodyPodium
+                <SinglePodium
                     rank={2}
                     containerStyle={styles.secondBodyPodiumContainer}
                     textStyle={styles.secondPodiumText}
@@ -66,16 +47,14 @@ const Podium = ({ firstUser, secondUser, thirdUser }) => {
             >
                 {firstUser ? (
                     <UserBox
-                        avatar={firstUser.avatarUrl}
-                        name={firstUser.name}
-                        score={firstUser.score}
+                        avatar={firstUser.avatar}
+                        name={firstUser.userName}
+                        score={firstUser.point}
                         isFirstUser={true}
                     />
                 ) : null}
 
-                <TopPodium style={styles.firstTopPodium} />
-
-                <BodyPodium
+                <SinglePodium
                     rank={1}
                     containerStyle={styles.firstBodyPodiumContainer}
                     textStyle={styles.firstPodiumText}
@@ -90,15 +69,14 @@ const Podium = ({ firstUser, secondUser, thirdUser }) => {
             >
                 {thirdUser ? (
                     <UserBox
-                        avatar={thirdUser.avatarUrl}
-                        name={thirdUser.name}
-                        score={thirdUser.score}
+                        avatar={thirdUser.avatar}
+                        name={thirdUser.userName}
+                        score={thirdUser.point}
+                        isThirdUser={true}
                     />
                 ) : null}
 
-                <TopPodium style={styles.thirdTopPodium} />
-
-                <BodyPodium
+                <SinglePodium
                     rank={3}
                     containerStyle={styles.thirdBodyPodiumContainer}
                     textStyle={styles.thirdPodiumText}
