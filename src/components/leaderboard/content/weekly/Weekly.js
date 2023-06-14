@@ -1,18 +1,32 @@
 // Libraries
-import { View } from 'react-native';
+import { View, ScrollView, RefreshControl } from 'react-native';
+import { useState } from 'react';
 
 // Components, styles
 import styles from './weekly.style';
-import UserCard from '../../common/usercard/UserCard';
+import { UserCard } from 'src/components/leaderboard';
 
-const Weekly = ({ leaderBoard }) => {
+const Weekly = ({ leaderBoard, refreshEvent }) => {
     return (
-        <View style={styles.container}>
-            {leaderBoard &&
-                leaderBoard?.map((user, index) => (
-                    <UserCard key={index} index={index} user={user} />
-                ))}
-        </View>
+        <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{
+                paddingBottom: 10,
+            }}
+            refreshControl={
+                <RefreshControl
+                    refreshing={refreshEvent.refreshing}
+                    onRefresh={refreshEvent.onRefresh}
+                />
+            }
+        >
+            <View style={styles.container}>
+                {leaderBoard &&
+                    leaderBoard?.map((user, index) => (
+                        <UserCard key={index} index={index} user={user} />
+                    ))}
+            </View>
+        </ScrollView>
     );
 };
 

@@ -31,7 +31,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         height: podiumSpecifications.first.podiumHeight,
-        backgroundColor: '#c1bcf0',
     },
     firstPodiumText: {
         fontSize: podiumSpecifications.first.textSize,

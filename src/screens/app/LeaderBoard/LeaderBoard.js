@@ -31,6 +31,7 @@ import { colors } from 'src/styles/color';
 import { userLeaderboard } from 'src/constants/userLeaderboard.constant';
 import { API } from 'src/constants/api';
 import { fetchAllUsers } from 'src/slices/usersSlice';
+
 // 2 button Tab thời gian
 const durationTabs = ['Weekly', 'All Time'];
 
@@ -55,26 +56,9 @@ export default function LeaderBoard({ navigation }) {
         }
     }, [users]);
 
-    //
-    // NhatDev IS HERE
-
-    // Value refreshing sẽ đi với prop RefreshControl của ScrollView
-    // phía dưới để khi đang ở vị trí trên cùng của ScrollView
-    // mà mình kéo xuống thì sẽ load lại Api mới nhất (có thể xài hoặc bỏ đi)
     const [refreshing, setRefreshing] = useState(false);
 
     const [activeTab, setActiveTab] = useState(durationTabs[0]);
-
-    const displayTabContent = () => {
-        switch (activeTab) {
-            case 'Weekly':
-                return <Weekly leaderBoard={leaderBoard} />;
-            case 'All Time':
-                return <AllTime leaderBoard={leaderBoard} />;
-            default:
-                break;
-        }
-    };
 
     useEffect(() => {
         fetch(`${API}api/users`, {
@@ -113,6 +97,32 @@ export default function LeaderBoard({ navigation }) {
             .catch((error) => console(error));
     }, []);
 
+    const refreshEvent = {
+        refreshing,
+        onRefresh,
+    };
+
+    const displayTabContent = () => {
+        switch (activeTab) {
+            case 'Weekly':
+                return (
+                    <Weekly
+                        leaderBoard={leaderBoard}
+                        refreshEvent={refreshEvent}
+                    />
+                );
+            case 'All Time':
+                return (
+                    <AllTime
+                        leaderBoard={leaderBoard}
+                        refreshEvent={refreshEvent}
+                    />
+                );
+            default:
+                break;
+        }
+    };
+
     // useFocusEffect(
     //     useCallback(() => {
     //         if (!isFocus) {
@@ -142,42 +152,19 @@ export default function LeaderBoard({ navigation }) {
             style={{
                 flex: 1,
                 backgroundColor: colors.primary,
+                paddingTop: 16,
+                paddingHorizontal: 8,
             }}
         >
-            <View
-                style={{
-                    flex: 1,
-                    paddingTop: 16,
-                    paddingHorizontal: 10,
-                }}
-            >
-                <Header
-                    title="Leaderboard"
-                    navigation={navigation}
-                    direct="Home"
-                />
+            <Header title="Leaderboard" navigation={navigation} direct="Home" />
 
-                <DurationTabs
-                    durationTabs={durationTabs}
-                    activeTab={activeTab}
-                    setActiveTab={setActiveTab}
-                />
+            <DurationTabs
+                durationTabs={durationTabs}
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+            />
 
-                <ScrollView
-                    showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{
-                        paddingBottom: 10,
-                    }}
-                    refreshControl={
-                        <RefreshControl
-                            refreshing={refreshing}
-                            onRefresh={onRefresh}
-                        />
-                    }
-                >
-                    {displayTabContent()}
-                </ScrollView>
-            </View>
+            {displayTabContent()}
         </SafeAreaView>
     );
 }

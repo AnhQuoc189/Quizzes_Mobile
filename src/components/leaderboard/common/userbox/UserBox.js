@@ -32,8 +32,6 @@ const UserBox = ({
         }
     };
 
-    // Function xử lý: bấm vào 1 UserBox để hiện cửa sổ nhỏ chứa một số
-    // thông tin của người dùng đó
     const handleShowInformation = () => {};
 
     return (
@@ -41,7 +39,7 @@ const UserBox = ({
             style={styles.userBox}
             onPress={handleShowInformation}
         >
-            {/* avtar */}
+            {/* avatar */}
             <View style={styles.avatarContainer}>
                 {isFirstUser ? <Badge badge={images.goldBadge} /> : null}
                 {isSecondUser ? <Badge badge={images.silverBadge} /> : null}
@@ -58,6 +56,7 @@ const UserBox = ({
                 />
             </View>
 
+            {/* user name */}
             <Text style={styles.name} numberOfLines={2}>
                 {name}
             </Text>
@@ -65,7 +64,12 @@ const UserBox = ({
             {/* score */}
             <View style={styles.scoreContainer}>
                 <Text style={styles.score} numberOfLines={1}>
-                    {score} QP
+                    {score}
+                </Text>
+
+                <Text style={styles.score} numberOfLines={1}>
+                    {' '}
+                    QP
                 </Text>
             </View>
         </TouchableOpacity>

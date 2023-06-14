@@ -38,8 +38,6 @@ const UserCard = ({ user, index }) => {
         }
     };
 
-    // Function xử lý: bấm vào 1 UserCard để hiện cửa sổ nhỏ chứa 1 số
-    // thông tin của người dùng đó (có thể có hoặc bỏ đi)
     const handleShowInformation = () => {};
 
     return (
