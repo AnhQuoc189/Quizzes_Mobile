@@ -88,10 +88,6 @@ export default function EditProfile({ navigation }) {
                 name: `test/${pickerResult.assets[0].uri.split('.')[1]}`,
             };
             uploadImage(newFile);
-            setFormEdit({
-                ...formData,
-                avatar: `data:image/jpeg;base64,${pickerResult.assets[0].base64}`,
-            });
         }
     };
 
