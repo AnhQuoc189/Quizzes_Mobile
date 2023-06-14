@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     },
 
     textTitle: {
-        width: '40%',
+        width: '60%',
         color: '#000',
         fontSize: 20,
         height: '100%',

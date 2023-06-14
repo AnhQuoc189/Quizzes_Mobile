@@ -7,6 +7,7 @@ import {
     Image,
     StyleSheet,
     ScrollView,
+    Alert,
 } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { useLoginUserMutation } from 'src/services/authApi';
@@ -96,6 +97,18 @@ export default function Login({ navigation }) {
         if (!noClick) {
             loginUser(formData);
         }
+    };
+
+    const showConfirmDialog = () => {
+        return Alert.alert(
+            'Login falure',
+            'You can not login with expo local',
+            [
+                {
+                    text: 'Cancle',
+                },
+            ],
+        );
     };
 
     return (
@@ -202,9 +215,7 @@ export default function Login({ navigation }) {
                     </Divider>
 
                     <View style={styles.viewLoginAnother}>
-                        <TouchableOpacity
-                            onPress={() => navigation.navigate('AppNavigator')}
-                        >
+                        <TouchableOpacity onPress={showConfirmDialog}>
                             <View style={styles.viewLoginwithFB}>
                                 <MaterialCommunityIcons
                                     name="facebook"
@@ -218,7 +229,7 @@ export default function Login({ navigation }) {
                             </View>
                         </TouchableOpacity>
 
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={showConfirmDialog}>
                             <View style={styles.viewLoginwithGG}>
                                 <Image source={google} />
 

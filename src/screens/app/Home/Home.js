@@ -27,8 +27,9 @@ import { useGetTeacherQuizzesQuery } from 'src/services/quizApi';
 import { useCreateQuizMutation } from 'src/services/quizApi';
 import { createSocket } from 'src/slices/socketSlice';
 import { io } from 'socket.io-client';
-
 import { useIsFocused } from '@react-navigation/native';
+import { fetchAllUsers } from 'src/slices/usersSlice';
+import { API } from 'src/constants/api';
 
 let nameIcontime;
 let timeCurrent;
@@ -61,6 +62,22 @@ export default function Home({ navigation }) {
             return () => socket?.disconnect();
         }
     }, [userData, dispatch]);
+
+    useEffect(() => {
+        fetch(`${API}api/users`, {
+            method: 'GET',
+            headers: new Headers({
+                Authorization: `Bearer ${accessToken}`,
+                'user-agent': 'Mozilla/4.0 MDN Example',
+                'content-type': 'application/json',
+            }),
+        })
+            .then((data) => data.json())
+            .then((json) => {
+                dispatch(fetchAllUsers(json));
+            })
+            .catch((error) => console(error));
+    }, []);
 
     const { data, isLoading } = useGetTeacherQuizzesQuery({
         accessToken,
