@@ -1,24 +1,10 @@
-// Libraries
+// Library
 import React, { useEffect, useState, useCallback } from 'react';
-import {
-    SafeAreaView,
-    View,
-    Text,
-    TouchableOpacity,
-    ScrollView,
-    RefreshControl,
-} from 'react-native';
+import { SafeAreaView } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
 // Actions
-import {
-    useCommentQuizMutation,
-    useCreateQuizMutation,
-    useDeleteQuizMutation,
-    useLikeQuizMutation,
-    useUpdateQuizMutation,
-} from 'src/services/quizApi';
-import { createQuiz } from 'src/slices/quizSlice';
+import { useCreateQuizMutation } from 'src/services/quizApi';
 
 // Components, colors, constants
 import {
@@ -28,7 +14,6 @@ import {
     AllTime,
 } from 'src/components/leaderboard';
 import { colors } from 'src/styles/color';
-import { userLeaderboard } from 'src/constants/userLeaderboard.constant';
 import { API } from 'src/constants/api';
 import { fetchAllUsers } from 'src/slices/usersSlice';
 

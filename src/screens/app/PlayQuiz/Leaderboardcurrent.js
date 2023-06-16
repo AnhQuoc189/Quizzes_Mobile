@@ -1,3 +1,4 @@
+//Library
 import React from 'react';
 import {
     SafeAreaView,
@@ -7,10 +8,15 @@ import {
     ScrollView,
     TouchableOpacity,
 } from 'react-native';
-import { colors } from 'src/styles/color';
+
+//component
 import UserLeader from 'src/components/playquiz/UserLeader';
+
+//icosn
 import { AntDesign } from '@expo/vector-icons';
-const a = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+//color
+import { colors } from 'src/styles/color';
 
 export default function LeaderBoardCurrent({
     playerList,

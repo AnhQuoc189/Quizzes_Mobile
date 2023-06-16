@@ -1,14 +1,19 @@
+//Library
 import React, { useEffect, useState } from 'react';
 import { View, Text, SafeAreaView, StyleSheet, Image } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+
+//redux
+import { useSelector } from 'react-redux';
+
+//Screen
 import WaitingRoom from './WaitingRoom';
 import QuestionScreen from './QuestionScreen';
 import ResultScreen from './ResultScreen';
 import CheckResultScreen from './CheckResult/CheckResultScreen';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useSelector } from 'react-redux';
-// import correct from 'src/assets/images/correctfull.png';
-import correctAnswer from 'src/assets/images/correctAnsswer.png';
 
+//images
+import correctAnswer from 'src/assets/images/correctAnsswer.png';
 import wrong from 'src/assets/images/wrong.png';
 
 const InitQuizData = {

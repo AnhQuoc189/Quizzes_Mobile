@@ -1,22 +1,21 @@
+//Library
 import {
+    SafeAreaView,
     StyleSheet,
-    Text,
-    View,
     FlatList,
     ActivityIndicator,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import BoxUser from '../BoxUser';
-import { SafeAreaView } from 'react-native';
-// import { useFocusEffect } from '@react-navigation/native';
-// import { useCallback } from 'react';
-import { useGetAllUsersQuery } from 'src/services/userApi';
-import { fetchAllUsers } from 'src/slices/usersSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import filter from 'lodash.filter';
-import { useFocusEffect } from '@react-navigation/native';
-import { useCallback } from 'react';
 import { useIsFocused } from '@react-navigation/native';
+
+//redux
+import { useDispatch, useSelector } from 'react-redux';
+
+//filter
+import filter from 'lodash.filter';
+
+//component
+import BoxUser from '../BoxUser';
 
 const FriendsFilter = () => {
     const dispatch = useDispatch();

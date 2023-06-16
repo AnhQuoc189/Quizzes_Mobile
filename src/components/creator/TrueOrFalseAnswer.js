@@ -1,11 +1,11 @@
 // Library
 import { StyleSheet, View, Text } from 'react-native';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Checkbox from 'expo-checkbox';
 
 // Action
 import { changeAnswer } from 'src/slices/creatorSlice';
-import { useState } from 'react';
 
 const TrueOrFalseAnswer = () => {
     const activeQuestion = useSelector((state) => state.creator.activeQuestion);

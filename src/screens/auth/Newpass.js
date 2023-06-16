@@ -1,12 +1,19 @@
+//Library
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView, StyleSheet, View, Text } from 'react-native';
 
+//RTK Query
 import { useResetPassMutation } from 'src/services/authApi';
+
+//validate
 import { RequirePassword } from 'src/validate/auth/Resgister';
 
+//Component
 import Button from 'src/components/auth/Button';
 import Header from 'src/components/auth/Header';
 import FormTextInput from 'src/components/auth/Input';
+
+//icons
 import { MaterialIcons } from '@expo/vector-icons';
 
 const Init = { newPass: '', confirmNewPass: '' };

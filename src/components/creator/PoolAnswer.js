@@ -7,9 +7,8 @@ import Checkbox from 'expo-checkbox';
 import { changeAnswer } from 'src/slices/creatorSlice';
 
 const PoolAnswer = () => {
-    const activeQuestion = useSelector((state) => state.creator.activeQuestion);
-
     const dispatch = useDispatch();
+    const activeQuestion = useSelector((state) => state.creator.activeQuestion);
 
     return (
         <>

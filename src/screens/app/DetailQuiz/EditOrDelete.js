@@ -316,7 +316,7 @@ const styles = StyleSheet.create({
     },
     title: {
         width: '90%',
-        height: '15%',
+        height: '18%',
         alignItems: 'flex-start',
         justifyContent: 'space-between',
         flexDirection: 'row',
@@ -330,7 +330,8 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
         backgroundColor: '#E0DEF9',
         borderRadius: 20,
-        marginBottom: 20,
+        // marginBottom: 20,
+        // marginTop: 20,
     },
 
     questionPointItem: {
@@ -360,7 +361,6 @@ const styles = StyleSheet.create({
 
     infocreator: {
         flexDirection: 'row',
-
         alignItems: 'center',
         justifyContent: 'space-between',
     },

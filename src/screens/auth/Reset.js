@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView, StyleSheet, View, Text } from 'react-native';
+
+//icons
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useDispatch } from 'react-redux';
+
+//RTK Query
 import { useGenerateOtpMutation } from 'src/services/authApi';
+
+//validate
 import { EmailReset } from 'src/validate/auth/Resgister';
 
+//component
 import Button from 'src/components/auth/Button';
 import Header from 'src/components/auth/Header';
 import FormTextInput from 'src/components/auth/Input';

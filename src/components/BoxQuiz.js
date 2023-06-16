@@ -1,12 +1,20 @@
+//Library
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import React from 'react';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import { setQuizPlay } from 'src/slices/quizSlice';
-import { useDispatch } from 'react-redux';
-import { bgColors, colors } from 'src/styles/color';
-import { useGetUserQuery } from 'src/services/userApi';
-import { useSelector } from 'react-redux';
 import moment from 'moment/moment';
+
+//redux
+import { useDispatch, useSelector } from 'react-redux';
+import { setQuizPlay } from 'src/slices/quizSlice';
+
+//icons
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
+//color
+import { bgColors, colors } from 'src/styles/color';
+
+//RTKQuery
+import { useGetUserQuery } from 'src/services/userApi';
 
 const BoxQuiz = ({ navigation, ...props }) => {
     const dispatch = useDispatch();

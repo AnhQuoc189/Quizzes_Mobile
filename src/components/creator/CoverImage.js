@@ -1,5 +1,5 @@
 // Library
-import { StyleSheet, TouchableOpacity, Text, View, Image } from 'react-native';
+import { StyleSheet, TouchableOpacity, Text, Image } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 // Color

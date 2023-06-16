@@ -1,12 +1,20 @@
+//Library
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView, TextInput, View, StyleSheet, Text } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+
+//validate
+import { RegisterValid } from 'src/validate/auth/Resgister';
+
+//RTKQuery
+import { useRegisterUserMutation } from 'src/services/authApi';
+
+//icons
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
-import { ScrollView } from 'react-native-gesture-handler';
-import { RegisterValid } from 'src/validate/auth/Resgister';
-import { useRegisterUserMutation } from 'src/services/authApi';
 
+//components
 import Button from 'src/components/auth/Button';
 import Header from 'src/components/auth/Header';
 import FormTextInput from 'src/components/auth/Input';

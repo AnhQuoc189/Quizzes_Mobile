@@ -1,5 +1,5 @@
 // Library
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
     StyleSheet,
     Text,
@@ -8,21 +8,18 @@ import {
     TouchableOpacity,
     Modal,
     TextInput,
-    Pressable,
     ActivityIndicator,
-    Platform,
     ToastAndroid,
-    AlertIOS,
     Dimensions,
 } from 'react-native';
+
+//redux
 import { useSelector, useDispatch } from 'react-redux';
+import { updateQuiz } from 'src/slices/quizSlice';
+
+//icons
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 const screenWidth = Dimensions.get('screen').width;
-
-// Layout
-import { MainLayout } from 'src/layouts';
-
-import AnswerInput from './AnswerInput';
 
 // Constant
 import { timeLimit } from 'src/constants/time.constant';
@@ -30,24 +27,16 @@ import { questionTypes } from 'src/constants/questionTypes.constant';
 import { pointTypes } from 'src/constants/pointTypes.constant';
 import { optionQuestions } from 'src/constants/optionQuestion';
 
+//RTKQuery
 import { useUpdateQuestionMutation } from 'src/services/quizApi';
 
-import {
-    Button,
-    CoverImage,
-    Header,
-    PoolAnswer,
-    TrueOrFalseAnswer,
-} from 'src/components/creator';
-
+//component
+import AnswerInput from './AnswerInput';
 import { ModalQuiz } from './Modal';
-
 import ImageUpload from 'src/components/creator/ImageUpload';
 
+//color
 import { bgColors, colors } from 'src/styles/color';
-import { useEffect } from 'react';
-import { useFocusEffect } from '@react-navigation/native';
-import { updateQuiz } from 'src/slices/quizSlice';
 
 export default function Item({
     quizId,

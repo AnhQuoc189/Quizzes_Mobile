@@ -1,3 +1,4 @@
+//Library
 import React, { useState, useEffect } from 'react';
 import {
     SafeAreaView,
@@ -6,12 +7,11 @@ import {
     TouchableOpacity,
     StyleSheet,
     Image,
-    ScrollView,
     FlatList,
 } from 'react-native';
 
+//images
 import { colors } from 'src/styles/color';
-import logo from 'src/assets/images/logo.png';
 
 export default function WaitingRoom({
     pin,

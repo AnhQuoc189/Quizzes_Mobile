@@ -1,17 +1,22 @@
-import React, { useEffect } from 'react';
+//Library
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView, Text, StyleSheet, View, Image } from 'react-native';
-import WaitingRoom from './WaitingRoom';
-import QuestionScreen from './QuestionScreen';
-import QuesntionLeaderboard from './QuesntionLeaderboard';
-import LeaderBoardCurrent from './Leaderboardcurrent';
-import ResultScreen from './ResultScreen';
-import { useState } from 'react';
-import { useSelector } from 'react-redux';
 import { LinearGradient } from 'expo-linear-gradient';
-import correctAnswer from 'src/assets/images/correctAnsswer.png';
-import wrong from 'src/assets/images/wrong.png';
-import CheckResultScreen from './CheckResult/CheckResultScreen';
 
+//Screen
+import ResultScreen from './ResultScreen';
+import CheckResultScreen from './CheckResult/CheckResultScreen';
+import QuestionScreen from './QuestionScreen';
+import LeaderBoardCurrent from './Leaderboardcurrent';
+
+//redux
+import { useSelector } from 'react-redux';
+
+//images
+import correctAnswer from 'src/assets/images/correctAnsswer.png';
+
+//images
+import wrong from 'src/assets/images/wrong.png';
 let arrayAnswer = [];
 
 export default function PlayerScreen({ navigation, ...props }) {

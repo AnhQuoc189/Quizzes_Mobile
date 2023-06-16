@@ -1,7 +1,9 @@
+//Librari
 import React from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { SimpleLineIcons } from '@expo/vector-icons';
+
 export default function Header({ navigation, ...props }) {
     return (
         <View style={styles.header}>

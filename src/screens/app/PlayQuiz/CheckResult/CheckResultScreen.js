@@ -1,7 +1,9 @@
+//Library
 import React from 'react';
-
-import QuestionScreen from './QuestionScreen';
 import { SafeAreaView, ScrollView, StyleSheet } from 'react-native';
+
+//Screen
+import QuestionScreen from './QuestionScreen';
 
 export default function CheckResultScreen({
     questionList,

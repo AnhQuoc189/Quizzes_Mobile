@@ -1,22 +1,33 @@
-import { StyleSheet, Text, View, FlatList } from 'react-native';
+//Library
+import {
+    StyleSheet,
+    ScrollView,
+    Text,
+    View,
+    FlatList,
+    TouchableOpacity,
+} from 'react-native';
 import React, { useState, useEffect } from 'react';
+import { useIsFocused } from '@react-navigation/native';
+
+//constant
 import { categories } from 'src/constants/category.constant';
-import CategoryCard from '../CategoryCard';
-import { ScrollView } from 'react-native';
+
+//redux
 import { useSelector } from 'react-redux';
+
+//filter
 import filter from 'lodash.filter';
 
-import { useIsFocused } from '@react-navigation/native';
+//Component
 import BoxQuiz from '../BoxQuiz';
-import { TouchableOpacity } from 'react-native';
-import { ActivityIndicator } from 'react-native';
+import CategoryCard from '../CategoryCard';
 
 const CatogoriesFilter = ({ navigation }) => {
     const searchQuery = useSelector((state) => state.searchs.searchQuery);
     const [result, setResults] = useState([]);
     const [showQuiz, setShowQuiz] = useState(false);
     const [listQuiz, setListQuiz] = useState([]);
-
     const isFocused = useIsFocused();
 
     useEffect(() => {

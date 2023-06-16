@@ -1,6 +1,10 @@
+//Library
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+
+//Screen
 import Answer from './Answer';
+
 export default function Question({ questionData, arrayCorrect, result }) {
     const type = questionData?.questionType;
 

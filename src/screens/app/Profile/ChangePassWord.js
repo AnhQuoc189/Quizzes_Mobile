@@ -1,17 +1,25 @@
+//Library
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView, StyleSheet, View, Text } from 'react-native';
+import { Toast } from 'react-native-toast-message/lib/src/Toast';
 
+//redux
+import { useDispatch } from 'react-redux';
+import { upDated } from 'src/slices/authSlice';
+
+//component
 import { useResetPassMutation } from 'src/services/authApi';
+
+//validate
 import { RequirePassword } from 'src/validate/auth/Resgister';
 
+//component
 import Button from 'src/components/auth/Button';
 import Header from 'src/components/auth/Header';
-
 import FormTextInput from 'src/components/auth/Input';
+
+//icons
 import { MaterialIcons } from '@expo/vector-icons';
-import { Toast } from 'react-native-toast-message/lib/src/Toast';
-import { upDated } from 'src/slices/authSlice';
-import { useDispatch } from 'react-redux';
 
 const Init = { newPass: '', confirmNewPass: '' };
 

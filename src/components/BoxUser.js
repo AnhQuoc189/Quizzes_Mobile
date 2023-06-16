@@ -1,20 +1,21 @@
-import { View, Text, StyleSheet, Image } from 'react-native';
+//Lybrary
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import React from 'react';
+
+//color
 import { colors } from 'src/styles/color';
-import { TouchableOpacity } from 'react-native';
-import { useFollowMutation, useUnFollowMutation } from 'src/services/userApi';
+
+//redux
 import { useDispatch, useSelector } from 'react-redux';
-import { SimpleLineIcons } from '@expo/vector-icons';
 import { upDated } from 'src/slices/authSlice';
 
-const BoxUser = ({
-    normal,
-    user,
-    follows,
-    follow,
-    // handleUnFollow,
-    // handleFollow,
-}) => {
+//RTKQuery
+import { useFollowMutation, useUnFollowMutation } from 'src/services/userApi';
+
+//icons
+import { SimpleLineIcons } from '@expo/vector-icons';
+
+const BoxUser = ({ normal, user, follows, follow }) => {
     const dispatch = useDispatch();
     const userData = useSelector((state) => state.auths?.authData);
     const accessToken = userData?.data?.accessToken;
