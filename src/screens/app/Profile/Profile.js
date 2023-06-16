@@ -1,3 +1,4 @@
+//Library
 import React from 'react';
 import {
     SafeAreaView,
@@ -7,20 +8,23 @@ import {
     ScrollView,
     StyleSheet,
     Image,
-    Dimensions,
 } from 'react-native';
+
+//icons
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 
-import { StackActions, NavigationActions } from 'react-navigation';
-
+//redux
 import { useSelector } from 'react-redux';
+
+//Layout
 import SubLayout from 'src/layouts/SubLayout';
-import { BarChart } from 'react-native-chart-kit';
 
+//color
 import { colors } from 'src/styles/color';
-import ProfileNavigator from 'src/navigation/ProfileNavigator';
+// import ProfileNavigator from 'src/navigation/ProfileNavigator';
 
+//chart
 import { PieChartCompo, BarChartCompo } from 'src/components/PieChart';
 
 export default function Profile({ navigation }) {

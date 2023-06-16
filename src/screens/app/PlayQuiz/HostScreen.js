@@ -1,13 +1,18 @@
-import React, { useEffect } from 'react';
+//Lirary
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView, Text, StyleSheet, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+
+//Screen
 import WaitingRoom from './WaitingRoom';
 import QuestionScreen from './QuestionScreen';
 import QuesntionLeaderboard from './QuesntionLeaderboard';
 import LeaderBoardCurrent from './Leaderboardcurrent';
-import { useState } from 'react';
-import { LinearGradient } from 'expo-linear-gradient';
+
+//redux
 import { useSelector } from 'react-redux';
 
+//RTKQuery
 import {
     useUpdateQuestionleaderboardMutation,
     useUpdateCurrentleaderboardMutation,
@@ -230,7 +235,7 @@ export default function HostScreen({ navigation }) {
         setIsQuestionResultScreen(true);
         setTimeout(() => {
             displayCurrentLeaderBoard(index);
-        }, 4000);
+        }, 3000);
     };
 
     const displayCurrentLeaderBoard = (index) => {
@@ -241,7 +246,7 @@ export default function HostScreen({ navigation }) {
         } else {
             setTimeout(() => {
                 displayQuestion(index + 1);
-            }, 4000);
+            }, 3000);
         }
     };
 

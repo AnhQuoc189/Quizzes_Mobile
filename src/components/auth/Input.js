@@ -1,6 +1,5 @@
+//Librari
 import React, { useEffect, useState } from 'react';
-// import { MaterialCommunityIcons } from '@expo/vector-icons';
-
 import {
     StyleSheet,
     View,
@@ -8,7 +7,6 @@ import {
     TextInput,
     TouchableOpacity,
 } from 'react-native';
-
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const checkIsPass = ['Password', 'Confirm Password'];

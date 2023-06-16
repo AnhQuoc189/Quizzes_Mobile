@@ -1,6 +1,10 @@
-import React from 'react';
+//Library
 import { View, StyleSheet, Text, Image } from 'react-native';
+import React from 'react';
+
+//icons
 import { FontAwesome5 } from '@expo/vector-icons';
+
 export default function UserLeader({ index, playerList, player, leaderboard }) {
     return (
         <View style={styles.viewUser}>

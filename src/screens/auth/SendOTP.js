@@ -1,15 +1,16 @@
+//Library
 import React, { useState, useRef, useEffect } from 'react';
-import { TouchableOpacity, View, Text, TextInput } from 'react-native';
-import { StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native';
+import { View, Text, TextInput, StyleSheet, SafeAreaView } from 'react-native';
+
+//RTKQuery
 import {
     useRegisterMailOtpQuery,
     useVerifyOtpMutation,
 } from 'src/services/authApi';
 
+//component
 import Header from 'src/components/auth/Header';
 import Button from 'src/components/auth/Button';
-
 import ResendOTP from 'src/components/auth/ResendOTP';
 
 const InitOtp = { 1: '', 2: '', 3: '', 4: '' };

@@ -1,17 +1,14 @@
+//Library
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import React from 'react';
+
+//icons
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
-import { StyleSheet, View, Text } from 'react-native';
-import { bgColors } from 'src/styles/color';
-import { colors } from 'src/styles/color';
-import { TouchableOpacity } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-{
-    /* <MaterialCommunityIcons name="checkbox-blank-outline" size={24} color="black" /> */
-}
-{
-    /* <Ionicons name="ios-checkbox" size={24} color="black" /> */
-}
+
+//color
+import { colors } from 'src/styles/color';
 
 export default function Answer({
     name,

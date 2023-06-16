@@ -1,18 +1,16 @@
-import {
-    StyleSheet,
-    Text,
-    View,
-    FlatList,
-    ActivityIndicator,
-} from 'react-native';
-import React, { useState, useEffect, useCallback } from 'react';
-import BoxQuiz from '../BoxQuiz';
+//Library
+import { StyleSheet, View, FlatList, ActivityIndicator } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { useIsFocused } from '@react-navigation/native';
+
+//redux
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchAllQuizes } from 'src/slices/quizSlice';
-import { useGetAllQuizzesQuery } from 'src/services/quizApi';
+
+//filter
 import filter from 'lodash.filter';
-import { useIsFocused, useFocusEffect } from '@react-navigation/native';
-import { API } from 'src/constants/api';
+
+//component
+import BoxQuiz from '../BoxQuiz';
 
 const QuizFilter = ({ navigation }) => {
     const dispatch = useDispatch();

@@ -1,14 +1,12 @@
 // Library
 import { useEffect, useState } from 'react';
 import { TouchableOpacity, StyleSheet, Text, View } from 'react-native';
+
+//icons
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 //redux
-import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
-
-// Actions
-import { changeActiveCategory } from 'src/slices/creatorSlice';
+import { useSelector, useDispatch } from 'react-redux';
 
 // Color
 import { colors, bgColors } from 'src/styles/color';

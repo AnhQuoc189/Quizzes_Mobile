@@ -16,12 +16,11 @@ const Button = ({ navigation, title, handlePress, loading, width }) => {
                 ...styles.container,
                 width: width,
                 backgroundColor: colors.lightPurple,
-                // height: '0%',
             }}
             onPress={handlePress}
         >
             {loading ? (
-                <ActivityIndicator size="large" color="#fff" />
+                <ActivityIndicator size="small" color="#fff" />
             ) : (
                 <Text style={{ ...styles.text, color: '#fff' }}>{title}</Text>
             )}

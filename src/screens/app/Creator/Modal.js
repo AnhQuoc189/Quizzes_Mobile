@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+//Library
 import {
     Pressable,
     StyleSheet,
@@ -6,7 +6,11 @@ import {
     Text,
     TouchableOpacity,
 } from 'react-native';
+
+//color
 import { bgColors, colors } from 'src/styles/color';
+
+//component
 import Button from 'src/components/creator/Button';
 
 export function ModalQuiz({

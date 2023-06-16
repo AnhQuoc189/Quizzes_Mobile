@@ -1,61 +1,29 @@
 // Library
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import {
     StyleSheet,
     Text,
     View,
     ScrollView,
-    TouchableOpacity,
-    Modal,
-    TextInput,
-    Pressable,
     ToastAndroid,
     SafeAreaView,
 } from 'react-native';
+
+//redux
 import { useSelector, useDispatch } from 'react-redux';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
-// Layout
-import { MainLayout } from 'src/layouts';
-
-import AnswerInput from './AnswerInput';
-
-// Constant
-import { timeLimit } from 'src/constants/time.constant';
-import { questionTypes } from 'src/constants/questionTypes.constant';
-import { pointTypes } from 'src/constants/pointTypes.constant';
-import { optionQuestions } from 'src/constants/optionQuestion';
-
-// Actions
-import {
-    addQuestion,
-    changeActiveQuestionIndex,
-    changeActiveQuestionInfo,
-    changeQuestionInfo,
-    deleteQuestion,
-    duplicateQuestion,
-} from 'src/slices/creatorSlice';
-
-import { ModalQuiz } from './Modal';
+import { updateQuiz } from 'src/slices/quizSlice';
 
 // Component
-import {
-    Button,
-    CoverImage,
-    Header,
-    PoolAnswer,
-    TrueOrFalseAnswer,
-} from 'src/components/creator';
-import { bgColors, colors } from 'src/styles/color';
-import { useEffect } from 'react';
+import { Header } from 'src/components/creator';
 import Item from './Item';
 
-// import { useSelector } from 'react-redux';
+//color
+import { bgColors, colors } from 'src/styles/color';
+
+//RTKQuery
 import { useAddQuestionMutation } from 'src/services/quizApi';
 import { useDeleteQuestionMutation } from 'src/services/quizApi';
-import { updateQuiz } from 'src/slices/quizSlice';
-import { useCallback } from 'react';
 
 const InitQuestion = {
     questionType: 'Quiz',

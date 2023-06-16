@@ -1,6 +1,4 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useFocusEffect } from '@react-navigation/native';
-import React, { useEffect, useCallback, useState } from 'react';
+import React, { useEffect } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -8,38 +6,40 @@ import {
     View,
     Text,
     Image,
-    ToastAndroid,
-    Platform,
+    ActivityIndicator,
 } from 'react-native';
-import { ActivityIndicator } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useIsFocused } from '@react-navigation/native';
 
+//icons
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useSelector, useDispatch } from 'react-redux';
 
+//redux
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchTeacherQuizes } from 'src/slices/quizSlice';
+import { fetchAllUsers } from 'src/slices/usersSlice';
+import { createSocket } from 'src/slices/socketSlice';
+
+//component
 import { BoxQuiz } from 'src/components';
 import SubLayout from 'src/layouts/SubLayout';
 
+//color
 import { colors } from 'src/styles/color';
-import { useGetTeacherQuizzesQuery } from 'src/services/quizApi';
-import { useCreateQuizMutation } from 'src/services/quizApi';
-import { createSocket } from 'src/slices/socketSlice';
+
+//Socket-Io
 import { io } from 'socket.io-client';
-import { useIsFocused } from '@react-navigation/native';
-import { fetchAllUsers } from 'src/slices/usersSlice';
+
+//RTKQuery
 import { API } from 'src/constants/api';
+import { useGetTeacherQuizzesQuery } from 'src/services/quizApi';
+
+//Toast
+import { Toast } from 'react-native-toast-message/lib/src/Toast';
 
 let nameIcontime;
 let timeCurrent;
-
-import { Audio } from 'expo-av';
-
-import { fetchTeacherQuizes } from 'src/slices/quizSlice';
-// import ToastManager, { Toast } from 'toastify-react-native';
-import { Toast } from 'react-native-toast-message/lib/src/Toast';
-import { defaultAvatar } from 'src/assets/images/defaultAvatar.png';
 
 export default function Home({ navigation }) {
     const SOCKET_URL = 'http://192.168.179.18:3001';
@@ -113,31 +113,6 @@ export default function Home({ navigation }) {
             dispatch(fetchTeacherQuizes(data));
         }
     }, [data]);
-
-    const [sound, setSound] = useState();
-
-    const playSound = async () => {
-        console.log('Loading Sound');
-        const { sound } = await Audio.Sound.createAsync(
-            require('src/assets/video/quizzSound.mp3'),
-        );
-        setSound(sound);
-
-        console.log('Playing Sound');
-        await sound.playAsync();
-        // setSound(false);
-    };
-    useEffect(() => {
-        return sound
-            ? () => {
-                  console.log('Unloading Sound');
-                  sound.unloadAsync();
-              }
-            : () => {
-                  console.log('HAHAH');
-                  playSound();
-              };
-    }, [sound]);
 
     const quizes = useSelector((state) => state.quizs.quizes);
     return (
@@ -281,9 +256,9 @@ export default function Home({ navigation }) {
                     }}
                 >
                     <SubLayout>
-                        <View style={styles.viewLoading}>
+                        {/* <View style={styles.viewLoading}>
                             <ActivityIndicator size="large" color="#fff" />
-                        </View>
+                        </View> */}
                         <View style={styles.headerContainer}>
                             <Text
                                 style={{ ...styles.textHeader, fontSize: 18 }}
@@ -296,7 +271,6 @@ export default function Home({ navigation }) {
                                     paddingVertical: 2,
                                     paddingLeft: 3,
                                 }}
-                                onPress={playSound}
                             >
                                 <Text style={styles.buttonText}>See All</Text>
                             </TouchableOpacity>

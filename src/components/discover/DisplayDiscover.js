@@ -1,20 +1,21 @@
-import {
-    View,
-    Text,
-    StyleSheet,
-    TouchableOpacity,
-    FlatList,
-    ScrollView,
-    Image,
-} from 'react-native';
+//Library
+import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
+
+//redux
+import { useSelector } from 'react-redux';
+
+//icons
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Entypo } from '@expo/vector-icons';
-import { BoxUser, CategoryCard } from 'src/components';
+
+//component
+import { CategoryCard } from 'src/components';
 import { categories } from 'src/constants/category.constant';
-import { bgColors, colors } from 'src/styles/color';
-import { useState, useEffect, useCallback } from 'react';
-import { useSelector } from 'react-redux';
-import { useFocusEffect } from '@react-navigation/native';
+
+//color
+import { colors } from 'src/styles/color';
+
+//image
 import golebadge from 'src/assets/images/goldbadge.png';
 import study from 'src/assets/images/study.png';
 
@@ -58,7 +59,7 @@ const DisplayDiscover = () => {
                                     color="#660012"
                                 />
                                 <Text style={styles.textSub}>
-                                    Math . 13 Quizzes
+                                    Math . 14 Quizzes
                                 </Text>
                             </View>
                         </View>

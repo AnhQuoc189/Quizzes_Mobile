@@ -1,7 +1,11 @@
+//Library
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import React from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
+
+//color
 import { colors } from 'src/styles/color';
+
+//component
 import Header from './auth/Header';
 import Achievement from './Achievement';
 import ProfileNavigator from 'src/navigation/ProfileNavigator';

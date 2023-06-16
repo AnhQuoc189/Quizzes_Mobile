@@ -1,3 +1,4 @@
+//Library
 import React, { useEffect } from 'react';
 import {
     Image,
@@ -10,16 +11,19 @@ import {
     ScrollView,
 } from 'react-native';
 
+//chart
+import { LineChart } from 'react-native-chart-kit';
+
+//RTKQuery
 import { useAddPlayerResultMutation } from 'src/services/playerResultApi';
 import { useGetLeaderBoardQuery } from 'src/services/leaderboardApi';
-import champion from 'src/assets/images/champion.png';
-import { LineChart } from 'react-native-chart-kit';
-import { useFocusEffect } from '@react-navigation/native';
-import { useCallback } from 'react';
-import { useState } from 'react';
 
+//redux
 import { useDispatch } from 'react-redux';
 import { upDated } from 'src/slices/authSlice';
+
+//image
+import champion from 'src/assets/images/champion.png';
 
 const screenWidth = Dimensions.get('window').width;
 

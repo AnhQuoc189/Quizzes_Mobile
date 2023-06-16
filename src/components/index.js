@@ -1,3 +1,4 @@
+//component
 import BoxUser from './BoxUser';
 import CategoryCard from './CategoryCard';
 import BoxQuiz from './BoxQuiz';

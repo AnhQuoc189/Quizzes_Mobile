@@ -1,6 +1,6 @@
+//Library
 import React from 'react';
 import {
-    SafeAreaView,
     View,
     Text,
     Image,
@@ -8,8 +8,12 @@ import {
     Dimensions,
     TouchableOpacity,
 } from 'react-native';
-import Question from './Question';
+
+//icons
 import { AntDesign } from '@expo/vector-icons';
+
+//Screen
+import Question from './Question';
 
 const screenWidth = Dimensions.get('screen').width;
 export default function QuestionScreen({

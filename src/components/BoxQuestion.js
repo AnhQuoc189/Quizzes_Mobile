@@ -1,10 +1,13 @@
+//Library
 import { StyleSheet, Text, View, Image } from 'react-native';
 import React from 'react';
+
+//color
 import { colors } from 'src/styles/color';
 
 const answerConst = ['A', 'B', 'C', 'D'];
 
-const BoxQuestion = ({ number, title, type, questionData, mylibrary }) => {
+const BoxQuestion = ({ questionData, mylibrary }) => {
     return (
         <View style={styles.container}>
             <View style={styles.numberBox}>

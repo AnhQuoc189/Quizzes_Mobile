@@ -1,5 +1,8 @@
-import React, { useEffect, useLayoutEffect } from 'react';
+//Library
+import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
+
+//component
 import Answer from './Answer';
 
 export default function Question({

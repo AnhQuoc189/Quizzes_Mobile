@@ -1,17 +1,23 @@
+//Library
 import React, { useState, useRef, useEffect } from 'react';
-import { TouchableOpacity, View, Text, TextInput } from 'react-native';
-import { StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native';
+import { View, Text, TextInput, StyleSheet, SafeAreaView } from 'react-native';
+import { Toast } from 'react-native-toast-message/lib/src/Toast';
+
+//RKTQuery
 import {
     useRegisterMailOtpQuery,
     useVerifyOTPResetEmailMutation,
 } from 'src/services/authApi';
+
+//redux
 import { useDispatch } from 'react-redux';
 import { upDated } from 'src/slices/authSlice';
+
+//components
 import Header from 'src/components/auth/Header';
 import Button from 'src/components/auth/Button';
-import { Toast } from 'react-native-toast-message/lib/src/Toast';
 import ResendOTP from 'src/components/auth/ResendOTP';
+
 const InitOtp = { 1: '', 2: '', 3: '', 4: '' };
 
 export default function SendEmailOTP({ navigation, ...props }) {

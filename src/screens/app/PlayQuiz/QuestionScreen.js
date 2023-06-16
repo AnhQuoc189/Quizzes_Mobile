@@ -1,7 +1,9 @@
+//Library
 import React from 'react';
-import { useEffect } from 'react';
 import { View, StyleSheet, Text, Image } from 'react-native';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
+
+//components
 import Question from 'src/components/playquiz/Question';
 
 export default function QuestionScreen({

@@ -1,6 +1,11 @@
+//Library
 import React from 'react';
 import { SafeAreaView, View, StyleSheet, Text, ScrollView } from 'react-native';
+
+//color
 import { colors } from 'src/styles/color';
+
+//component
 import UserLeader from 'src/components/playquiz/UserLeader';
 
 const a = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];

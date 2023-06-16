@@ -1,5 +1,8 @@
+//Librari
 import React, { useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+
+//RTKQuery
 import { useGenerateOtpMutation } from 'src/services/authApi';
 
 export default function ResendOTP({ navigation, ...props }) {
@@ -18,17 +21,6 @@ export default function ResendOTP({ navigation, ...props }) {
             };
             navigation.navigate('SendOTP', infoEmail);
             props.setTime();
-        }
-        if (isError) {
-            // const errorText = error?.data?.message;
-            // switch (errorText) {
-            //     case 'email does not exists':
-            //         setEmailError(true);
-            //         setEmailFormaError(false);
-            //         break;
-            //     default:
-            //         break;
-            // }
         }
     }, [data, isError]);
 

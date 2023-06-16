@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     SafeAreaView,
     Text,
@@ -9,9 +9,12 @@ import {
     ScrollView,
     Alert,
 } from 'react-native';
+
+//redux
 import { useDispatch } from 'react-redux';
-import { useLoginUserMutation } from 'src/services/authApi';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { loGin, upDated } from 'src/slices/authSlice';
+
+//icons
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -19,11 +22,13 @@ import { MaterialIcons } from '@expo/vector-icons';
 import google from 'src/assets/images/google.png';
 import Divider from 'react-native-divider';
 
+//component
 import Header from 'src/components/auth/Header';
 import Button from 'src/components/auth/Button';
 import FormTextInput from 'src/components/auth/Input';
-import { useEffect } from 'react';
-import { loGin, upDated } from 'src/slices/authSlice';
+
+//RTKQuery
+import { useLoginUserMutation } from 'src/services/authApi';
 
 //Web: 782625948070-5a1sertfems0ia4cedglharqqo44kqb4.apps.googleusercontent.com
 //IOS; 782625948070-dnqkej8k4movbj0j37lgjuuv435iucgb.apps.googleusercontent.com

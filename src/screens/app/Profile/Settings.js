@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+//Library
+import React from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -8,21 +9,24 @@ import {
     TouchableOpacity,
 } from 'react-native';
 
-// import { StackActions, NavigationActions } from 'react-navigation';
-import { CommonActions } from '@react-navigation/native';
+//Toast
+import { Toast } from 'react-native-toast-message/lib/src/Toast';
 
+//component
 import Header from 'src/components/auth/Header';
 import Item from 'src/components/auth/Item';
-import { logOut } from 'src/slices/authSlice';
-import { useDispatch, useSelector } from 'react-redux';
 
+//redux
+import { useDispatch, useSelector } from 'react-redux';
+import { logOut } from 'src/slices/authSlice';
+
+//icons
 import { Feather } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { Switch } from 'react-native-paper';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Toast } from 'react-native-toast-message/lib/src/Toast';
+
 export default function Settings({ navigation }) {
     const dispatch = useDispatch();
 

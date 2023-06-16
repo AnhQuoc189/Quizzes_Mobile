@@ -1,21 +1,20 @@
+//Library
 import {
     StyleSheet,
-    Text,
     View,
-    TouchableOpacity,
     SafeAreaView,
     Modal,
     Pressable,
     Alert,
 } from 'react-native';
 import React, { useState } from 'react';
-import { ScrollView } from 'react-native-gesture-handler';
+
+//component
 import Header from 'src/components/auth/Header';
 import EditOrDelete from './EditOrDelete';
-
-import { useSelector } from 'react-redux';
-
 import { QuizInfo } from 'src/components';
+
+//color
 import { colors } from 'src/styles/color';
 
 const DetailQuiz = ({ navigation, ...props }) => {

@@ -1,8 +1,7 @@
-import { TouchableOpacity, Text, View, ActivityIndicator } from 'react-native';
+//Librari
+import { TouchableOpacity, Text, View } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-import { Entypo } from '@expo/vector-icons';
 import { SimpleLineIcons } from '@expo/vector-icons';
-import { useSelector } from 'react-redux';
 
 const Header = ({
     quiz,

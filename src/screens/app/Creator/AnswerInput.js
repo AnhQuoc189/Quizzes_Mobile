@@ -1,6 +1,14 @@
+//Library
 import React, { useState } from 'react';
-import { TouchableOpacity } from 'react-native';
-import { StyleSheet, TextInput, View, Text } from 'react-native';
+import {
+    StyleSheet,
+    TextInput,
+    View,
+    Text,
+    TouchableOpacity,
+} from 'react-native';
+
+//icons
 import { Entypo } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 

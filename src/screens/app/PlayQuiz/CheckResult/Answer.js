@@ -1,5 +1,8 @@
+//Library
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+
+//icons
 import { AntDesign } from '@expo/vector-icons';
 
 export default function Answer({ name, body, isCorrect, result }) {

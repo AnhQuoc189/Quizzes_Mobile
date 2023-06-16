@@ -1,21 +1,12 @@
-import {
-    Button,
-    Image,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-} from 'react-native';
+//Library
+import { Image, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { colors, bgColors } from 'src/styles/color';
-
 import * as ImagePicker from 'expo-image-picker';
-
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { useCallback } from 'react';
+
+//color
+import { colors, bgColors } from 'src/styles/color';
 
 function ImageUpload({ creator, picture, setFile }) {
     const [image, setImage] = useState();

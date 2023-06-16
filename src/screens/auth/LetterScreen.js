@@ -1,18 +1,9 @@
+//Library
 import React from 'react';
-import {
-    SafeAreaView,
-    StyleSheet,
-    View,
-    TouchableOpacity,
-    Text,
-    TextInput,
-} from 'react-native';
+import { SafeAreaView, StyleSheet, View, Text } from 'react-native';
 
-import Button from 'src/components/auth/Button';
+//component
 import Header from 'src/components/auth/Header';
-import FormTextInput from 'src/components/auth/Input';
-
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 export default function LetterScreen({ navigation, ...props }) {
     const letter = props.route.params;

@@ -3,31 +3,32 @@ import {
     Text,
     View,
     TouchableOpacity,
-    ScrollView,
     Modal,
+    FlatList,
 } from 'react-native';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import Feather from 'react-native-vector-icons/Feather';
 import { useState } from 'react';
 
+//redux
+import { useDispatch, useSelector } from 'react-redux';
+import { createGame } from 'src/slices/gamesSlice';
+import { createLeaderboard } from 'src/slices/leaderboardSlice';
+
+//icons
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Feather from 'react-native-vector-icons/Feather';
+
+//color
 import { colors } from 'src/styles/color';
 import { bgColors } from 'src/styles/color';
 
+//Component
 import BoxQuestion from './BoxQuestion';
 import { Button } from './creator';
-import { FlatList } from 'react-native';
-
 import { ModalNote } from 'src/screens/app/Creator/Modal';
 
+//RTKQuery
 import { useCreateGameMutation } from 'src/services/gameApi';
 import { useCreateLeaderboardMutation } from 'src/services/leaderboardApi';
-import { useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
-import { createGame } from 'src/slices/gamesSlice';
-import { createLeaderboard } from 'src/slices/leaderboardSlice';
-import { setQuizPlay } from 'src/slices/quizSlice';
-
-import { setGame } from 'src/slices/gamesSlice';
 
 const QuizInfo = ({
     isMine,

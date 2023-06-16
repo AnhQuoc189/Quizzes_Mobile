@@ -2,13 +2,11 @@
 import { SafeAreaView, View, StyleSheet, TextInput } from 'react-native';
 import { SimpleLineIcons } from '@expo/vector-icons';
 // import { TextInput } from 'react-native-paper';
-import { ScrollView } from 'react-native-gesture-handler';
 import { useState } from 'react';
 
 //redux
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllQuizes } from 'src/slices/quizSlice';
-import { useGetPublicQuizzesQuery } from 'src/services/quizApi';
 import { searchQuery } from 'src/slices/searchSlice';
 
 //component
@@ -19,8 +17,7 @@ import { API } from 'src/constants/api';
 import { colors } from 'src/styles/color';
 import { DisplayDiscover, FilterSearch } from 'src/components/discover';
 import { fetchAllUsers } from 'src/slices/usersSlice';
-import { useEffect, useCallback } from 'react';
-import { BackHandler } from 'react-native';
+import { useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 export default function Discover({ navigation }) {
     const dispatch = useDispatch();

@@ -1,13 +1,8 @@
+//Librari
 import React from 'react';
-import {
-    StyleSheet,
-    View,
-    Text,
-    Touchable,
-    TouchableOpacity,
-} from 'react-native';
-import { Feather } from '@expo/vector-icons';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
+
 export default function Item({ navigation, ...props }) {
     return (
         <TouchableOpacity onPress={props.onPress}>

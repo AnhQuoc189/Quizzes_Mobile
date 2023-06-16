@@ -1,21 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, TextInput } from 'react-native';
 import {
-    SafeAreaView,
     StyleSheet,
     View,
     Text,
     Image,
-    Platform,
     ActivityIndicator,
+    ScrollView,
+    TextInput,
+    TouchableOpacity,
 } from 'react-native';
-import Header from 'src/components/auth/Header';
-import { useDispatch, useSelector } from 'react-redux';
-import { TouchableOpacity } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { useUpdateUserMutation } from 'src/services/userApi';
-import { upDated } from 'src/slices/authSlice';
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
+
+//component
+import Header from 'src/components/auth/Header';
+
+//redux
+import { useDispatch, useSelector } from 'react-redux';
+import { upDated } from 'src/slices/authSlice';
+
+//RTKQuery
+import { useUpdateUserMutation } from 'src/services/userApi';
 
 export default function EditProfile({ navigation }) {
     const dispatch = useDispatch();

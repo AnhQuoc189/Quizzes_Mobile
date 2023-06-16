@@ -1,15 +1,30 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { TextInput, TouchableOpacity } from 'react-native';
-import { SafeAreaView, View, Text, StyleSheet } from 'react-native';
-import Header from 'src/components/auth/Header';
-import { ActivityIndicator } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import {
+    SafeAreaView,
+    View,
+    Text,
+    StyleSheet,
+    TextInput,
+    TouchableOpacity,
+    ActivityIndicator,
+} from 'react-native';
+
+//redux
 import { useSelector, useDispatch } from 'react-redux';
-import { useCreatePlayerResultMutation } from 'src/services/playerResultApi';
-import { createPlayerResults } from 'src/slices/playerResultSlice';
-import { useAddPlayerMutation } from 'src/services/gameApi';
 import { addPlayer } from 'src/slices/gamesSlice';
+import { createPlayerResults } from 'src/slices/playerResultSlice';
+
+//RTKQuery
+import { useCreatePlayerResultMutation } from 'src/services/playerResultApi';
+import { useAddPlayerMutation } from 'src/services/gameApi';
+
+//component
+import Header from 'src/components/auth/Header';
+
+//Toast
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
-import { useFocusEffect } from '@react-navigation/native';
+
+//Sound
 import { Audio } from 'expo-av';
 
 export default function JoinGame({ navigation }) {
