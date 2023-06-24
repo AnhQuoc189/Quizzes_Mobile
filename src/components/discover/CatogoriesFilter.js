@@ -24,6 +24,9 @@ import BoxQuiz from '../BoxQuiz';
 import CategoryCard from '../CategoryCard';
 
 const CatogoriesFilter = ({ navigation }) => {
+    const userInfo = useSelector((state) => state.auths?.user);
+    const userType = userInfo?.userType;
+
     const searchQuery = useSelector((state) => state.searchs.searchQuery);
     const [result, setResults] = useState([]);
     const [showQuiz, setShowQuiz] = useState(false);
@@ -94,6 +97,7 @@ const CatogoriesFilter = ({ navigation }) => {
                         navigation={navigation}
                         mylibrary={false}
                         direct="DetailQuiz"
+                        userType={userType}
                     />
                 )}
             />

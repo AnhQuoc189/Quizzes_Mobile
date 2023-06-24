@@ -26,7 +26,7 @@ const UsersFilter = () => {
     const [showData, setShowData] = useState(true);
 
     const info = useSelector((state) => state.auths?.user);
-    let follows = info.follow;
+    let follows = info?.follow;
     const searchQuery = useSelector((state) => state.searchs.searchQuery);
     const users = useSelector((state) => state.users.users);
 

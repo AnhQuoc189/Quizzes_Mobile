@@ -12,7 +12,7 @@ const Badge = ({ badge }) => (
     </View>
 );
 
-const UserCard = ({ user, index }) => {
+const UserCard = ({ user, index, navigation }) => {
     // Function check URL của hình ảnh có hợp lệ hay ko
     const checkImageURL = (url) => {
         if (!url) return false;
@@ -38,7 +38,12 @@ const UserCard = ({ user, index }) => {
         }
     };
 
-    const handleShowInformation = () => {};
+    const handleShowInformation = () => {
+        navigation.navigate('Profile', {
+            userInfo: user,
+            other: true,
+        });
+    };
 
     return (
         <TouchableOpacity
@@ -51,7 +56,7 @@ const UserCard = ({ user, index }) => {
 
             <View style={styles.avatarContainer}>
                 <Image
-                    resizeMode="contain"
+                    resizeMode="cover"
                     style={styles.avatar}
                     source={
                         checkImageURL(user.avatar)

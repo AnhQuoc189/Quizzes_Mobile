@@ -14,12 +14,19 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import CreatorNavigator from './CreatorNavigator';
 import { TouchableOpacity } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
 import AddQuestion from 'src/screens/app/Creator/AddQuestion';
 import Creator from 'src/screens/app/Creator/Creator';
+
+import { useSelector } from 'react-redux';
+import Community from 'src/screens/app/Community/Community';
+import CommunityDetais from 'src/screens/app/Community/CommunityDetais';
+import JoinGame from 'src/screens/app/PlayQuiz/JoinGame';
 
 const Tab = createBottomTabNavigator();
 
 export default function BottomNavigator({ navigation }) {
+    const userInfo = useSelector((state) => state.auths?.user);
     return (
         <Tab.Navigator
             initialRouteName="Home"
@@ -59,7 +66,6 @@ export default function BottomNavigator({ navigation }) {
                             return (
                                 <TouchableOpacity
                                     onPress={() => {
-                                        console.log('CC');
                                         navigation.navigate('Creator', {
                                             quiz: '',
                                             creator: true,
@@ -90,6 +96,30 @@ export default function BottomNavigator({ navigation }) {
                                     </View>
                                 </TouchableOpacity>
                             );
+                        case 'JoinGame':
+                            return (
+                                <View
+                                    style={{
+                                        width: 60,
+                                        height: 60,
+
+                                        backgroundColor: '#865DFF',
+                                        // backgroundColor: transparent,
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        borderRadius: 50,
+                                        marginBottom: 70,
+                                        shadowRadius: 20,
+                                        shadowColor: 'red',
+                                    }}
+                                >
+                                    <FontAwesome
+                                        name="th-large"
+                                        size={focused ? 28 : 24}
+                                        color="white"
+                                    />
+                                </View>
+                            );
 
                         case 'LeaderBoard':
                             return (
@@ -102,11 +132,11 @@ export default function BottomNavigator({ navigation }) {
                                 </View>
                             );
 
-                        case 'Profile':
+                        case 'Community':
                             return (
                                 <View>
-                                    <Feather
-                                        name="user"
+                                    <Ionicons
+                                        name="library-outline"
                                         size={focused ? 28 : 24}
                                         color={focused ? '#865DFF' : 'gray'}
                                     />
@@ -127,20 +157,57 @@ export default function BottomNavigator({ navigation }) {
         >
             <Tab.Screen name="Home" component={Home} />
             <Tab.Screen name="Discover" component={Discover} />
-            <Tab.Screen
+            {/* <Tab.Screen
                 name="Creator"
                 component={Creator}
                 options={{ tabBarStyle: { display: 'none' } }}
-            />
+            /> */}
+            {userInfo?.userType === 'Teacher' ? (
+                <Tab.Screen
+                    name="Creator"
+                    component={Creator}
+                    options={{ tabBarStyle: { display: 'none' } }}
+                />
+            ) : (
+                <Tab.Screen
+                    name="JoinGame"
+                    component={JoinGame}
+                    options={{ tabBarStyle: { display: 'none' } }}
+                />
+            )}
             <Tab.Screen
                 name="LeaderBoard"
                 component={LeaderBoard}
                 options={{ tabBarStyle: { display: 'none' } }}
             />
-            <Tab.Screen name="Profile" component={Profile} />
+            <Tab.Screen
+                name="Community"
+                component={Community}
+                options={{ tabBarStyle: { display: 'none' } }}
+            />
+            <Tab.Screen
+                name="Profile"
+                component={Profile}
+                options={() => ({
+                    tabBarStyle: {
+                        display: 'none',
+                    },
+                    tabBarButton: () => null,
+                })}
+            />
             <Tab.Screen
                 name="AddQuestion"
                 component={AddQuestion}
+                options={() => ({
+                    tabBarStyle: {
+                        display: 'none',
+                    },
+                    tabBarButton: () => null,
+                })}
+            />
+            <Tab.Screen
+                name="CommunityDetais"
+                component={CommunityDetais}
                 options={() => ({
                     tabBarStyle: {
                         display: 'none',

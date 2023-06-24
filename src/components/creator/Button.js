@@ -35,13 +35,12 @@ const styles = StyleSheet.create({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        // height: '36%',
         borderRadius: 20,
         paddingHorizontal: 20,
         paddingVertical: 20,
     },
     text: {
-        fontSize: 14,
+        fontSize: 15,
         fontWeight: '600',
     },
 });

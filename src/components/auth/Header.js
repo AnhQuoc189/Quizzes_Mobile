@@ -22,7 +22,18 @@ export default function Header({ navigation, ...props }) {
                             props.handleOutGame();
                         }
 
-                        navigation.navigate(props.direct);
+                        // if(props.quizList){
+                        //     navigation.navigate(props.direct,{quizList});
+                        // }
+                        if (props.direct === 'CommunityDetais') {
+                            navigation.navigate(props.direct, {
+                                quizList: props.quizList,
+                                title: props.titlee,
+                            });
+                        } else {
+                            navigation.navigate(props.direct);
+                        }
+                        // navigation.navigate(props.direct);
                     }}
                 >
                     <AntDesign name="arrowleft" size={30} color={props.color} />

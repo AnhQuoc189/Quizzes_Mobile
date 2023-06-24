@@ -1,3 +1,4 @@
+//library
 import { useEffect } from 'react';
 import {
     StyleSheet,
@@ -64,6 +65,6 @@ const styles = StyleSheet.create({
     textName: {
         fontSize: 40,
         fontWeight: 800,
-        color: 'white',
+        color: '#fff',
     },
 });

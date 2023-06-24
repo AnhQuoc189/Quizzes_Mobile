@@ -5,7 +5,7 @@ import { View, ScrollView, RefreshControl } from 'react-native';
 import styles from './alltime.style';
 import { Podium, UserCard } from 'src/components/leaderboard';
 
-const AllTime = ({ leaderBoard, refreshEvent }) => {
+const AllTime = ({ leaderBoard, refreshEvent, navigation }) => {
     return (
         <ScrollView
             showsVerticalScrollIndicator={false}
@@ -24,11 +24,17 @@ const AllTime = ({ leaderBoard, refreshEvent }) => {
                     firstUser={leaderBoard[0]}
                     secondUser={leaderBoard[1]}
                     thirdUser={leaderBoard[2]}
+                    navigation={navigation}
                 />
 
                 <View style={styles.userCardContainer}>
                     {leaderBoard?.slice(3)?.map((user, index) => (
-                        <UserCard key={index} index={index + 3} user={user} />
+                        <UserCard
+                            key={index}
+                            index={index + 3}
+                            user={user}
+                            navigation={navigation}
+                        />
                     ))}
                 </View>
             </View>

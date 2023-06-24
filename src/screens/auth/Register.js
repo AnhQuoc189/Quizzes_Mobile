@@ -31,7 +31,7 @@ const InitRegister = {
     confirmPassword: '',
 };
 
-const InitUserType = { Teacher: false, Student: false };
+// const InitUserType = { Teacher: false, Student: false };
 
 const InitErrorExist = {
     userName: false,
@@ -47,8 +47,14 @@ const InitErrorUser = {
     textQuantity: false,
 };
 
-export default function Register({ navigation }) {
-    const [formData, setFormData] = useState(InitRegister);
+export default function Register({ navigation, ...props }) {
+    const InitUserType = props.route.params.UserType;
+    console.log(InitUserType);
+
+    const [formData, setFormData] = useState({
+        ...InitRegister,
+        userType: InitUserType,
+    });
     const [formError, setFormError] = useState(InitErrorExist);
     const [errorUser, setErrorUser] = useState(InitErrorUser);
     const [type, setType] = useState(InitUserType);
@@ -132,10 +138,7 @@ export default function Register({ navigation }) {
     };
 
     const handleType = (name) => {
-        setType((pre) => {
-            var newType = { ...InitUserType, [name]: true };
-            return newType;
-        });
+        setType(name);
         setFormData({ ...formData, userType: name });
     };
 
@@ -225,12 +228,12 @@ export default function Register({ navigation }) {
                                 >
                                     <RadioButton
                                         lable="Teacher"
-                                        isSelect={type.Teacher}
+                                        isSelect={type === 'Teacher'}
                                         onPress={() => handleType('Teacher')}
                                     />
                                     <RadioButton
                                         lable="Student"
-                                        isSelect={type.Student}
+                                        isSelect={type === 'Student'}
                                         onPress={() => handleType('Student')}
                                     />
                                 </View>

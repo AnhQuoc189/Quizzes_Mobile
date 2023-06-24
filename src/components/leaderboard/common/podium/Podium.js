@@ -32,7 +32,7 @@ const BodyPodium = ({ rank, containerStyle, textStyle }) => (
 // Component đỉnh bục
 const TopPodium = ({ style }) => <View style={style} />;
 
-const Podium = ({ firstUser, secondUser, thirdUser }) => {
+const Podium = ({ firstUser, secondUser, thirdUser, navigation }) => {
     return (
         <View style={styles.container}>
             {/* Rank 2 */}
@@ -43,10 +43,12 @@ const Podium = ({ firstUser, secondUser, thirdUser }) => {
             >
                 {secondUser ? (
                     <UserBox
+                        user={secondUser}
                         avatar={secondUser.avatar}
                         name={secondUser.userName}
                         score={secondUser.point}
                         isSecondUser={true}
+                        navigation={navigation}
                     />
                 ) : null}
 
@@ -67,10 +69,12 @@ const Podium = ({ firstUser, secondUser, thirdUser }) => {
             >
                 {firstUser ? (
                     <UserBox
+                        user={firstUser}
                         avatar={firstUser.avatar}
                         name={firstUser.userName}
                         score={firstUser.point}
                         isFirstUser={true}
+                        navigation={navigation}
                     />
                 ) : null}
 
@@ -91,10 +95,12 @@ const Podium = ({ firstUser, secondUser, thirdUser }) => {
             >
                 {thirdUser ? (
                     <UserBox
+                        user={thirdUser}
                         avatar={thirdUser.avatar}
                         name={thirdUser.userName}
                         score={thirdUser.point}
                         isThirdUser={true}
+                        navigation={navigation}
                     />
                 ) : null}
 

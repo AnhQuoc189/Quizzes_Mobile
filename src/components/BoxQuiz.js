@@ -37,10 +37,12 @@ const BoxQuiz = ({ navigation, ...props }) => {
                     quizData,
                     mylibrary: props.mylibrary,
                     avatar: data.avatar,
+                    userType: props.userType,
                 });
             }}
         >
             <Image
+                resizeMode="cover"
                 style={styles.image}
                 source={{
                     // uri: 'https://us.123rf.com/450wm/sn333g/sn333g1608/sn333g160800029/65791205-math-round-bright-symbol-vector-colorful-mathematics-school-subject-bright-sign-in-thin-line-style.jpg?ver=6',
@@ -106,14 +108,13 @@ const styles = StyleSheet.create({
         height: 65,
         borderRadius: 15,
         justifyContent: 'center',
-        resizeMode: 'contain',
     },
     info: {
-        justifyContent: 'space-between',
+        justifyContent: 'center',
         display: 'flex',
         marginLeft: 10,
         flexDirection: 'column',
-        // alignItems: 'center',
+        width: '70%',
     },
 
     textHeader: {

@@ -3,7 +3,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import BottomNavigator from './BottomNavigator';
 import Settings from '../screens/app/Profile/Settings';
-import { PlayQuiz } from 'src/screens/app/PlayQuiz';
 import { DetailQuiz } from 'src/screens/app/DetailQuiz';
 import JoinGame from 'src/screens/app/PlayQuiz/JoinGame';
 import PlayerSolo from 'src/screens/app/PlayQuiz/PlayerSolo';
@@ -26,7 +25,6 @@ export default function AppNavigator(props) {
                 component={BottomNavigator}
             />
             <AppStack.Screen name="Settings" component={Settings} />
-            <AppStack.Screen name="PlayQuiz" component={PlayQuiz} />
             <AppStack.Screen name="DetailQuiz" component={DetailQuiz} />
             <AppStack.Screen name="JoinGame" component={JoinGame} />
             <AppStack.Screen name="HostScreen" component={HostScreen} />

@@ -24,7 +24,7 @@ const FriendsFilter = () => {
     const [showData, setShowData] = useState(true);
     const [data, setData] = useState();
     const info = useSelector((state) => state.auths?.user);
-    let follow = info.follow;
+    let follow = info?.follow;
 
     const searchQuery = useSelector((state) => state.searchs.searchQuery);
 

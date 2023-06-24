@@ -9,6 +9,7 @@ import { apiUser } from './services/userApi';
 import { apiGame } from './services/gameApi';
 import { apiLeaderboard } from './services/leaderboardApi';
 import { apiPlayerResult } from './services/playerResultApi';
+import { apiCommunity } from './services/communityApi';
 
 // Slices
 import authReducer from './slices/authSlice';
@@ -30,6 +31,7 @@ const store = configureStore({
         [apiGame.reducerPath]: apiGame.reducer,
         [apiLeaderboard.reducerPath]: apiLeaderboard.reducer,
         [apiPlayerResult.reducerPath]: apiPlayerResult.reducer,
+        [apiCommunity.reducerPath]: apiCommunity.reducer,
 
         auths: authReducer,
         quizs: quizReducer,
@@ -58,6 +60,7 @@ const store = configureStore({
             apiGame.middleware,
             apiLeaderboard.middleware,
             apiPlayerResult.middleware,
+            apiCommunity.middleware,
         ]),
 });
 

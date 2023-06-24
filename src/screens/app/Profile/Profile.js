@@ -1,5 +1,5 @@
 //Library
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     SafeAreaView,
     View,
@@ -26,14 +26,37 @@ import { colors } from 'src/styles/color';
 
 //chart
 import { PieChartCompo, BarChartCompo } from 'src/components/PieChart';
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
 
-export default function Profile({ navigation }) {
-    const userInfo = useSelector((state) => state.auths?.user);
-    const userName = userInfo?.userName;
-    const avatar = userInfo?.avatar;
-    const point = userInfo?.point;
-    const follow = userInfo?.follow;
+export default function Profile({ navigation, ...props }) {
+    // const other = props.route.params.other;
+    const profilePerson = useSelector((state) => state.auths?.user);
+    const profileAnother = props.route.params?.userInfo;
 
+    let userInfo = profileAnother ? profileAnother : profilePerson;
+
+    const { userName, avatar, point, follow } = userInfo ? userInfo : {};
+
+    const users = useSelector((state) => state.users.users);
+
+    const [rank, setRank] = useState();
+
+    useFocusEffect(
+        useCallback(() => {
+            if (users) {
+                let leader = [...users];
+                leader.sort(function (a, b) {
+                    return b.point - a.point;
+                });
+                leader.map((user, index) => {
+                    if (user.userName === userName) {
+                        setRank(index + 1);
+                    }
+                });
+            }
+        }),
+    );
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView
@@ -46,7 +69,9 @@ export default function Profile({ navigation }) {
                     <TouchableOpacity>
                         <TouchableOpacity
                             onPress={() => {
-                                navigation.navigate('Home');
+                                navigation.navigate(
+                                    !profileAnother ? 'Home' : 'LeaderBoard',
+                                );
                             }}
                         >
                             <Ionicons
@@ -56,17 +81,19 @@ export default function Profile({ navigation }) {
                             />
                         </TouchableOpacity>
                     </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => {
-                            navigation.navigate('Settings');
-                        }}
-                    >
-                        <Ionicons
-                            name="settings-sharp"
-                            size={28}
-                            color="white"
-                        />
-                    </TouchableOpacity>
+                    {!profileAnother && (
+                        <TouchableOpacity
+                            onPress={() => {
+                                navigation.navigate('Settings');
+                            }}
+                        >
+                            <Ionicons
+                                name="settings-sharp"
+                                size={28}
+                                color="white"
+                            />
+                        </TouchableOpacity>
+                    )}
                 </View>
                 {/* Main */}
                 <View style={styles.mainSection}>
@@ -92,7 +119,7 @@ export default function Profile({ navigation }) {
                             >
                                 {/* Name */}
                                 <Text style={styles.textHeader}>
-                                    {userName}
+                                    {userName && userName}
                                 </Text>
                                 {/* achievement */}
                                 <View style={styles.achieveBox}>
@@ -113,10 +140,8 @@ export default function Profile({ navigation }) {
                                             size={24}
                                             color="white"
                                         />
-                                        <Text style={styles.title}>
-                                            YOUR RANK
-                                        </Text>
-                                        <Text style={styles.score}>#1500</Text>
+                                        <Text style={styles.title}>RANK</Text>
+                                        <Text style={styles.score}>{rank}</Text>
                                     </View>
                                     <View style={styles.box}>
                                         <Ionicons
@@ -166,8 +191,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     header: {
-        alignItems: 'center',
-        width: '100%',
+        alignSelf: 'center',
+        width: '90%',
         justifyContent: 'space-between',
         flexDirection: 'row',
         paddingVertical: 10,
@@ -183,7 +208,7 @@ const styles = StyleSheet.create({
         width: 100,
         height: 100,
         borderRadius: 50,
-        resizeMode: 'contain',
+        resizeMode: 'cover',
     },
     displayContent: {
         width: '100%',

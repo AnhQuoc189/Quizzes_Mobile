@@ -44,9 +44,10 @@ export default function Settings({ navigation }) {
     // };
 
     const logout = () => {
-        dispatch(logOut());
         navigation.navigate('Home');
+        dispatch(logOut());
         navigation.navigate('AuthNavigator');
+        // console.log('CCCC');
     };
 
     const handlePassWord = () => {
@@ -123,8 +124,8 @@ export default function Settings({ navigation }) {
                             <Switch
                                 style={{
                                     transform: [
-                                        { scaleX: 1.2 },
-                                        { scaleY: 1.2 },
+                                        { scaleX: 1.0 },
+                                        { scaleY: 1.1 },
                                     ],
                                 }}
                             />
@@ -176,7 +177,7 @@ const styles = StyleSheet.create({
     },
     viewAll: {
         width: '100%',
-        justifyContent: 'center',
+        justifyContent: 'space-around',
         alignItems: 'center',
     },
 

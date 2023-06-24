@@ -3,9 +3,6 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { SafeAreaView } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
-// Actions
-import { useCreateQuizMutation } from 'src/services/quizApi';
-
 // Components, colors, constants
 import {
     Header,
@@ -21,7 +18,6 @@ import { fetchAllUsers } from 'src/slices/usersSlice';
 const durationTabs = ['Weekly', 'All Time'];
 
 export default function LeaderBoard({ navigation }) {
-    const [formQuiz, { data, isLoading, error }] = useCreateQuizMutation();
     const dispatch = useDispatch();
     const [leaderBoard, setLeader] = useState([]);
 
@@ -94,6 +90,7 @@ export default function LeaderBoard({ navigation }) {
                     <Weekly
                         leaderBoard={leaderBoard}
                         refreshEvent={refreshEvent}
+                        navigation={navigation}
                     />
                 );
             case 'All Time':
@@ -101,6 +98,7 @@ export default function LeaderBoard({ navigation }) {
                     <AllTime
                         leaderBoard={leaderBoard}
                         refreshEvent={refreshEvent}
+                        navigation={navigation}
                     />
                 );
             default:
@@ -139,6 +137,7 @@ export default function LeaderBoard({ navigation }) {
                 backgroundColor: colors.primary,
                 paddingTop: 16,
                 paddingHorizontal: 8,
+                justifyContent: 'space-around',
             }}
         >
             <Header title="Leaderboard" navigation={navigation} direct="Home" />

@@ -138,7 +138,7 @@ export default function JoinGame({ navigation }) {
     const joinGame = () => {
         socket?.emit(
             'add-player',
-            userData.data.user,
+            userData?.data?.user,
             socket.id,
             pin,
             (message, playerId, gameId) => {
