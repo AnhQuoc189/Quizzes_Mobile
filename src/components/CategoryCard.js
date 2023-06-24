@@ -103,8 +103,9 @@ const styles = StyleSheet.create({
         borderRadius: 20,
     },
     label: {
+        // width: '100%',
         marginTop: 5,
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: 700,
     },
     quizQuantity: {

@@ -18,9 +18,18 @@ import { QuizInfo } from 'src/components';
 import { colors } from 'src/styles/color';
 
 const DetailQuiz = ({ navigation, ...props }) => {
-    const quizData = props.route.params.quizData;
-    const mylibrary = props.route.params.mylibrary;
-    const avatar = props.route.params.avatar;
+    const {
+        quizList,
+        title,
+        quizData,
+        mylibrary,
+        avatar,
+        community,
+        userType,
+        home,
+    } = props.route.params;
+
+    console.log(userType);
 
     const [modalOption, setModalOption] = useState(false);
 
@@ -55,13 +64,27 @@ const DetailQuiz = ({ navigation, ...props }) => {
                         navigation={navigation}
                         mylibrary={mylibrary}
                         avatar={avatar}
+                        quizList={quizList}
+                        title={title}
+                        userType={userType}
+                        community={community}
                     />
                 </Pressable>
             </Modal>
             <View style={{ width: '100%', flex: 1 }}>
                 <Header
                     title="Question"
-                    direct={mylibrary ? 'Home' : 'Discover'}
+                    direct={
+                        mylibrary
+                            ? 'Home'
+                            : community
+                            ? 'CommunityDetais'
+                            : userType === 'Student' && home
+                            ? 'Home'
+                            : 'Discover'
+                    }
+                    quizList={quizList}
+                    titlee={title}
                     navigation={navigation}
                     option={true}
                     handleOption={handleOption}

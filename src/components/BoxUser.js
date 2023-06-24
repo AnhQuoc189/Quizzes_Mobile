@@ -126,7 +126,7 @@ const BoxUser = ({ normal, user, follows, follow }) => {
                 </TouchableOpacity>
             ) : (
                 <View style={styles.follow}>
-                    {follows.includes(user.userName) ? (
+                    {follows?.includes(user.userName) ? (
                         <Text style={{ color: '#D21312', width: 70 }}>
                             following
                         </Text>

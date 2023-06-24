@@ -33,7 +33,7 @@ export default function Onboard({ navigation }) {
 
                         <Button
                             title={'SignUp'}
-                            onPress={() => navigation.navigate('Register')}
+                            onPress={() => navigation.navigate('Lookup')}
                             onboard={true}
                             navigation={navigation}
                         />
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     },
 
     viewImage: {
-        marginTop: 100,
+        marginTop: '20%',
     },
 
     optionSign: {

@@ -13,12 +13,14 @@ const Badge = ({ badge }) => (
 );
 
 const UserBox = ({
+    user,
     avatar,
     name,
     score,
     isFirstUser,
     isSecondUser,
     isThirdUser,
+    navigation,
 }) => {
     // Function check URL của hình ảnh có hợp lệ hay ko
     const checkImageURL = (url) => {
@@ -32,7 +34,12 @@ const UserBox = ({
         }
     };
 
-    const handleShowInformation = () => {};
+    const handleShowInformation = () => {
+        navigation.navigate('Profile', {
+            userInfo: user,
+            other: true,
+        });
+    };
 
     return (
         <TouchableOpacity

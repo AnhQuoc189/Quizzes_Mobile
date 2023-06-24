@@ -33,7 +33,9 @@ const InitQuizData = {
 
 let arrayAnswer = [];
 
-export default function PlayerSolo({ navigation }) {
+export default function PlayerSolo({ navigation, ...props }) {
+    const { quizList, title, userType, community } = props.route.params;
+
     const [questionData, setQuestionData] = useState(InitQuizData);
     const [isStartedGame, setIsStaretedGame] = useState(false);
     const [timeAlready, setTimeAlready] = useState(false);
@@ -207,11 +209,35 @@ export default function PlayerSolo({ navigation }) {
     };
 
     const cancelGame = () => {
-        navigation.navigate('DetailQuiz', { quizData: quiz, mylibrary: false });
+        navigation.navigate('DetailQuiz', {
+            quizData: quiz,
+            mylibrary: false,
+            community,
+            quizList,
+            title,
+        });
     };
 
     const handleFinish = () => {
-        navigation.navigate('Discover');
+        if (quizList && title) {
+            navigation.navigate('CommunityDetais', {
+                quizList,
+                title,
+                community,
+            });
+        } else {
+            // if (student) {
+            //     navigation.navigate('Home');
+            // } else {
+            //     navigation.navigate('Discover');
+            // }
+            navigation.navigate('DetailQuiz', {
+                quizData: quiz,
+                mylibrary: false,
+                userType,
+                community,
+            });
+        }
     };
 
     const handleAnswer = (key) => {

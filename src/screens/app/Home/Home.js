@@ -17,13 +17,14 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 //redux
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchTeacherQuizes } from 'src/slices/quizSlice';
+import { fetchTeacherQuizes, fetchAllQuizes } from 'src/slices/quizSlice';
 import { fetchAllUsers } from 'src/slices/usersSlice';
 import { createSocket } from 'src/slices/socketSlice';
 
 //component
 import { BoxQuiz } from 'src/components';
 import SubLayout from 'src/layouts/SubLayout';
+import QuizCommunity from './QuizCommunity';
 
 //color
 import { colors } from 'src/styles/color';
@@ -42,7 +43,7 @@ let nameIcontime;
 let timeCurrent;
 
 export default function Home({ navigation }) {
-    const SOCKET_URL = 'http://192.168.179.18:3001';
+    const SOCKET_URL = 'http://192.168.91.18:3001';
     const dispatch = useDispatch();
     const focus = useIsFocused();
 
@@ -52,6 +53,7 @@ export default function Home({ navigation }) {
 
     const userInfo = useSelector((state) => state.auths?.user);
     const userName = userInfo?.userName;
+    const userType = userInfo?.userType;
     const avatar = userInfo?.avatar;
 
     useEffect(() => {
@@ -77,6 +79,20 @@ export default function Home({ navigation }) {
             .then((data) => data.json())
             .then((json) => {
                 dispatch(fetchAllUsers(json));
+            })
+            .catch((error) => console(error));
+
+        fetch(`${API}api/quizzes/public`, {
+            method: 'GET',
+            headers: new Headers({
+                Authorization: `Bearer ${accessToken}`,
+                'user-agent': 'Mozilla/4.0 MDN Example',
+                'content-type': 'application/json',
+            }),
+        })
+            .then((data) => data.json())
+            .then((json) => {
+                dispatch(fetchAllQuizes(json));
             })
             .catch((error) => console(error));
     }, []);
@@ -115,6 +131,8 @@ export default function Home({ navigation }) {
     }, [data]);
 
     const quizes = useSelector((state) => state.quizs.quizes);
+    const allquizes = useSelector((state) => state.quizs.allquizes);
+
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView
@@ -153,9 +171,7 @@ export default function Home({ navigation }) {
 
                         <TouchableOpacity
                             onPress={() => {
-                                navigation.navigate('Profile', {
-                                    avatar: 'cc',
-                                });
+                                navigation.navigate('Profile');
                             }}
                         >
                             <Image
@@ -193,60 +209,62 @@ export default function Home({ navigation }) {
                     </View>
 
                     {/* Status Find Friends */}
-                    <View style={styles.boxFindFriend}>
-                        <Text
-                            style={{
-                                ...styles.textHeader,
-                                fontSize: 15,
-                                color: '#D5D1F5',
-                            }}
-                        >
-                            FEATURED
-                        </Text>
-
-                        <Text
-                            style={{
-                                ...styles.textTiltle,
-                                fontSize: 18,
-                                width: '100%',
-                                color: 'white',
-                                textAlign: 'center',
-                            }}
-                        >
-                            Take part in challenges with friends or other
-                            players
-                        </Text>
-
-                        <TouchableOpacity
-                            style={styles.btnFindFriends}
-                            onPress={() => {
-                                navigation.navigate('JoinGame');
-                            }}
-                        >
-                            <View
+                    {userInfo?.userType === 'Teacher' && (
+                        <View style={styles.boxFindFriend}>
+                            <Text
                                 style={{
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
+                                    ...styles.textHeader,
+                                    fontSize: 15,
+                                    color: '#D5D1F5',
                                 }}
                             >
-                                <Ionicons
-                                    name="people-circle"
-                                    size={24}
-                                    color={colors.primary}
-                                />
-                                <Text
+                                FEATURED
+                            </Text>
+
+                            <Text
+                                style={{
+                                    ...styles.textTiltle,
+                                    fontSize: 18,
+                                    width: '100%',
+                                    color: 'white',
+                                    textAlign: 'center',
+                                }}
+                            >
+                                Take part in challenges with friends or other
+                                players
+                            </Text>
+
+                            <TouchableOpacity
+                                style={styles.btnFindFriends}
+                                onPress={() => {
+                                    navigation.navigate('JoinGame');
+                                }}
+                            >
+                                <View
                                     style={{
-                                        ...styles.textHeader,
-                                        fontSize: 15,
-                                        marginLeft: 10,
-                                        color: colors.primary,
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
                                     }}
                                 >
-                                    Join Game
-                                </Text>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
+                                    <Ionicons
+                                        name="people-circle"
+                                        size={24}
+                                        color={colors.primary}
+                                    />
+                                    <Text
+                                        style={{
+                                            ...styles.textHeader,
+                                            fontSize: 15,
+                                            marginLeft: 10,
+                                            color: colors.primary,
+                                        }}
+                                    >
+                                        Join Game
+                                    </Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                    )}
                 </View>
 
                 {/* Status Find Live Quizzes */}
@@ -263,7 +281,9 @@ export default function Home({ navigation }) {
                             <Text
                                 style={{ ...styles.textHeader, fontSize: 18 }}
                             >
-                                My Library
+                                {userInfo?.userType === 'Teacher'
+                                    ? 'My Library'
+                                    : 'Top pics Quizzes'}
                             </Text>
 
                             <TouchableOpacity
@@ -282,15 +302,20 @@ export default function Home({ navigation }) {
                             </View>
                         ) : (
                             <View>
-                                {quizes.map((quizData, index) => (
-                                    <BoxQuiz
-                                        key={index}
-                                        quizData={quizData}
-                                        navigation={navigation}
-                                        direct="DetailQuiz"
-                                        mylibrary={true}
-                                    />
-                                ))}
+                                {userInfo?.userType === 'Teacher' ? (
+                                    quizes.map((quizData, index) => (
+                                        <BoxQuiz
+                                            key={index}
+                                            quizData={quizData}
+                                            navigation={navigation}
+                                            direct="DetailQuiz"
+                                            mylibrary={true}
+                                            userType={userType}
+                                        />
+                                    ))
+                                ) : (
+                                    <QuizCommunity navigation={navigation} />
+                                )}
                             </View>
                         )}
                     </SubLayout>

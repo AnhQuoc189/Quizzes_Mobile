@@ -2,6 +2,8 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import Onboard from '../screens/auth/Onboard';
+import Lookup from '../screens/auth/Lookup';
+import UserType from '../screens/auth/UserType';
 import Login from '../screens/auth/Login';
 import Register from '../screens/auth/Register';
 import Reset from '../screens/auth/Reset';
@@ -18,6 +20,8 @@ export default function AuthNavigator(props) {
             screenOptions={{ headerShown: false }}
         >
             <AuthStack.Screen name="Onboard" component={Onboard} />
+            <AuthStack.Screen name="Lookup" component={Lookup} />
+            <AuthStack.Screen name="UserType" component={UserType} />
             <AuthStack.Screen name="Login" component={Login} />
             <AuthStack.Screen name="Register" component={Register} />
             <AuthStack.Screen name="SendOTP" component={SendOTP} />

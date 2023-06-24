@@ -6,7 +6,7 @@ import { useState } from 'react';
 import styles from './weekly.style';
 import { UserCard } from 'src/components/leaderboard';
 
-const Weekly = ({ leaderBoard, refreshEvent }) => {
+const Weekly = ({ leaderBoard, refreshEvent, navigation }) => {
     return (
         <ScrollView
             showsVerticalScrollIndicator={false}
@@ -23,7 +23,12 @@ const Weekly = ({ leaderBoard, refreshEvent }) => {
             <View style={styles.container}>
                 {leaderBoard &&
                     leaderBoard?.map((user, index) => (
-                        <UserCard key={index} index={index} user={user} />
+                        <UserCard
+                            key={index}
+                            index={index}
+                            user={user}
+                            navigation={navigation}
+                        />
                     ))}
             </View>
         </ScrollView>

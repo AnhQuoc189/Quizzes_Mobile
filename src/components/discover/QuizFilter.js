@@ -24,6 +24,9 @@ const QuizFilter = ({ navigation }) => {
 
     const quizes = useSelector((state) => state.quizs.allquizes);
 
+    const userInfo = useSelector((state) => state.auths?.user);
+    const userType = userInfo?.userType;
+
     useEffect(() => {
         if (quizes) {
             setData(quizes);
@@ -68,6 +71,7 @@ const QuizFilter = ({ navigation }) => {
                         mylibrary={false}
                         direct="DetailQuiz"
                         decover={true}
+                        userType={userType}
                     />
                 )}
             />

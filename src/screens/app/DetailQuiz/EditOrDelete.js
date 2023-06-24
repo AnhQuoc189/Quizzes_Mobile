@@ -22,12 +22,17 @@ import { setQuizPlay } from 'src/slices/quizSlice';
 import { useFocusEffect } from '@react-navigation/native';
 
 export default function EditOrDelete({
+    quizList,
+    title,
     avatar,
     onClose,
     quizData,
     navigation,
     mylibrary,
+    userType,
+    community,
 }) {
+    console.log(userType);
     const dispatch = useDispatch();
     const [point, setPoint] = useState();
     const userData = useSelector((state) => state.auths?.authData);
@@ -166,8 +171,16 @@ export default function EditOrDelete({
 
     const handleSolo = () => {
         dispatch(setQuizPlay(quizData));
-        navigation.navigate('PlaySolo');
+        onClose();
+        navigation.navigate('PlaySolo', {
+            quizList,
+            title,
+            userType,
+            community,
+        });
     };
+
+    console.log(userType);
 
     const handleImport = () => {
         showImportDialog();
@@ -264,7 +277,8 @@ export default function EditOrDelete({
             ) : (
                 <View style={styles.footer}>
                     {userName !== quizData.creatorName &&
-                        userName !== quizData.sourceCreator && (
+                        userName !== quizData.sourceCreator &&
+                        userType === 'Teacher' && (
                             <TouchableOpacity
                                 style={styles.editButton}
                                 onPress={handleImport}

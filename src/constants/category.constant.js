@@ -39,4 +39,9 @@ export const categories = [
         icon: 'laptop',
         color: '#B6D9AC',
     },
+    {
+        name: 'Language',
+        icon: 'atom',
+        color: '#2E8A99',
+    },
 ];
