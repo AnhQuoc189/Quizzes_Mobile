@@ -13,7 +13,6 @@ import { apiCommunity } from './services/communityApi';
 
 // Slices
 import authReducer from './slices/authSlice';
-// import creatorReducer from './slices/creatorSlice';
 import searchReducer from './slices/searchSlice.js';
 import quizReducer from './slices/quizSlice';
 import userReducer from './slices/usersSlice';
@@ -21,7 +20,7 @@ import socketReducer from './slices/socketSlice';
 import gameReducer from './slices/gamesSlice';
 import leaderboardReducer from './slices/leaderboardSlice';
 import playeResultReducer from './slices/playerResultSlice';
-import { users } from './constants/user.constant';
+import communityReducer from './slices/communitySlice';
 
 const store = configureStore({
     reducer: {
@@ -41,6 +40,7 @@ const store = configureStore({
         searchs: searchReducer,
         leaderboards: leaderboardReducer,
         playeResults: playeResultReducer,
+        communities: communityReducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({

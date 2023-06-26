@@ -70,7 +70,7 @@ const QuizFilter = ({ navigation }) => {
                         navigation={navigation}
                         mylibrary={false}
                         direct="DetailQuiz"
-                        decover={true}
+                        discover={true}
                         userType={userType}
                     />
                 )}

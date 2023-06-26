@@ -9,56 +9,104 @@ import {
     Text,
     Image,
     ActivityIndicator,
+    Modal,
+    Pressable,
 } from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
 
 //redux
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import {
+    fetchAllCommunities,
+    fetchAllCommunity,
+} from 'src/slices/communitySlice';
 
 //RTLQuery
+import { API } from 'src/constants/api';
 import { useGetCommunitiesQuery } from 'src/services/communityApi';
 
 //component
 import Header from 'src/components/auth/Header';
+import ModalAdd from './ModalAdd';
 
 export default function Community({ navigation }) {
+    const dispatch = useDispatch();
+    const focus = useIsFocused();
     const userData = useSelector((state) => state.auths?.authData);
     const accessToken = userData?.data?.accessToken;
-    const [result, setResult] = useState();
-    const { data, isLoading } = useGetCommunitiesQuery(accessToken);
-    const quizes = useSelector((state) => state.quizs.allquizes);
+    // const { data, isLoading } = useGetCommunitiesQuery(accessToken);
+
+    const [modalAdd, setModalAdd] = useState(false);
+
+    // useEffect(() => {
+    //     if (data) {
+    //         fetchAllCommunities(data);
+    //     }
+    // }, [data]);
 
     useEffect(() => {
-        if (data) {
-            const res = data.map((item) => {
-                let quizList = [];
-                quizes.map(async (quiz) => {
-                    if (item.quizzes.includes(quiz._id)) {
-                        quizList.push(quiz);
-                    }
-                });
-                return { ...item, quizList };
-            });
-            setResult(res);
-        }
-    }, [data]);
+        fetch(`${API}api/community`, {
+            method: 'GET',
+            headers: new Headers({
+                Authorization: `Bearer ${accessToken}`,
+                'user-agent': 'Mozilla/4.0 MDN Example',
+                'content-type': 'application/json',
+            }),
+        })
+            .then((data) => data.json())
+            .then((json) => {
+                dispatch(fetchAllCommunities(json));
+            })
+            .catch((error) => console(error));
+    }, [focus]);
+
+    const communities = useSelector((state) => state.communities.communities);
 
     const handleCommunitiDetails = (item) => {
+        dispatch(fetchAllCommunity(item));
         navigation.navigate('CommunityDetais', {
+            quiz: item,
             quizList: item.quizList,
             title: item.tags,
         });
     };
 
+    const addCommunity = () => {
+        setModalAdd(true);
+    };
+
     return (
         <SafeAreaView style={styles.viewSafeArea}>
-            <Header title="Comunities" direct="Home" navigation={navigation} />
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalAdd}
+                onRequestClose={() => {
+                    Alert.alert('Modal has been closed.');
+                    setModalAdd(!modalAdd);
+                }}
+            >
+                <Pressable
+                    onPress={() => setModalAdd(!modalAdd)}
+                    style={styles.viewPress}
+                >
+                    <ModalAdd setModalAdd={setModalAdd} />
+                </Pressable>
+            </Modal>
+            <Header
+                title="Comunities"
+                direct="Home"
+                navigation={navigation}
+                community={true}
+                addCommunity={addCommunity}
+            />
             <ScrollView
                 showsVerticalScrollIndicator={false}
                 style={styles.viewScroll}
             >
                 <View style={styles.categoryContain}>
-                    {result &&
-                        result.map((item, index) => (
+                    {communities &&
+                        communities.map((item, index) => (
                             <TouchableOpacity
                                 style={styles.viewItem}
                                 key={index}
@@ -69,19 +117,19 @@ export default function Community({ navigation }) {
                                         style={styles.image}
                                         resizeMode="cover"
                                         source={{
-                                            uri: item.backgroundImage
-                                                ? item.backgroundImage
+                                            uri: item?.backgroundImage
+                                                ? item?.backgroundImage
                                                 : 'https://i0.wp.com/thatnhucuocsong.com.vn/wp-content/uploads/2023/02/Hinh-anh-avatar-cute.jpg?ssl\u003d1',
                                         }}
                                     />
                                 </View>
                                 <Text style={styles.nameCommunity}>
-                                    {item.name}
+                                    {item?.name}
                                 </Text>
                             </TouchableOpacity>
                         ))}
                 </View>
-                {isLoading && <ActivityIndicator size="large" color="#fff" />}
+                {/* {isLoading && <ActivityIndicator size="large" color="#fff" />} */}
             </ScrollView>
         </SafeAreaView>
     );
@@ -127,5 +175,13 @@ const styles = StyleSheet.create({
     nameCommunity: {
         textAlign: 'center',
         width: '80%',
+    },
+
+    viewPress: {
+        height: '100%',
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(105,105,105, 0.6)',
     },
 });

@@ -52,13 +52,11 @@ export default function JoinGame({ navigation }) {
 
     useEffect(() => {
         const handlePlaySound = async () => {
-            console.log('Loading Sound');
             const { sound } = await Audio.Sound.createAsync(
                 require('src/assets/video/quizzSound.mp3'),
             );
             setSound(sound);
 
-            console.log('Playing Sound');
             await sound.playAsync();
         };
         handlePlaySound();
@@ -67,12 +65,9 @@ export default function JoinGame({ navigation }) {
     useEffect(() => {
         return sound
             ? () => {
-                  console.log('Unloading Sound');
                   sound.unloadAsync();
               }
-            : () => {
-                  console.log('HAHAH');
-              };
+            : () => {};
     }, [sound]);
 
     useEffect(() => {

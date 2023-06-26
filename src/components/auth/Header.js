@@ -27,6 +27,7 @@ export default function Header({ navigation, ...props }) {
                         // }
                         if (props.direct === 'CommunityDetais') {
                             navigation.navigate(props.direct, {
+                                quiz: props.quizData,
                                 quizList: props.quizList,
                                 title: props.titlee,
                             });
@@ -50,6 +51,24 @@ export default function Header({ navigation, ...props }) {
                             if (props.handleOption) props.handleOption();
                         }}
                     >
+                        <SimpleLineIcons
+                            name="options"
+                            size={24}
+                            color="black"
+                        />
+                    </TouchableOpacity>
+                </View>
+            )}
+            {props.community && (
+                <View style={{ bottom: 70, left: 140 }}>
+                    <TouchableOpacity onPress={props.addCommunity}>
+                        <AntDesign name="plussquareo" size={25} color="#333" />
+                    </TouchableOpacity>
+                </View>
+            )}
+            {props.commuDetails && (
+                <View style={{ bottom: 70, left: 140 }}>
+                    <TouchableOpacity onPress={props.openOption}>
                         <SimpleLineIcons
                             name="options"
                             size={24}

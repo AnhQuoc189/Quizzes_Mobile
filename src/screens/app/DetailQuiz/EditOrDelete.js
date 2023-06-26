@@ -16,10 +16,12 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { useDeleteQuizMutation } from 'src/services/quizApi';
 import { useImportQuizMutation } from 'src/services/quizApi';
+import { useDeleteQuizCommunityMutation } from 'src/services/communityApi';
 import { useSelector, useDispatch } from 'react-redux';
 import { deleteQuiz, addLibrayQuiz, createQuiz } from 'src/slices/quizSlice';
 import { setQuizPlay } from 'src/slices/quizSlice';
 import { useFocusEffect } from '@react-navigation/native';
+import { removeQuiz } from 'src/slices/communitySlice';
 
 export default function EditOrDelete({
     quizList,
@@ -31,8 +33,8 @@ export default function EditOrDelete({
     mylibrary,
     userType,
     community,
+    discover,
 }) {
-    console.log(userType);
     const dispatch = useDispatch();
     const [point, setPoint] = useState();
     const userData = useSelector((state) => state.auths?.authData);
@@ -40,10 +42,15 @@ export default function EditOrDelete({
     const userName = userData?.data?.user?.userName;
     const userId = userData?.data?.user?._id;
 
+    const communityCurrent = useSelector(
+        (state) => state.communities.community,
+    );
+
     const [loadingImport, setLoadingImport] = useState(false);
 
     const [removeQuiz, { isLoading }] = useDeleteQuizMutation();
     const [importQuiz, { error }] = useImportQuizMutation();
+    const [removeQuizCommunity] = useDeleteQuizCommunityMutation();
 
     useEffect(() => {
         if (error) {
@@ -136,6 +143,53 @@ export default function EditOrDelete({
         );
     };
 
+    const showRemoveQuiz = () => {
+        return Alert.alert(
+            'Are your sure?',
+            'Are you sure you want to remove this quiz ?',
+            [
+                {
+                    text: 'Yes',
+                    onPress: async () => {
+                        console.log(
+                            accessToken,
+                            communityCurrent._id,
+                            quizData._id,
+                        );
+                        const { data } = await removeQuizCommunity({
+                            accessToken,
+                            id: communityCurrent._id,
+                            quizId: quizData._id,
+                        });
+
+                        if (data) {
+                            onClose();
+                            // dispatch(addLibrayQuiz(data));
+                            dispatch(
+                                deleteQuiz({
+                                    id: communityCurrent._id,
+                                    quiz: data,
+                                }),
+                            );
+                            if (Platform.OS === 'android') {
+                                ToastAndroid.show(
+                                    'Delete successfully!',
+                                    ToastAndroid.SHORT,
+                                );
+                            } else {
+                                AlertIOS.alert('Delete successfully!');
+                            }
+                            navigation.navigate('Community');
+                        }
+                    },
+                },
+                {
+                    text: 'No',
+                },
+            ],
+        );
+    };
+
     useFocusEffect(
         useCallback(() => {
             let Point = 0;
@@ -158,7 +212,6 @@ export default function EditOrDelete({
     );
 
     const handleDelete = () => {
-        console.log(quizData._id);
         showConfirmDialog();
     };
 
@@ -167,6 +220,11 @@ export default function EditOrDelete({
             quiz: quizData,
             creator: false,
         });
+    };
+
+    const handleRemoveQuiz = () => {
+        // console.log(accessToken, communityCurrent?._id, quizData._id);
+        showRemoveQuiz();
     };
 
     const handleSolo = () => {
@@ -180,8 +238,6 @@ export default function EditOrDelete({
         });
     };
 
-    console.log(userType);
-
     const handleImport = () => {
         showImportDialog();
     };
@@ -190,7 +246,12 @@ export default function EditOrDelete({
         <View style={styles.container}>
             <View style={styles.title}>
                 <View>
-                    <Text style={{ color: 'gray' }}> SPORTS</Text>
+                    <Text
+                        style={{ color: 'gray', fontSize: 20, fontWeight: 500 }}
+                    >
+                        {' '}
+                        {quizData.tags[0]}
+                    </Text>
                     <Text style={{ fontWeight: 700, fontSize: 20 }}>
                         {quizData.name}
                     </Text>
@@ -292,6 +353,27 @@ export default function EditOrDelete({
                                     ) : (
                                         <Text style={styles.textEdit}>
                                             Import
+                                        </Text>
+                                    )}
+                                </View>
+                            </TouchableOpacity>
+                        )}
+                    {userType === 'Teacher' &&
+                        !discover &&
+                        userName === quizData.creatorName && (
+                            <TouchableOpacity
+                                style={styles.deleteButton}
+                                onPress={handleRemoveQuiz}
+                            >
+                                <View>
+                                    {false ? (
+                                        <ActivityIndicator
+                                            size="large"
+                                            color="#fff"
+                                        />
+                                    ) : (
+                                        <Text style={styles.textDelete}>
+                                            Remove
                                         </Text>
                                     )}
                                 </View>

@@ -24,19 +24,21 @@ const CategoryCard = ({
     const [quality, setQuality] = useState();
     const [quizCate, setQuizCate] = useState([]);
 
-    const quizes = useSelector((state) => state.quizs.allquizes);
+    const quizes = useSelector((state) => state?.quizs?.allquizes);
 
     useEffect(() => {
-        let lc = 0;
-        let quizArray = [];
-        quizes.map((quiz) => {
-            if (quiz.tags.includes(category.name)) {
-                lc++;
-                quizArray.push(quiz);
-            }
-        });
-        setQuality(lc);
-        setQuizCate(quizArray);
+        if (quizes) {
+            let lc = 0;
+            let quizArray = [];
+            quizes.map((quiz) => {
+                if (quiz.tags.includes(category.name)) {
+                    lc++;
+                    quizArray.push(quiz);
+                }
+            });
+            setQuality(lc);
+            setQuizCate(quizArray);
+        }
     }, [quizes]);
 
     return (

@@ -26,15 +26,6 @@ export default function Discover({ navigation }) {
     const userData = useSelector((state) => state.auths?.authData);
     const accessToken = userData?.data?.accessToken;
 
-    // const { data, loading } = useGetPublicQuizzesQuery(accessToken);
-
-    // useEffect(() => {
-    //     if (data) {
-    //         console.log('All');
-    //         dispatch(fetchAllQuizes(data));
-    //     }
-    // }, [data]);
-
     useFocusEffect(
         useCallback(() => {
             if (!isFocus) {

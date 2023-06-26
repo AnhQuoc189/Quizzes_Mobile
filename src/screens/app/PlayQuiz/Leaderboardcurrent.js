@@ -26,12 +26,6 @@ export default function LeaderBoardCurrent({
     handleExitGame,
     handleBackLeaderboard,
 }) {
-    // let leaderFinal = false;
-    // if (lengthQuiz) {
-    //     leaderFinal = currentLeaderboard.leaderboardList.questionIndex =
-    //         lengthQuiz;
-    // }
-
     return (
         <SafeAreaView style={styles.container}>
             <View

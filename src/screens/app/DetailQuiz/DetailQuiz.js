@@ -15,7 +15,7 @@ import EditOrDelete from './EditOrDelete';
 import { QuizInfo } from 'src/components';
 
 //color
-import { colors } from 'src/styles/color';
+import { bgColors, colors } from 'src/styles/color';
 
 const DetailQuiz = ({ navigation, ...props }) => {
     const {
@@ -27,9 +27,8 @@ const DetailQuiz = ({ navigation, ...props }) => {
         community,
         userType,
         home,
+        discover,
     } = props.route.params;
-
-    console.log(userType);
 
     const [modalOption, setModalOption] = useState(false);
 
@@ -68,6 +67,7 @@ const DetailQuiz = ({ navigation, ...props }) => {
                         title={title}
                         userType={userType}
                         community={community}
+                        discover={discover}
                     />
                 </Pressable>
             </Modal>
@@ -83,6 +83,7 @@ const DetailQuiz = ({ navigation, ...props }) => {
                             ? 'Home'
                             : 'Discover'
                     }
+                    quizData={quizData}
                     quizList={quizList}
                     titlee={title}
                     navigation={navigation}
