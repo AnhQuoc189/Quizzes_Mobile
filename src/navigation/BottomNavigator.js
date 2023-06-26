@@ -21,6 +21,7 @@ import Creator from 'src/screens/app/Creator/Creator';
 import { useSelector } from 'react-redux';
 import Community from 'src/screens/app/Community/Community';
 import CommunityDetais from 'src/screens/app/Community/CommunityDetais';
+import ShareQuiz from 'src/screens/app/Community/ShareQuiz';
 import JoinGame from 'src/screens/app/PlayQuiz/JoinGame';
 
 const Tab = createBottomTabNavigator();
@@ -198,6 +199,16 @@ export default function BottomNavigator({ navigation }) {
             <Tab.Screen
                 name="AddQuestion"
                 component={AddQuestion}
+                options={() => ({
+                    tabBarStyle: {
+                        display: 'none',
+                    },
+                    tabBarButton: () => null,
+                })}
+            />
+            <Tab.Screen
+                name="ShareQuiz"
+                component={ShareQuiz}
                 options={() => ({
                     tabBarStyle: {
                         display: 'none',

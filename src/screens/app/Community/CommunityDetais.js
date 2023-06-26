@@ -1,5 +1,5 @@
 //Library
-import React from 'react';
+import { useState } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -8,6 +8,8 @@ import {
     FlatList,
     Image,
     TouchableOpacity,
+    Modal,
+    Pressable,
 } from 'react-native';
 import moment from 'moment/moment';
 
@@ -16,6 +18,7 @@ import { useSelector } from 'react-redux';
 
 //component
 import Header from 'src/components/auth/Header';
+import ModalOption from './ModalOption';
 
 //icons
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -87,9 +90,11 @@ const QuizCommunity = ({ item, handleOpenQuizDetals }) => (
 );
 
 export default function CommunityDetais({ navigation, ...props }) {
-    const { quizList, title } = props.route.params;
+    const { quiz, quizList, title } = props.route.params;
     const users = useSelector((state) => state.users.users);
     const userInfo = useSelector((state) => state.auths?.user);
+
+    const [modalOption, setModalOption] = useState(false);
 
     const handleOpenQuizDetals = (item) => {
         const creator = users.filter(
@@ -102,14 +107,51 @@ export default function CommunityDetais({ navigation, ...props }) {
             quizData: item,
             mylibrary: false,
             community: true,
-            avatar: creator[0].avatar,
+            avatar: creator[0]?.avatar,
             userType: userInfo?.userType,
         });
     };
 
+    const handleOpenOption = () => {
+        setModalOption(true);
+    };
+
     return (
         <SafeAreaView style={styles.viewSafeArea}>
-            <Header title={title} direct="Community" navigation={navigation} />
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalOption}
+                onRequestClose={() => {
+                    Alert.alert('Modal has been closed.');
+                    setModalOption(!modalOption);
+                }}
+            >
+                <Pressable
+                    onPress={() => setModalOption(!modalOption)}
+                    style={{
+                        height: '100%',
+                        flex: 1,
+                        justifyContent: 'flex-end',
+                        alignItems: 'center',
+                        backgroundColor: 'rgba(105,105,105, 0.6)',
+                    }}
+                >
+                    <ModalOption
+                        quiz={quiz}
+                        onClose={() => setModalOption(false)}
+                        navigation={navigation}
+                        quizList={quizList}
+                    />
+                </Pressable>
+            </Modal>
+            <Header
+                title={title}
+                direct="Community"
+                navigation={navigation}
+                commuDetails={true}
+                openOption={handleOpenOption}
+            />
             <View style={styles.viewFlatlist}>
                 {quizList?.length ? (
                     <FlatList

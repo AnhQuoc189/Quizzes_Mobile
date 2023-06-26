@@ -8,8 +8,6 @@ import { colors } from 'src/styles/color';
 //component
 import UserLeader from 'src/components/playquiz/UserLeader';
 
-const a = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-
 export default function QuesntionLeaderboard({ playerList, questionResult }) {
     return (
         <SafeAreaView style={styles.container}>

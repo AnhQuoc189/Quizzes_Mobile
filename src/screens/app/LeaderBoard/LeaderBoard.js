@@ -106,30 +106,6 @@ export default function LeaderBoard({ navigation }) {
         }
     };
 
-    // useFocusEffect(
-    //     useCallback(() => {
-    //         if (!isFocus) {
-    //             fetch(`${API}api/users`, {
-    //                 method: 'GET',
-    //                 headers: new Headers({
-    //                     Authorization: `Bearer ${accessToken}`,
-    //                     'user-agent': 'Mozilla/4.0 MDN Example',
-    //                     'content-type': 'application/json',
-    //                 }),
-    //             })
-    //                 .then((data) => data.json())
-    //                 .then((json) => {
-    //                     dispatch(fetchAllUsers(json));
-    //                     json.sort(function (a, b) {
-    //                         return b.point - a.point;
-    //                     });
-    //                     setLeader(json);
-    //                 })
-    //                 .catch((error) => console(error));
-    //         }
-    //     }, [isFocus]),
-    // );
-
     return (
         <SafeAreaView
             style={{

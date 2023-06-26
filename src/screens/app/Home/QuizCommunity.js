@@ -7,41 +7,34 @@ import {
     FlatList,
     Image,
     TouchableOpacity,
+    ActivityIndicator,
 } from 'react-native';
 import { useEffect, useState } from 'react';
 
 //redux
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchAllCommunities } from 'src/slices/communitySlice';
 
 //RTKQuery
 import { useGetCommunitiesQuery } from 'src/services/communityApi';
 
 export default function QuizCommunity({ navigation }) {
+    const dispatch = useDispatch();
     const userData = useSelector((state) => state.auths?.authData);
     const accessToken = userData?.data?.accessToken;
-    const [result, setResult] = useState();
     const { data, isLoading } = useGetCommunitiesQuery(accessToken);
-    const quizes = useSelector((state) => state.quizs.allquizes);
 
     useEffect(() => {
-        if (data) {
-            const res = data.map((item) => {
-                let quizList = [];
-                quizes.map(async (quiz) => {
-                    if (item.quizzes.includes(quiz._id)) {
-                        quizList.push(quiz);
-                    }
-                });
-                return { ...item, quizList };
-            });
-            setResult(res);
-        }
+        dispatch(fetchAllCommunities(data));
     }, [data]);
+
+    const communities = useSelector((state) => state.communities.communities);
 
     return (
         <View style={styles.viewCommunity}>
-            {result &&
-                result.map((item, index) => {
+            {isLoading && <ActivityIndicator color="#333" size="large" />}
+            {communities &&
+                communities.map((item, index) => {
                     if (item?.quizList?.length) {
                         return (
                             <View style={{ gap: 10 }} key={index}>
@@ -63,8 +56,8 @@ const QuizLizst = ({ quizList, navigation }) => {
         <FlatList
             data={quizList}
             horizontal
-            renderItem={({ item, index }) => (
-                <QuizItem quiz={item} navigation={navigation} />
+            renderItem={({ item }) => (
+                <QuizItem key={item} quiz={item} navigation={navigation} />
             )}
             keyExtractor={(item) => item.id}
             ItemSeparatorComponent={() => <View style={{ width: 20 }} />}
@@ -75,7 +68,6 @@ const QuizLizst = ({ quizList, navigation }) => {
 
 const QuizItem = ({ quiz, navigation }) => {
     const userInfo = useSelector((state) => state.auths?.user);
-    // console.log(userInfo.userType);
 
     const handleOpenQuiz = () => {
         navigation.navigate('DetailQuiz', {

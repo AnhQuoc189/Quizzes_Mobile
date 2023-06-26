@@ -1,3 +1,4 @@
+//Library
 import React, { useEffect } from 'react';
 import {
     SafeAreaView,
@@ -131,7 +132,6 @@ export default function Home({ navigation }) {
     }, [data]);
 
     const quizes = useSelector((state) => state.quizs.quizes);
-    const allquizes = useSelector((state) => state.quizs.allquizes);
 
     return (
         <SafeAreaView style={styles.container}>
@@ -291,6 +291,9 @@ export default function Home({ navigation }) {
                                     paddingVertical: 2,
                                     paddingLeft: 3,
                                 }}
+                                onPress={() =>
+                                    navigation.navigate('AuthNavigator')
+                                }
                             >
                                 <Text style={styles.buttonText}>See All</Text>
                             </TouchableOpacity>

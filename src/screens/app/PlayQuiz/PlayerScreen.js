@@ -247,9 +247,7 @@ export default function PlayerScreen({ navigation, ...props }) {
         navigation.navigate('JoinGame');
     };
 
-    const handleFinish = () => {
-        console.log('End ha');
-    };
+    const handleFinish = () => {};
 
     const handleCompareResult = () => {
         setIsResultFinal(false);

@@ -38,6 +38,7 @@ const BoxQuiz = ({ navigation, ...props }) => {
                     mylibrary: props.mylibrary,
                     avatar: data.avatar,
                     userType: props.userType,
+                    discover: props.discover,
                 });
             }}
         >
