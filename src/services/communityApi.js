@@ -8,6 +8,13 @@ export const apiCommunity = createApi({
         baseUrl: API,
     }),
     endpoints: (builder) => ({
+        getCommunity: builder.query({
+            query: ({ accessToken, id }) => ({
+                url: `api/community/${id}`,
+                method: 'GET',
+                headers: { Authorization: `Bearer ${accessToken}` },
+            }),
+        }),
         getCommunities: builder.query({
             query: (accessToken) => ({
                 url: 'api/community',
@@ -44,13 +51,23 @@ export const apiCommunity = createApi({
                 headers: { Authorization: `Bearer ${accessToken}` },
             }),
         }),
+        addMessageBox: builder.mutation({
+            query: ({ accessToken, id, message }) => ({
+                url: `api/community/addmessage/${id}`,
+                method: 'PUT',
+                headers: { Authorization: `Bearer ${accessToken}` },
+                body: { message },
+            }),
+        }),
     }),
 });
 
 export const {
+    useGetCommunityQuery,
     useGetCommunitiesQuery,
     useCreateCommunityMutation,
     useDeleteCommunityMutation,
     useAddQuizCommunityMutation,
     useDeleteQuizCommunityMutation,
+    useAddMessageBoxMutation,
 } = apiCommunity;

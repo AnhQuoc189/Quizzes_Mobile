@@ -26,6 +26,9 @@ export default function Header({ navigation, ...props }) {
                         //     navigation.navigate(props.direct,{quizList});
                         // }
                         if (props.direct === 'CommunityDetais') {
+                            if (props.chatBox) {
+                                props.handleOutChat();
+                            }
                             navigation.navigate(props.direct, {
                                 quiz: props.quizData,
                                 quizList: props.quizList,

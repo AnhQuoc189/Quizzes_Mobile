@@ -52,6 +52,7 @@ export default function PlayerSolo({ navigation, ...props }) {
     const [trueAnswer, setTrueAnswer] = useState(true);
 
     const [timer, setTimer] = useState(10);
+    // const [timerQuestion,setTimerQuestion]=useState()
     const [answer, setAnswer] = useState([]);
 
     const [resultDetail, setResultDetails] = useState({
@@ -131,6 +132,13 @@ export default function PlayerSolo({ navigation, ...props }) {
                 return poitperQuestion;
             case 'Double':
                 return poitperQuestion * 2;
+            case 'OnTime':
+                console.log(
+                    questionData.answerTime,
+                    answer[currentQuestionIndex - 1].time,
+                    poitperQuestion,
+                );
+                return answer[currentQuestionIndex - 1].time * poitperQuestion;
             default:
                 break;
         }

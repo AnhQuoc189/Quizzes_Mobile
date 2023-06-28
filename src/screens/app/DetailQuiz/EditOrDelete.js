@@ -203,6 +203,8 @@ export default function EditOrDelete({
                     case 'Double':
                         Point += pointsPerQuestion * 2;
                         break;
+                    case 'OnTime':
+                        Point += pointsPerQuestion * question.answerTime;
                     default:
                         break;
                 }

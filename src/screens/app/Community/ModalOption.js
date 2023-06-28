@@ -22,7 +22,13 @@ import { useDeleteCommunityMutation } from 'src/services/communityApi';
 
 import message from 'src/assets/images/messenger.png';
 
-export default function ModalOption({ navigation, quiz, onClose, quizList }) {
+export default function ModalOption({
+    navigation,
+    quiz,
+    onClose,
+    quizList,
+    title,
+}) {
     const dispatch = useDispatch();
     const userData = useSelector((state) => state.auths?.authData);
     const accessToken = userData?.data?.accessToken;
@@ -30,6 +36,8 @@ export default function ModalOption({ navigation, quiz, onClose, quizList }) {
     const userInfo = useSelector((state) => state.auths?.user);
 
     const [removeCommunity, { isLoading }] = useDeleteCommunityMutation();
+
+    const socket = useSelector((state) => state.sockets.socket);
 
     const showConfirmDialog = () => {
         return Alert.alert(
@@ -65,6 +73,17 @@ export default function ModalOption({ navigation, quiz, onClose, quizList }) {
         );
     };
 
+    const handleChatRoom = () => {
+        onClose();
+        socket.emit('joinChat', quiz._id);
+        navigation.navigate('ChatRoom', {
+            name: quiz?.tags,
+            quiz,
+            quizList,
+            title,
+        });
+    };
+
     return (
         <View style={styles.container}>
             <View style={styles.title}>
@@ -94,7 +113,10 @@ export default function ModalOption({ navigation, quiz, onClose, quizList }) {
                     <Text>{quiz?.users?.length} users</Text>
                 </View>
             </View>
-            <TouchableOpacity style={styles.decription}>
+            <TouchableOpacity
+                style={styles.decription}
+                onPress={handleChatRoom}
+            >
                 <Text style={styles.textChatbox}>Chat box here</Text>
                 <Image source={message} style={{ width: 50, height: 50 }} />
             </TouchableOpacity>

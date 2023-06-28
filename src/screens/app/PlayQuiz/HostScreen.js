@@ -36,15 +36,6 @@ const InitQuizData = {
 let CorrectAnswer = [];
 
 export default function HostScreen({ navigation }) {
-    // const game = props.route.params.newGame;
-    // const leaderboard = props.route.params.newLeaderboard;
-
-    // const [quizData, setQuizData] = useState(props.route.params.quizData);
-    // const [game, setGame] = useState(props.route.params.quizData);
-    // const [leaderboard, setLeaderboard] = useState(
-    //     props.route.params.newLeaderboard,
-    // );
-
     const [correct, setCorrect] = useState();
 
     const socket = useSelector((state) => state.sockets.socket);

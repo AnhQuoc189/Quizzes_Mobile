@@ -142,6 +142,7 @@ export default function CommunityDetais({ navigation, ...props }) {
                         onClose={() => setModalOption(false)}
                         navigation={navigation}
                         quizList={quizList}
+                        title={title}
                     />
                 </Pressable>
             </Modal>
