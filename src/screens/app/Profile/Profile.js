@@ -9,10 +9,15 @@ import {
     StyleSheet,
     Image,
 } from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
+
+//constant
+import { categories } from 'src/constants/category.constant';
+const nameCate = categories.map((item) => item.name);
 
 //icons
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Fontisto from 'react-native-vector-icons/Fontisto';
+import { AntDesign } from '@expo/vector-icons';
 
 //redux
 import { useSelector } from 'react-redux';
@@ -29,18 +34,111 @@ import { PieChartCompo, BarChartCompo } from 'src/components/PieChart';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
 
+//RTKQuery
+import { API } from 'src/constants/api';
+import { useGetTeacherQuizzesQuery } from 'src/services/quizApi';
+
+const InitBar = {
+    labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+    datasets: [
+        {
+            data: [
+                Math.random(),
+                Math.random(),
+                Math.random(),
+                Math.random(),
+                Math.random(),
+                Math.random(),
+            ],
+        },
+    ],
+};
+
 export default function Profile({ navigation, ...props }) {
     // const other = props.route.params.other;
+    const [dataBar, setDataBar] = useState(InitBar);
+    const focus = useIsFocused();
+    const userData = useSelector((state) => state.auths?.authData);
+    const accessToken = userData?.data?.accessToken;
+
     const profilePerson = useSelector((state) => state.auths?.user);
     const profileAnother = props.route.params?.userInfo;
 
     let userInfo = profileAnother ? profileAnother : profilePerson;
+    const teacherId = userInfo?._id;
+
+    useEffect(() => {
+        setDataBar({
+            ...dataBar,
+            datasets: [
+                {
+                    data: [
+                        Math.random(),
+                        Math.random(),
+                        Math.random(),
+                        Math.random(),
+                        Math.random(),
+                        Math.random(),
+                    ],
+                },
+            ],
+        });
+    }, [userInfo]);
 
     const { userName, avatar, point, follow } = userInfo ? userInfo : {};
+
+    const [quality, setQuality] = useState();
 
     const users = useSelector((state) => state.users.users);
 
     const [rank, setRank] = useState();
+
+    const quizes = useSelector((state) => state.quizs.quizes);
+    const { data, isLoading } = useGetTeacherQuizzesQuery({
+        accessToken,
+        teacherId,
+    });
+
+    useEffect(() => {
+        // fetch(`${API}api/quizzes/teacher/${teacherId}`, {
+        //     method: 'GET',
+        //     headers: new Headers({
+        //         Authorization: `Bearer ${accessToken}`,
+        //         'user-agent': 'Mozilla/4.0 MDN Example',
+        //         'content-type': 'application/json',
+        //     }),
+        // })
+        //     .then((data) => data.json())
+        //     .then((json) => {
+        //         const arr = [];
+        //         json.map((name) => {
+        //             let lc = 0;
+        //             quizes.map((quiz) => {
+        //                 if (quiz.tags.includes(name)) {
+        //                     lc++;
+        //                 }
+        //             });
+        //             arr.push(lc);
+        //         });
+        //         setQuality(arr);
+        //     })
+        //     .catch((error) => console(error));
+        if (data) {
+            const arr = [];
+            nameCate.map((name) => {
+                let lc = 0;
+                data.map((quiz) => {
+                    if (quiz.tags.includes(name)) {
+                        lc++;
+                    }
+                });
+                arr.push(lc);
+            });
+            setQuality(arr);
+        }
+    }, [focus]);
+
+    // console.log(data);
 
     useFocusEffect(
         useCallback(() => {
@@ -135,8 +233,8 @@ export default function Profile({ navigation, ...props }) {
                                         </Text>
                                     </View>
                                     <View style={styles.box}>
-                                        <Fontisto
-                                            name="world-o"
+                                        <AntDesign
+                                            name="Trophy"
                                             size={24}
                                             color="white"
                                         />
@@ -167,12 +265,17 @@ export default function Profile({ navigation, ...props }) {
                                 >
                                     <ProfileNavigator />
                                 </View> */}
-                                <View style={{ marginTop: 40 }}>
-                                    <BarChartCompo />
-                                </View>
-                                <View style={{ marginTop: 40 }}>
-                                    <PieChartCompo />
-                                </View>
+                                {dataBar && (
+                                    <View style={{ marginTop: 40 }}>
+                                        <BarChartCompo data={dataBar} />
+                                    </View>
+                                )}
+                                {userInfo?.userType === 'Teacher' &&
+                                    quality && (
+                                        <View style={{ marginTop: 40 }}>
+                                            <PieChartCompo quality={quality} />
+                                        </View>
+                                    )}
                             </View>
                         </SubLayout>
                     </View>

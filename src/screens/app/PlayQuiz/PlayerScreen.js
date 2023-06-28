@@ -105,6 +105,9 @@ export default function PlayerScreen({ navigation, ...props }) {
                 return poitperQuestion;
             case 'Double':
                 return poitperQuestion * 2;
+
+            case 'OnTime':
+                return answer[currentQuestionIndex - 1].time * poitperQuestion;
             default:
                 break;
         }

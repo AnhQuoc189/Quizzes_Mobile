@@ -1,1 +1,1 @@
-export const pointTypes = ['Standard', 'Double'];
+export const pointTypes = ['Standard', 'Double', 'OnTime'];

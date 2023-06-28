@@ -51,6 +51,10 @@ const communitySlice = createSlice({
             });
             // console.log(action);
         },
+        addMessageChat: (state, action) => {
+            state.community.chatBox.push(action.payload);
+            // console.log(action);
+        },
     },
 });
 
@@ -61,6 +65,7 @@ export const {
     fetchAllCommunities,
     addQuiz,
     deleteQuiz,
+    addMessageChat,
 } = communitySlice.actions;
 
 const communityReducer = communitySlice.reducer;

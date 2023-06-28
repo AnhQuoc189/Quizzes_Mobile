@@ -1,3 +1,4 @@
+//Library
 import React, { useState, useEffect } from 'react';
 import {
     SafeAreaView,
@@ -42,11 +43,11 @@ export default function JoinGame({ navigation }) {
 
     const [InitAddPlayer] = useAddPlayerMutation();
 
-    useEffect(() => {
-        if (data) {
-            dispatch(createPlayerResults(data));
-        }
-    }, [data]);
+    // useEffect(() => {
+    //     if (data) {
+    //         dispatch(createPlayerResults(data));
+    //     }
+    // }, [data]);
 
     const [sound, setSound] = useState();
 
@@ -112,7 +113,7 @@ export default function JoinGame({ navigation }) {
         return () => {
             socket.off('move-to-game-page');
         };
-    }, [socket, dispatch, navigation, userData.data.user._id]);
+    }, [socket, dispatch, navigation, userData?.data.user._id]);
 
     const result = async (message, playerId, gameId) => {
         if (message === 'correct') {

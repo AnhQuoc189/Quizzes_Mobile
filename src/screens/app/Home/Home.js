@@ -172,6 +172,7 @@ export default function Home({ navigation }) {
                         <TouchableOpacity
                             onPress={() => {
                                 navigation.navigate('Profile');
+                                // navigation.navigate('AuthNavigator');
                             }}
                         >
                             <Image

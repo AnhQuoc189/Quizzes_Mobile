@@ -12,6 +12,7 @@ import ChangePass from 'src/screens/app/Profile/ChangePassWord';
 import ChangeEmail from 'src/screens/app/Profile/ChangeEmail';
 import SendEmailOTP from 'src/screens/app/Profile/SendOTP';
 import EditProfile from 'src/screens/app/Profile/EditProfile';
+import ChatRoom from 'src/screens/app/Community/ChatRoom';
 const AppStack = createStackNavigator();
 
 export default function AppNavigator(props) {
@@ -34,6 +35,7 @@ export default function AppNavigator(props) {
             <AppStack.Screen name="ChangeEmail" component={ChangeEmail} />
             <AppStack.Screen name="SendEmailOTP" component={SendEmailOTP} />
             <AppStack.Screen name="EditProfile" component={EditProfile} />
+            <AppStack.Screen name="ChatRoom" component={ChatRoom} />
         </AppStack.Navigator>
     );
 }
