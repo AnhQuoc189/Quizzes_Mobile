@@ -18,6 +18,7 @@ const nameCate = categories.map((item) => item.name);
 //icons
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { AntDesign } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
 
 //redux
 import { useSelector } from 'react-redux';
@@ -138,8 +139,6 @@ export default function Profile({ navigation, ...props }) {
         }
     }, [focus]);
 
-    // console.log(data);
-
     useFocusEffect(
         useCallback(() => {
             if (users) {
@@ -164,21 +163,30 @@ export default function Profile({ navigation, ...props }) {
             >
                 {/* Header */}
                 <View style={styles.header}>
-                    <TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => {
+                            navigation.navigate(
+                                !profileAnother ? 'Home' : 'LeaderBoard',
+                            );
+                        }}
+                    >
+                        <Ionicons name="arrow-back" size={28} color="white" />
+                    </TouchableOpacity>
+                    {profileAnother && (
                         <TouchableOpacity
                             onPress={() => {
-                                navigation.navigate(
-                                    !profileAnother ? 'Home' : 'LeaderBoard',
-                                );
+                                navigation.navigate('HistoryUser', {
+                                    userInfo,
+                                });
                             }}
                         >
-                            <Ionicons
-                                name="arrow-back"
+                            <FontAwesome5
+                                name="history"
                                 size={28}
                                 color="white"
                             />
                         </TouchableOpacity>
-                    </TouchableOpacity>
+                    )}
                     {!profileAnother && (
                         <TouchableOpacity
                             onPress={() => {

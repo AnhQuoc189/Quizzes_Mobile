@@ -4,12 +4,17 @@ import { SafeAreaView } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
 // Components, colors, constants
-import {
-    Header,
-    DurationTabs,
-    Weekly,
-    AllTime,
-} from 'src/components/leaderboard';
+// import {
+//     Header,
+//     DurationTabs,
+//     Weekly,
+//     AllTime,
+// } from 'src/components/leaderboard';
+import Header from 'src/components/leaderboard/common/header/Header';
+import DurationTabs from 'src/components/leaderboard/common/durationtabs/DurationTabs';
+import Weekly from 'src/components/leaderboard/content/weekly/Weekly';
+import AllTime from 'src/components/leaderboard/content/alltime/AllTime';
+
 import { colors } from 'src/styles/color';
 import { API } from 'src/constants/api';
 import { fetchAllUsers } from 'src/slices/usersSlice';

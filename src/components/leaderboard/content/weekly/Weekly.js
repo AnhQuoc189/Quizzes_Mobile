@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 // Components, styles
 import styles from './weekly.style';
-import { UserCard } from 'src/components/leaderboard';
+import UserCard from 'src/components/leaderboard/common/usercard/UserCard';
 
 const Weekly = ({ leaderBoard, refreshEvent, navigation }) => {
     return (

@@ -30,9 +30,7 @@ export default function UserType({ navigation }) {
             <View style={styles.viewMain}>
                 <View style={styles.viewMainHeader}>
                     <View style={styles.viewMainHeaderText}>
-                        <TouchableOpacity
-                            onPress={() => navigation.navigate('Lookup')}
-                        >
+                        <TouchableOpacity onPress={() => navigation.pop()}>
                             <AntDesign
                                 name="arrowleft"
                                 size={30}

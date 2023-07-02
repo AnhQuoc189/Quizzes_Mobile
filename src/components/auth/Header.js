@@ -15,29 +15,32 @@ export default function Header({ navigation, ...props }) {
             <View style={{ bottom: 33, right: 150 }}>
                 <TouchableOpacity
                     onPress={() => {
-                        if (props.setFocus) {
-                            props.setFocus();
-                        }
-                        if (props.handleOutGame && props.join) {
-                            props.handleOutGame();
-                        }
-
-                        // if(props.quizList){
-                        //     navigation.navigate(props.direct,{quizList});
+                        // if (props.setFocus) {
+                        //     props.setFocus();
                         // }
-                        if (props.direct === 'CommunityDetais') {
-                            if (props.chatBox) {
-                                props.handleOutChat();
-                            }
-                            navigation.navigate(props.direct, {
-                                quiz: props.quizData,
-                                quizList: props.quizList,
-                                title: props.titlee,
-                            });
-                        } else {
-                            navigation.navigate(props.direct);
-                        }
-                        // navigation.navigate(props.direct);
+
+                        // if (props.handleOutGame && props.join) {
+                        //     props.handleOutGame();
+                        // }
+
+                        // if (props.direct === 'CommunityDetais') {
+                        //     if (props.chatBox) {
+                        //         props.handleOutChat();
+                        //     }
+                        //     navigation.navigate(props.direct, {
+                        //         quiz: props.quizData,
+                        //         quizList: props.quizList,
+                        //         title: props.titlee,
+                        //     });
+                        // } else {
+                        //     if (props.direct) {
+                        //         navigation.navigate(props.direct);
+                        //     } else {
+                        //         navigation.pop();
+                        //     }
+                        // }
+                        console.log('CC');
+                        navigation.pop();
                     }}
                 >
                     <AntDesign name="arrowleft" size={30} color={props.color} />
@@ -48,9 +51,6 @@ export default function Header({ navigation, ...props }) {
                 <View style={{ bottom: 60, left: 140 }}>
                     <TouchableOpacity
                         onPress={() => {
-                            // if (props.setFocus) {
-                            //     props.setFocus();
-                            // }
                             if (props.handleOption) props.handleOption();
                         }}
                     >
