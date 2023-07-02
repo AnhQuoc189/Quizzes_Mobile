@@ -1,6 +1,8 @@
+//Library
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
+//Screen
 import BottomNavigator from './BottomNavigator';
 import Settings from '../screens/app/Profile/Settings';
 import { DetailQuiz } from 'src/screens/app/DetailQuiz';
@@ -13,6 +15,8 @@ import ChangeEmail from 'src/screens/app/Profile/ChangeEmail';
 import SendEmailOTP from 'src/screens/app/Profile/SendOTP';
 import EditProfile from 'src/screens/app/Profile/EditProfile';
 import ChatRoom from 'src/screens/app/Community/ChatRoom';
+import HistoryUser from 'src/screens/app/Profile/HistoryUser';
+
 const AppStack = createStackNavigator();
 
 export default function AppNavigator(props) {
@@ -36,6 +40,7 @@ export default function AppNavigator(props) {
             <AppStack.Screen name="SendEmailOTP" component={SendEmailOTP} />
             <AppStack.Screen name="EditProfile" component={EditProfile} />
             <AppStack.Screen name="ChatRoom" component={ChatRoom} />
+            <AppStack.Screen name="HistoryUser" component={HistoryUser} />
         </AppStack.Navigator>
     );
 }

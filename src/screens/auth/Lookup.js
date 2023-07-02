@@ -31,9 +31,7 @@ export default function Lookup({ navigation }) {
             <View style={styles.viewMain}>
                 <View style={styles.viewMainHeader}>
                     <View style={styles.viewMainHeaderText}>
-                        <TouchableOpacity
-                            onPress={() => navigation.navigate('Onboard')}
-                        >
+                        <TouchableOpacity onPress={() => navigation.pop()}>
                             <AntDesign
                                 name="arrowleft"
                                 size={30}

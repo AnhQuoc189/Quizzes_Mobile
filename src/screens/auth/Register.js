@@ -49,7 +49,6 @@ const InitErrorUser = {
 
 export default function Register({ navigation, ...props }) {
     const InitUserType = props.route.params.UserType;
-    console.log(InitUserType);
 
     const [formData, setFormData] = useState({
         ...InitRegister,

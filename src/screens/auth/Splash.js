@@ -47,7 +47,7 @@ export default function Splash({ navigation }) {
         <SafeAreaView style={{ flex: 1 }}>
             <ImageBackground source={background} style={styles.backgroundImage}>
                 <Image source={logo} />
-                <Text style={styles.textName}>Quizes</Text>
+                <Text style={styles.textName}>Quizzes</Text>
             </ImageBackground>
         </SafeAreaView>
     );

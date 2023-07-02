@@ -1,6 +1,14 @@
 //Library
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, SafeAreaView } from 'react-native';
+import {
+    View,
+    Text,
+    TextInput,
+    StyleSheet,
+    SafeAreaView,
+    TouchableOpacity,
+    ActivityIndicator,
+} from 'react-native';
 
 //RTKQuery
 import {
@@ -243,5 +251,29 @@ const styles = StyleSheet.create({
         width: 100,
         backgroundColor: '#865DFF',
         height: 50,
+    },
+    viewTouchButton: {
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    viewLoading: {
+        width: '100%',
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    viewButon: {
+        width: '90%',
+        height: 50,
+        borderRadius: 20,
+        justifyContent: 'center',
+        backgroundColor: '#865DFF',
+    },
+
+    textTitle: {
+        textAlign: 'center',
+        color: 'white',
+        fontWeight: 600,
     },
 });

@@ -1,8 +1,8 @@
 // Library
 import { SafeAreaView, View, StyleSheet, TextInput } from 'react-native';
 import { SimpleLineIcons } from '@expo/vector-icons';
-// import { TextInput } from 'react-native-paper';
 import { useState } from 'react';
+import { FilterSearchNavigation } from 'src/navigation/DiscoverNavigator';
 
 //redux
 import { useDispatch, useSelector } from 'react-redux';
@@ -15,10 +15,11 @@ import { API } from 'src/constants/api';
 
 //styles
 import { colors } from 'src/styles/color';
-import { DisplayDiscover, FilterSearch } from 'src/components/discover';
+import { DisplayDiscover } from 'src/components/discover';
 import { fetchAllUsers } from 'src/slices/usersSlice';
 import { useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
+
 export default function Discover({ navigation }) {
     const dispatch = useDispatch();
     const [isFocus, setIsFocus] = useState(false);
@@ -95,7 +96,7 @@ export default function Discover({ navigation }) {
                 </View>
             </View>
 
-            {isFocus ? <FilterSearch /> : <DisplayDiscover />}
+            {isFocus ? <FilterSearchNavigation /> : <DisplayDiscover />}
         </SafeAreaView>
     );
 }

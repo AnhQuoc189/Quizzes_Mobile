@@ -3,7 +3,8 @@ import { View, ScrollView, RefreshControl } from 'react-native';
 
 // Components, styles
 import styles from './alltime.style';
-import { Podium, UserCard } from 'src/components/leaderboard';
+import Podium from 'src/components/leaderboard/common/podium/Podium';
+import UserCard from 'src/components/leaderboard/common/usercard/UserCard';
 
 const AllTime = ({ leaderBoard, refreshEvent, navigation }) => {
     return (

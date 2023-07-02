@@ -1,28 +1,30 @@
+//library
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
-import Home from '../screens/app/Home/Home';
-import Discover from '../screens/app/Discover/Discover';
-import LeaderBoard from '../screens/app/LeaderBoard/LeaderBoard';
-import Profile from '../screens/app/Profile/Profile';
-
 import { View } from 'react-native';
 import { Path } from 'react-native-svg';
+import { StyleSheet } from 'react-native';
 
+//redux
+import { useSelector } from 'react-redux';
+
+//icons
 import { Entypo } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
-import { Feather } from '@expo/vector-icons';
-import CreatorNavigator from './CreatorNavigator';
 import { TouchableOpacity } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-import AddQuestion from 'src/screens/app/Creator/AddQuestion';
-import Creator from 'src/screens/app/Creator/Creator';
 
-import { useSelector } from 'react-redux';
+//Screen
+import Home from 'src/screens/app/Home/Home';
+import Discover from 'src/screens/app/Discover/Discover';
+import LeaderBoard from 'src/screens/app/LeaderBoard/LeaderBoard';
+import Profile from 'src/screens/app/Profile/Profile';
 import Community from 'src/screens/app/Community/Community';
 import CommunityDetais from 'src/screens/app/Community/CommunityDetais';
 import ShareQuiz from 'src/screens/app/Community/ShareQuiz';
 import JoinGame from 'src/screens/app/PlayQuiz/JoinGame';
+import AddQuestion from 'src/screens/app/Creator/AddQuestion';
+import Creator from 'src/screens/app/Creator/Creator';
 
 const Tab = createBottomTabNavigator();
 
@@ -34,8 +36,7 @@ export default function BottomNavigator({ navigation }) {
             screenOptions={({ route }) => ({
                 headerShown: false,
                 tabBarShowLabel: false,
-                tabBarIcon: ({ focused, size, color }) => {
-                    // console.log(route.name);
+                tabBarIcon: ({ focused }) => {
                     switch (route.name) {
                         case 'Home':
                             return (
@@ -74,21 +75,7 @@ export default function BottomNavigator({ navigation }) {
                                         });
                                     }}
                                 >
-                                    <View
-                                        style={{
-                                            width: 60,
-                                            height: 60,
-
-                                            backgroundColor: '#865DFF',
-                                            // backgroundColor: transparent,
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                            borderRadius: 50,
-                                            marginBottom: 70,
-                                            shadowRadius: 20,
-                                            shadowColor: 'red',
-                                        }}
-                                    >
+                                    <View style={styles.viewCreator}>
                                         <Ionicons
                                             name="add"
                                             size={focused ? 28 : 24}
@@ -99,21 +86,7 @@ export default function BottomNavigator({ navigation }) {
                             );
                         case 'JoinGame':
                             return (
-                                <View
-                                    style={{
-                                        width: 60,
-                                        height: 60,
-
-                                        backgroundColor: '#865DFF',
-                                        // backgroundColor: transparent,
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        borderRadius: 50,
-                                        marginBottom: 70,
-                                        shadowRadius: 20,
-                                        shadowColor: 'red',
-                                    }}
-                                >
+                                <View style={styles.viewCreator}>
                                     <FontAwesome
                                         name="th-large"
                                         size={focused ? 28 : 24}
@@ -158,11 +131,6 @@ export default function BottomNavigator({ navigation }) {
         >
             <Tab.Screen name="Home" component={Home} />
             <Tab.Screen name="Discover" component={Discover} />
-            {/* <Tab.Screen
-                name="Creator"
-                component={Creator}
-                options={{ tabBarStyle: { display: 'none' } }}
-            /> */}
             {userInfo?.userType === 'Teacher' ? (
                 <Tab.Screen
                     name="Creator"
@@ -229,3 +197,17 @@ export default function BottomNavigator({ navigation }) {
         </Tab.Navigator>
     );
 }
+
+const styles = StyleSheet.create({
+    viewCreator: {
+        width: 60,
+        height: 60,
+        backgroundColor: '#865DFF',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 50,
+        marginBottom: 70,
+        shadowRadius: 20,
+        shadowColor: 'red',
+    },
+});
