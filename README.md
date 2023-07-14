@@ -96,7 +96,7 @@ Chúng tôi sẽ xem xét và xem xét các đóng góp của bạn. Xin cảm �
 
 ## Liên hệ
 
-Nếu bạn có bất kỳ câu hỏi hoặc đề xuất nào, hãy liên hệ với chúng tôi qua email: levanduy08062003@gmail.com.
+Nếu bạn có bất kỳ câu hỏi hoặc đề xuất nào, hãy liên hệ với chúng tôi qua email: levanduy08062003@gmail.com hoặc FaceBook: https://www.facebook.com/profile.php?id=100024539650227 và https://www.facebook.com/imyady86/.
 
 ---
 
