@@ -44,7 +44,7 @@ let nameIcontime;
 let timeCurrent;
 
 export default function Home({ navigation }) {
-    const SOCKET_URL = 'http://192.168.91.18:3001';
+    const SOCKET_URL = 'http://172.20.10.3:3001';
     const dispatch = useDispatch();
     const focus = useIsFocused();
 
@@ -171,7 +171,7 @@ export default function Home({ navigation }) {
 
                         <TouchableOpacity
                             onPress={() => {
-                                navigation.navigate('Profile');
+                                navigation.navigate('ProfileNavigator');
                                 // navigation.navigate('AuthNavigator');
                             }}
                         >
@@ -292,9 +292,6 @@ export default function Home({ navigation }) {
                                     paddingVertical: 2,
                                     paddingLeft: 3,
                                 }}
-                                onPress={() =>
-                                    navigation.navigate('AuthNavigator')
-                                }
                             >
                                 <Text style={styles.buttonText}>See All</Text>
                             </TouchableOpacity>
@@ -313,6 +310,7 @@ export default function Home({ navigation }) {
                                             quizData={quizData}
                                             navigation={navigation}
                                             direct="DetailQuiz"
+                                            // direct="QuizNavigator"
                                             mylibrary={true}
                                             userType={userType}
                                         />

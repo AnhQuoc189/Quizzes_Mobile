@@ -9,6 +9,7 @@ import {
     TouchableOpacity,
     ActivityIndicator,
 } from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
 
 //redux
 import { useSelector, useDispatch } from 'react-redux';
@@ -27,8 +28,10 @@ import { Toast } from 'react-native-toast-message/lib/src/Toast';
 
 //Sound
 import { Audio } from 'expo-av';
+import HeaderBack from 'src/components/auth/HeaderBack';
 
 export default function JoinGame({ navigation }) {
+    const focus = useIsFocused();
     const [pin, setPin] = useState();
     const [isPlayerAdded, setIsPlayerAdded] = useState(false);
     const [pinExist, setPinExist] = useState(true);
@@ -52,10 +55,19 @@ export default function JoinGame({ navigation }) {
     const [sound, setSound] = useState();
 
     useEffect(() => {
+        // Audio.setAudioModeAsync({
+        //     allowsRecordingIOS: true,
+        //     interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
+        //     playsInSilentModeIOS: true,
+        //     shouldDuckAndroid: true,
+        //     interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX,
+        // });
+
         const handlePlaySound = async () => {
             const { sound } = await Audio.Sound.createAsync(
                 require('src/assets/video/quizzSound.mp3'),
             );
+
             setSound(sound);
 
             await sound.playAsync();
@@ -144,6 +156,7 @@ export default function JoinGame({ navigation }) {
     };
 
     const handleOutGame = () => {
+        setIsPlayerAdded(false);
         socket.emit('studen-leave-JoinRoom', pin);
     };
 
@@ -151,11 +164,14 @@ export default function JoinGame({ navigation }) {
         <SafeAreaView style={styles.SafeAreaView}>
             {!isPlayerAdded ? (
                 <View style={styles.container}>
-                    <Header
-                        title="Join Game"
-                        direct="Home"
-                        navigation={navigation}
-                    />
+                    <View style={styles.viewHeader}>
+                        <HeaderBack
+                            title="Join Game"
+                            handleBack={() => {
+                                navigation.goBack();
+                            }}
+                        />
+                    </View>
                     <View style={styles.viewTextInput}>
                         <TextInput
                             autoFocus={true}
@@ -169,7 +185,13 @@ export default function JoinGame({ navigation }) {
                         style={{ width: '60%', alignItems: 'center', gap: 10 }}
                     >
                         {!pinExist && (
-                            <Text style={{ color: 'red' }}>
+                            <Text
+                                style={{
+                                    color: 'red',
+                                    fontSize: 20,
+                                    fontWeight: 700,
+                                }}
+                            >
                                 Pin doesn not exist
                             </Text>
                         )}
@@ -187,13 +209,15 @@ export default function JoinGame({ navigation }) {
                 </View>
             ) : (
                 <View style={styles.loading}>
-                    <Header
-                        title="Join Game"
-                        direct="Home"
-                        navigation={navigation}
-                        join={true}
-                        handleOutGame={handleOutGame}
-                    />
+                    <View style={styles.viewHeader}>
+                        <HeaderBack
+                            title="Join Game"
+                            handleBack={() => {
+                                handleOutGame();
+                                navigation.goBack();
+                            }}
+                        />
+                    </View>
                     <View style={{ alignItems: 'center' }}>
                         <Text style={{ fontSize: 20, fontWeight: 600 }}>
                             You joined the game
@@ -214,6 +238,11 @@ const styles = StyleSheet.create({
     SafeAreaView: {
         width: '100%',
         height: '100%',
+    },
+
+    viewHeader: {
+        width: '90%',
+        alignSelf: 'center',
     },
 
     container: {

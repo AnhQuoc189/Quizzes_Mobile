@@ -10,6 +10,7 @@ import {
     Text,
     StyleSheet,
     Image,
+    KeyboardAvoidingView,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -23,6 +24,8 @@ import Header from 'src/components/auth/Header';
 //RTKQuery
 import { useGetCommunityQuery } from 'src/services/communityApi';
 import { useAddMessageBoxMutation } from 'src/services/communityApi';
+import HeaderBack from 'src/components/auth/HeaderBack';
+import { Platform } from 'react-native';
 
 export default function ChatRoom({ navigation, ...props }) {
     const dispatch = useDispatch();
@@ -87,25 +90,28 @@ export default function ChatRoom({ navigation, ...props }) {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
+        <KeyboardAvoidingView
+            style={styles.container}
+            behavior={Platform.OS === 'ios' ? 'padding' : null}
+        >
             <View style={{ marginBottom: 20 }}>
-                <Header
+                <HeaderBack
                     title={name}
-                    direct="CommunityDetais"
-                    navigation={navigation}
-                    // commuDetails={true}
-                    quizData={quiz}
-                    quizList={quizList}
-                    titlee={title}
-                    chatBox={true}
-                    handleOutChat={handleOutChat}
+                    handleBack={() => {
+                        handleOutChat();
+                        navigation.goBack();
+                    }}
                 />
             </View>
 
             <FlatList
                 data={messages}
                 renderItem={({ item }) => (
-                    <RenderItem item={item} userInfo={userInfo} />
+                    <RenderItem
+                        key={item._id}
+                        item={item}
+                        userInfo={userInfo}
+                    />
                 )}
                 keyExtractor={(item, index) => index.toString()}
                 showsVerticalScrollIndicator={false}
@@ -135,7 +141,7 @@ export default function ChatRoom({ navigation, ...props }) {
                     <Text style={styles.sendButtonText}>Send</Text>
                 </TouchableOpacity>
             </View>
-        </SafeAreaView>
+        </KeyboardAvoidingView>
     );
 }
 
@@ -185,8 +191,9 @@ const RenderItem = ({ item, userInfo }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 16,
-        justifyContent: 'flex-end',
+        // padding: 16,
+        paddingHorizontal: 16,
+        justifyContent: 'space-around',
         width: '100%',
     },
     messageContainer: {
@@ -207,6 +214,8 @@ const styles = StyleSheet.create({
     inputContainer: {
         flexDirection: 'row',
         alignItems: 'center',
+        marginBottom: 10,
+        height: '10%',
     },
     textInput: {
         flex: 1,

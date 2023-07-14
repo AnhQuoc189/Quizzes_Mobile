@@ -9,7 +9,8 @@ const Header = ({ title, navigation, direct }) => {
             {/* Back button */}
             <TouchableOpacity
                 onPress={() => {
-                    navigation.navigate(direct);
+                    // navigation.navigate(direct);
+                    navigation.goBack();
                 }}
                 style={styles.backBtnHeader}
             >

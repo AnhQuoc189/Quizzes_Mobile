@@ -54,7 +54,7 @@ const UserBox = ({
 
                 <Image
                     style={styles.avatar}
-                    resizeMode="contain"
+                    resizeMode="cover"
                     source={
                         checkImageURL(avatar)
                             ? { uri: avatar }

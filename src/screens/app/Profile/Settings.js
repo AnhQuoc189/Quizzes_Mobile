@@ -13,7 +13,7 @@ import {
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
 
 //component
-import Header from 'src/components/auth/Header';
+import HeaderBack from 'src/components/auth/HeaderBack';
 import Item from 'src/components/auth/Item';
 
 //redux
@@ -47,7 +47,6 @@ export default function Settings({ navigation }) {
         navigation.navigate('Home');
         dispatch(logOut());
         navigation.navigate('AuthNavigator');
-        // console.log('CCCC');
     };
 
     const handlePassWord = () => {
@@ -63,96 +62,102 @@ export default function Settings({ navigation }) {
     };
 
     return (
-        <SafeAreaView style={styles.safeAreaView}>
+        <View style={styles.safeAreaView}>
             <ScrollView
                 style={{ width: '90%' }}
                 showsVerticalScrollIndicator={false}
             >
                 <View style={styles.viewAll}>
-                    <Header
+                    {/* <Header
                         title="Settings"
                         direct="Profile"
                         navigation={navigation}
+                    /> */}
+                    <HeaderBack
+                        title="Settings"
+                        handleBack={() => navigation.goBack()}
                     />
-                    <View style={styles.viewAccountAndOther}>
-                        <Text style={styles.textAccount}>ACCOUNT</Text>
-                        <Item
-                            icon={
-                                <Feather
-                                    name="user"
-                                    size={24}
-                                    color="#865DFF"
-                                />
-                            }
-                            title="Update Profile"
-                            text="Update username,country,etc"
-                            onPress={EditProfile}
-                        />
+                    <View style={{ width: '100%' }}>
+                        <View style={styles.viewAccountAndOther}>
+                            <Text style={styles.textAccount}>ACCOUNT</Text>
+                            <Item
+                                icon={
+                                    <Feather
+                                        name="user"
+                                        size={24}
+                                        color="#865DFF"
+                                    />
+                                }
+                                title="Update Profile"
+                                text="Update username,country,etc"
+                                onPress={EditProfile}
+                            />
 
-                        <Item
-                            icon={
-                                <MaterialCommunityIcons
-                                    name="email-outline"
-                                    size={24}
-                                    color="#865DFF"
-                                />
-                            }
-                            title="Change Email Address"
-                            text={mail}
-                            onPress={handleChangeEmail}
-                        />
-                        <Item
-                            icon={
-                                <MaterialIcons
-                                    name="lock-outline"
-                                    size={24}
-                                    color="#865DFF"
-                                />
-                            }
-                            title="Change Password"
-                            text="Last change 1 year ago"
-                            onPress={handlePassWord}
-                        />
-                    </View>
-
-                    <View style={styles.viewAccountAndOther}>
-                        <Text style={styles.textAccount}>OTHER</Text>
-                        <View style={styles.viewNotification}>
-                            <Text style={{ fontWeight: 900, fontSize: 16 }}>
-                                Notification
-                            </Text>
-                            <Switch
-                                style={{
-                                    transform: [
-                                        { scaleX: 1.0 },
-                                        { scaleY: 1.1 },
-                                    ],
-                                }}
+                            <Item
+                                icon={
+                                    <MaterialCommunityIcons
+                                        name="email-outline"
+                                        size={24}
+                                        color="#865DFF"
+                                    />
+                                }
+                                title="Change Email Address"
+                                text={mail}
+                                onPress={handleChangeEmail}
+                            />
+                            <Item
+                                icon={
+                                    <MaterialIcons
+                                        name="lock-outline"
+                                        size={24}
+                                        color="#865DFF"
+                                    />
+                                }
+                                title="Change Password"
+                                text="Last change 1 year ago"
+                                onPress={handlePassWord}
                             />
                         </View>
 
-                        <Item
-                            icon={
-                                <MaterialCommunityIcons
-                                    name="umbrella-beach-outline"
-                                    size={24}
-                                    color="#865DFF"
+                        <View style={styles.viewAccountAndOther}>
+                            <Text style={styles.textAccount}>OTHER</Text>
+                            <View style={styles.viewNotification}>
+                                <Text style={{ fontWeight: 900, fontSize: 16 }}>
+                                    Notification
+                                </Text>
+                                <Switch
+                                    style={{
+                                        transform: [
+                                            { scaleX: 1.0 },
+                                            { scaleY: 1.1 },
+                                        ],
+                                    }}
                                 />
-                            }
-                            title="Change Difficulty"
-                            text="Easy, normal, hard"
-                        />
-                        <Item
-                            icon={
-                                <AntDesign
-                                    name="question"
-                                    size={24}
-                                    color="#865DFF"
-                                />
-                            }
-                            title="FAQ"
-                            text="Most frequently asked question"
-                        />
+                            </View>
+
+                            <Item
+                                icon={
+                                    <MaterialCommunityIcons
+                                        name="umbrella-beach-outline"
+                                        size={24}
+                                        color="#865DFF"
+                                    />
+                                }
+                                title="Change Difficulty"
+                                text="Easy, normal, hard"
+                            />
+                            <Item
+                                icon={
+                                    <AntDesign
+                                        name="question"
+                                        size={24}
+                                        color="#865DFF"
+                                    />
+                                }
+                                title="FAQ"
+                                text="Most frequently asked question"
+                            />
+                        </View>
                     </View>
                     <TouchableOpacity onPress={logout}>
                         <View style={styles.viewLogout}>
@@ -160,24 +165,26 @@ export default function Settings({ navigation }) {
                         </View>
                     </TouchableOpacity>
                 </View>
+
                 <Toast />
             </ScrollView>
-        </SafeAreaView>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
     safeAreaView: {
         backgroundColor: '#fff',
-        display: 'flex',
+        // display: 'flex',
         width: '100%',
         height: '100%',
         gap: 10,
         alignItems: 'center',
+        justifyContent: 'center',
     },
     viewAll: {
         width: '100%',
-        justifyContent: 'space-around',
+        justifyContent: 'space-between',
         alignItems: 'center',
     },
 
@@ -205,6 +212,7 @@ const styles = StyleSheet.create({
 
     viewLogout: {
         marginTop: 20,
+        alignItems: 'center',
     },
 
     textLogout: {

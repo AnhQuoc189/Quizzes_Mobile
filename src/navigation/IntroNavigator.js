@@ -1,11 +1,13 @@
+//Library
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import Splash from '../screens/auth/Splash';
+//Screen
+import Splash from 'src/screens/auth/Splash';
 
 const IntroStack = createStackNavigator();
 
-export default function IntroNavigator(props) {
+export default function IntroNavigator() {
     return (
         <IntroStack.Navigator
             initialRouteName="Splash"

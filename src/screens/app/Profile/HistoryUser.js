@@ -19,8 +19,7 @@ import { useSelector } from 'react-redux';
 import { API } from 'src/constants/api';
 
 //component
-
-import Header from 'src/components/auth/Header';
+import HeaderBack from 'src/components/auth/HeaderBack';
 import { useState } from 'react';
 
 //constant
@@ -38,7 +37,7 @@ export default function HistoryUser({ navigation, ...props }) {
 
     useEffect(() => {
         if (focus) {
-            fetch(`${API}api/leaderboard/${userInfo?._id}`, {
+            fetch(`${API}api/leaderboard/history/${userInfo?._id}`, {
                 method: 'GET',
             })
                 .then((data) => data.json())
@@ -46,8 +45,7 @@ export default function HistoryUser({ navigation, ...props }) {
                     const data = json.filter((item) =>
                         item.game[0].playerList.includes(userInfo?._id),
                     );
-                    setHistory(data);
-                    console.log(data);
+                    setHistory(data.reverse());
                 })
                 .catch((error) => console(error));
         }
@@ -62,13 +60,11 @@ export default function HistoryUser({ navigation, ...props }) {
     };
 
     return (
-        <SafeAreaView style={styles.viewSafeArea}>
-            <View style={{ marginBottom: 20 }}>
-                <Header
+        <View style={styles.viewSafeArea}>
+            <View style={styles.viewHeader}>
+                <HeaderBack
                     title="History"
-                    // direct="Profile"
-                    navigation={navigation}
-                    userInfo={userInfo}
+                    handleBack={() => navigation.goBack()}
                 />
             </View>
             {!show ? (
@@ -96,11 +92,17 @@ export default function HistoryUser({ navigation, ...props }) {
                 </View>
             ) : (
                 <View style={styles.viewList}>
-                    <TouchableOpacity onPress={() => setShow(false)}>
-                        <View style={styles.viewBack}>
+                    <View
+                        onPress={() => setShow(false)}
+                        style={styles.viewBackAll}
+                    >
+                        <TouchableOpacity
+                            style={styles.viewBack}
+                            onPress={() => setShow(false)}
+                        >
                             <Text style={{ color: 'white' }}>Back</Text>
-                        </View>
-                    </TouchableOpacity>
+                        </TouchableOpacity>
+                    </View>
 
                     <FlatList
                         data={leaderboard}
@@ -121,7 +123,7 @@ export default function HistoryUser({ navigation, ...props }) {
                     />
                 </View>
             )}
-        </SafeAreaView>
+        </View>
     );
 }
 
@@ -227,14 +229,21 @@ const styles = StyleSheet.create({
         height: '100%',
         backgroundColor: '#8F87E5',
         alignItems: 'center',
+        gap: 30,
+    },
+    viewHeader: {
+        width: '90%',
+        alignSelf: 'center',
     },
     viewList: {
         backgroundColor: '#fff',
         height: '80%',
         width: '90%',
         borderRadius: 30,
-        alignItems: 'center',
+        // alignItems: 'center',
         paddingVertical: 20,
+        // paddingHorizontal: 20,
+        // justifyContent: 'center',
     },
     container: {
         width: '90%',
@@ -296,12 +305,18 @@ const styles = StyleSheet.create({
         height: '100%',
         borderRadius: 20,
     },
+    viewBackAll: {
+        width: '90%',
+        alignSelf: 'center',
+    },
     viewBack: {
+        width: '20%',
         backgroundColor: '#8F87E5',
         marginBottom: 15,
         borderRadius: 10,
         padding: 10,
-        left: 0,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
 });
 

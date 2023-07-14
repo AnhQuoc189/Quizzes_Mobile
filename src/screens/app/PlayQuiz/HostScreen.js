@@ -242,7 +242,11 @@ export default function HostScreen({ navigation }) {
     };
 
     const handleExitGame = () => {
+        setIsLeaderboardScreen(false);
+        setIsStaretedGame(false);
         navigation.navigate('DetailQuiz', { quizData: quiz, mylibrary: true });
+
+        // navigation.goBack();
     };
 
     return (

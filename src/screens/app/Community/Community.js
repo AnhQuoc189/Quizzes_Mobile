@@ -21,6 +21,9 @@ import {
     fetchAllCommunity,
 } from 'src/slices/communitySlice';
 
+//icons
+import { AntDesign } from '@expo/vector-icons';
+
 //RTLQuery
 import { API } from 'src/constants/api';
 import { useGetCommunitiesQuery } from 'src/services/communityApi';
@@ -28,6 +31,7 @@ import { useGetCommunitiesQuery } from 'src/services/communityApi';
 //component
 import Header from 'src/components/auth/Header';
 import ModalAdd from './ModalAdd';
+import HeaderBack from 'src/components/auth/HeaderBack';
 
 export default function Community({ navigation }) {
     const dispatch = useDispatch();
@@ -66,6 +70,7 @@ export default function Community({ navigation }) {
         dispatch(fetchAllCommunity(item));
         navigation.navigate('CommunityDetais', {
             quiz: item,
+            id: item._id,
             quizList: item.quizList,
             title: item.tags,
         });
@@ -75,8 +80,10 @@ export default function Community({ navigation }) {
         setModalAdd(true);
     };
 
+    // console.log(communities[0].backgroundImage);
+
     return (
-        <SafeAreaView style={styles.viewSafeArea}>
+        <View style={styles.viewSafeArea}>
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -93,19 +100,32 @@ export default function Community({ navigation }) {
                     <ModalAdd setModalAdd={setModalAdd} />
                 </Pressable>
             </Modal>
-            <Header
+            {/* <Header
                 title="Comunities"
                 direct="Home"
                 navigation={navigation}
                 community={true}
                 addCommunity={addCommunity}
-            />
-            <ScrollView
-                showsVerticalScrollIndicator={false}
-                style={styles.viewScroll}
-            >
+            /> */}
+            <View style={styles.viewHeader}>
+                <HeaderBack
+                    title="Comunities"
+                    handleBack={() => navigation.goBack()}
+                    option={
+                        <TouchableOpacity onPress={addCommunity}>
+                            <AntDesign
+                                name="plussquareo"
+                                size={25}
+                                color="#333"
+                            />
+                        </TouchableOpacity>
+                    }
+                />
+            </View>
+
+            <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={styles.categoryContain}>
-                    {communities &&
+                    {communities ? (
                         communities.map((item, index) => (
                             <TouchableOpacity
                                 style={styles.viewItem}
@@ -127,11 +147,14 @@ export default function Community({ navigation }) {
                                     {item?.name}
                                 </Text>
                             </TouchableOpacity>
-                        ))}
+                        ))
+                    ) : (
+                        <ActivityIndicator size={'large'} color="#333" />
+                    )}
                 </View>
                 {/* {isLoading && <ActivityIndicator size="large" color="#fff" />} */}
             </ScrollView>
-        </SafeAreaView>
+        </View>
     );
 }
 
@@ -141,29 +164,42 @@ const styles = StyleSheet.create({
         height: '100%',
         backgroundColor: '#E3DFFD',
         flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 20,
+    },
+    viewHeader: {
+        width: '90%',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     categoryContain: {
         display: 'flex',
         flexDirection: 'row',
         flexWrap: 'wrap',
         paddingTop: 20,
-        gap: 40,
+        gap: 30,
         justifyContent: 'center',
         alignItems: 'center',
         marginBottom: 100,
-        height: '100%',
+        height: '90%',
+        width: '100%',
+        padding: 10,
     },
 
     viewItem: {
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'space-around',
+        width: '40%',
+        height: '20%',
+        gap: 20,
     },
     viewItemImage: {
         alignItems: 'center',
         justifyContent: 'center',
-        width: 150,
-        height: 150,
-        borderRadius: 75,
+        width: 140,
+        height: 140,
+        borderRadius: 70,
         borderWidth: 2,
         borderColor: '#9BA4B5',
     },
@@ -174,7 +210,8 @@ const styles = StyleSheet.create({
     },
     nameCommunity: {
         textAlign: 'center',
-        width: '80%',
+        width: '100%',
+        height: '30%',
     },
 
     viewPress: {

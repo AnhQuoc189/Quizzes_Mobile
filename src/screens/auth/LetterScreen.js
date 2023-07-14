@@ -4,16 +4,21 @@ import { SafeAreaView, StyleSheet, View, Text } from 'react-native';
 
 //component
 import Header from 'src/components/auth/Header';
+import HeaderBack from 'src/components/auth/HeaderBack';
 
 export default function LetterScreen({ navigation, ...props }) {
     const letter = props.route.params;
     return (
         <SafeAreaView style={styles.safeAreaView}>
             <View style={styles.viewContainer}>
-                <Header
+                {/* <Header
                     title={letter.title}
                     direct="Login"
                     navigation={navigation}
+                /> */}
+                <HeaderBack
+                    title={letter.title}
+                    handleBack={() => navigation.navigate('Login')}
                 />
 
                 <View style={styles.viewTextInput}>

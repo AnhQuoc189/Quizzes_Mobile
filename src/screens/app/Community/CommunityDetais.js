@@ -1,5 +1,5 @@
 //Library
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -17,11 +17,12 @@ import moment from 'moment/moment';
 import { useSelector } from 'react-redux';
 
 //component
-import Header from 'src/components/auth/Header';
+import HeaderBack from 'src/components/auth/HeaderBack';
 import ModalOption from './ModalOption';
 
 //icons
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { SimpleLineIcons } from '@expo/vector-icons';
 
 //RKTQuery
 import { useGetUserQuery } from 'src/services/userApi';
@@ -79,9 +80,15 @@ const QuizCommunity = ({ item, handleOpenQuizDetals }) => (
                 data={item?.questionList}
                 horizontal
                 renderItem={({ item, index }) => (
-                    <QuestionBox key={item} question={item} index={index} />
+                    <View key={item._id}>
+                        <QuestionBox
+                            key={index}
+                            question={item}
+                            index={index}
+                        />
+                    </View>
                 )}
-                keyExtractor={(item) => item.id}
+                keyExtractor={(item) => item._id}
                 ItemSeparatorComponent={() => <View style={{ width: 20 }} />}
                 showsHorizontalScrollIndicator={false}
             />
@@ -90,7 +97,9 @@ const QuizCommunity = ({ item, handleOpenQuizDetals }) => (
 );
 
 export default function CommunityDetais({ navigation, ...props }) {
-    const { quiz, quizList, title } = props.route.params;
+    const community = useSelector((state) => state.communities.community);
+
+    const { quiz, quizList, title, id } = props.route.params;
     const users = useSelector((state) => state.users.users);
     const userInfo = useSelector((state) => state.auths?.user);
 
@@ -117,7 +126,7 @@ export default function CommunityDetais({ navigation, ...props }) {
     };
 
     return (
-        <SafeAreaView style={styles.viewSafeArea}>
+        <View style={styles.viewSafeArea}>
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -146,26 +155,43 @@ export default function CommunityDetais({ navigation, ...props }) {
                     />
                 </Pressable>
             </Modal>
-            <Header
+            {/* <Header
                 title={title}
                 direct="Community"
                 navigation={navigation}
                 commuDetails={true}
                 openOption={handleOpenOption}
-            />
-            <View style={styles.viewFlatlist}>
-                {quizList?.length ? (
-                    <FlatList
-                        data={quizList}
-                        keyExtractor={(item) => item.id}
-                        renderItem={({ item }) => (
-                            <QuizCommunity
-                                key={item}
-                                item={item}
-                                handleOpenQuizDetals={() =>
-                                    handleOpenQuizDetals(item)
-                                }
+            /> */}
+            <View style={styles.viewHeader}>
+                <HeaderBack
+                    title={title}
+                    handleBack={() => navigation.goBack()}
+                    option={
+                        <TouchableOpacity onPress={handleOpenOption}>
+                            <SimpleLineIcons
+                                name="options"
+                                size={25}
+                                color="#333"
                             />
+                        </TouchableOpacity>
+                    }
+                />
+            </View>
+            <View style={styles.viewFlatlist}>
+                {community?.quizList?.length ? (
+                    <FlatList
+                        data={community?.quizList}
+                        keyExtractor={(item) => item._id}
+                        renderItem={({ item }) => (
+                            <View key={item._id}>
+                                <QuizCommunity
+                                    key={item}
+                                    item={item}
+                                    handleOpenQuizDetals={() =>
+                                        handleOpenQuizDetals(item)
+                                    }
+                                />
+                            </View>
                         )}
                         ItemSeparatorComponent={ItemSeparator}
                         showsVerticalScrollIndicator={false}
@@ -174,7 +200,7 @@ export default function CommunityDetais({ navigation, ...props }) {
                     <Text>No Quiz here</Text>
                 )}
             </View>
-        </SafeAreaView>
+        </View>
     );
 }
 
@@ -185,7 +211,14 @@ const styles = StyleSheet.create({
         backgroundColor: '#E3DFFD',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: 50,
+        // gap: 50,
+        flex: 1,
+    },
+    viewHeader: {
+        width: '90%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginBottom: 50,
     },
     viewFlatlist: {
         width: '100%',

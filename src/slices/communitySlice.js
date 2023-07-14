@@ -37,8 +37,10 @@ const communitySlice = createSlice({
                     return item;
                 }
             });
+            state.community.quizList.push(action.payload.quiz);
         },
         removeQuiz: (state, action) => {
+            console.log(action.payload.quiz._id);
             state.communities = state.communities.map((item) => {
                 if (item._id === action.payload.id) {
                     item.quizList = item.quizList.filter(
@@ -50,6 +52,11 @@ const communitySlice = createSlice({
                 }
             });
             // console.log(action);
+            state.community.quizList = state.community.quizList.filter(
+                (item) => {
+                    return item._id !== action.payload.quiz._id;
+                },
+            );
         },
         addMessageChat: (state, action) => {
             state.community.chatBox.push(action.payload);
@@ -64,7 +71,7 @@ export const {
     deleteCommunity,
     fetchAllCommunities,
     addQuiz,
-    deleteQuiz,
+    removeQuiz,
     addMessageChat,
 } = communitySlice.actions;
 

@@ -54,7 +54,8 @@ export default function ModalOption({
                         if (data) {
                             onClose();
                             dispatch(deleteCommunity(quiz));
-                            navigation.navigate('Community');
+                            // navigation.navigate('Community');
+                            navigation.goBack();
                             if (Platform.OS === 'android') {
                                 ToastAndroid.show(
                                     'Delete successfully!',

@@ -21,11 +21,12 @@ const Header = ({
             {/* Back button */}
             <TouchableOpacity
                 onPress={() => {
-                    navigation.navigate(direct, {
-                        quiz,
-                        creator: false,
-                        importQuizData: importQuiz,
-                    });
+                    // navigation.navigate(direct, {
+                    //     quiz,
+                    //     creator: false,
+                    //     importQuizData: importQuiz,
+                    // });
+                    navigation.goBack();
                 }}
             >
                 <AntDesign name="arrowleft" size={25} color="#fff" />

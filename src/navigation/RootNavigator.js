@@ -6,7 +6,7 @@ import AuthNavigator from './AuthNavigator';
 import AppNavigator from './AppNavigator';
 const RootStack = createStackNavigator();
 
-export default function RootNavigator(props) {
+export default function RootNavigator() {
     return (
         <NavigationContainer>
             <RootStack.Navigator

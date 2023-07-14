@@ -19,6 +19,7 @@ import { EmailReset } from 'src/validate/auth/Resgister';
 //component
 import Button from 'src/components/auth/Button';
 import Header from 'src/components/auth/Header';
+import HeaderBack from 'src/components/auth/HeaderBack';
 import FormTextInput from 'src/components/auth/Input';
 
 export default function Reset({ navigation }) {
@@ -77,10 +78,9 @@ export default function Reset({ navigation }) {
     return (
         <SafeAreaView style={styles.safeAreaView}>
             <View style={styles.viewContainer}>
-                <Header
+                <HeaderBack
                     title="Reset Password"
-                    direct="Login"
-                    navigation={navigation}
+                    handleBack={() => navigation.goBack()}
                 />
 
                 <View style={styles.viewTextInput}>

@@ -48,7 +48,7 @@ export default function EditOrDelete({
 
     const [loadingImport, setLoadingImport] = useState(false);
 
-    const [removeQuiz, { isLoading }] = useDeleteQuizMutation();
+    const [removeQuizz, { isLoading }] = useDeleteQuizMutation();
     const [importQuiz, { error }] = useImportQuizMutation();
     const [removeQuizCommunity] = useDeleteQuizCommunityMutation();
 
@@ -61,8 +61,6 @@ export default function EditOrDelete({
                             'Quiz already exist in your library',
                             ToastAndroid.SHORT,
                         );
-                    } else {
-                        AlertIOS.alert('Quiz already exist in your library');
                     }
                     break;
                 default:
@@ -79,7 +77,7 @@ export default function EditOrDelete({
                 {
                     text: 'Yes',
                     onPress: async () => {
-                        const { data } = await removeQuiz({
+                        const { data } = await removeQuizz({
                             accessToken,
                             quizId: quizData._id,
                             userId,
@@ -87,14 +85,12 @@ export default function EditOrDelete({
                         if (data) {
                             onClose();
                             dispatch(deleteQuiz(quizData));
-                            navigation.navigate('Home');
+                            navigation.goBack();
                             if (Platform.OS === 'android') {
                                 ToastAndroid.show(
                                     'Delete successfully!',
                                     ToastAndroid.SHORT,
                                 );
-                            } else {
-                                AlertIOS.alert('Delete successfully!');
                             }
                         }
                     },
@@ -130,8 +126,6 @@ export default function EditOrDelete({
                                     'Import successfully!',
                                     ToastAndroid.SHORT,
                                 );
-                            } else {
-                                AlertIOS.alert('Delete successfully!');
                             }
                         }
                     },
@@ -151,11 +145,6 @@ export default function EditOrDelete({
                 {
                     text: 'Yes',
                     onPress: async () => {
-                        console.log(
-                            accessToken,
-                            communityCurrent._id,
-                            quizData._id,
-                        );
                         const { data } = await removeQuizCommunity({
                             accessToken,
                             id: communityCurrent._id,
@@ -166,7 +155,7 @@ export default function EditOrDelete({
                             onClose();
                             // dispatch(addLibrayQuiz(data));
                             dispatch(
-                                deleteQuiz({
+                                removeQuiz({
                                     id: communityCurrent._id,
                                     quiz: data,
                                 }),
@@ -176,10 +165,8 @@ export default function EditOrDelete({
                                     'Delete successfully!',
                                     ToastAndroid.SHORT,
                                 );
-                            } else {
-                                AlertIOS.alert('Delete successfully!');
                             }
-                            navigation.navigate('Community');
+                            navigation.goBack();
                         }
                     },
                 },
@@ -218,6 +205,7 @@ export default function EditOrDelete({
     };
 
     const handleEdit = () => {
+        onClose();
         navigation.navigate('Creator', {
             quiz: quizData,
             creator: false,
@@ -251,7 +239,6 @@ export default function EditOrDelete({
                     <Text
                         style={{ color: 'gray', fontSize: 20, fontWeight: 500 }}
                     >
-                        {' '}
                         {quizData.tags[0]}
                     </Text>
                     <Text style={{ fontWeight: 700, fontSize: 20 }}>
@@ -262,18 +249,24 @@ export default function EditOrDelete({
                     <AntDesign name="close" size={24} color="black" />
                 </TouchableOpacity>
             </View>
-            <View style={styles.questionPoint}>
-                <View style={styles.questionPointItem}>
-                    <AntDesign
-                        name="questioncircle"
-                        size={30}
-                        color="#865DFF"
-                    />
-                    <Text>{quizData.questionList.length} question</Text>
-                </View>
-                <View style={styles.questionPointItem}>
-                    <AntDesign name="codepen-circle" size={30} color="black" />
-                    <Text>{point} points</Text>
+            <View style={{ width: '90%', height: '14%' }}>
+                <View style={styles.questionPoint}>
+                    <View style={styles.questionPointItem}>
+                        <AntDesign
+                            name="questioncircle"
+                            size={30}
+                            color="#865DFF"
+                        />
+                        <Text>{quizData.questionList.length} question</Text>
+                    </View>
+                    <View style={styles.questionPointItem}>
+                        <AntDesign
+                            name="codepen-circle"
+                            size={30}
+                            color="black"
+                        />
+                        <Text>{point} points</Text>
+                    </View>
                 </View>
             </View>
             <View style={styles.decription}>
@@ -411,25 +404,24 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         justifyContent: 'center',
         alignItems: 'center',
+        gap: 10,
     },
     title: {
         width: '90%',
-        height: '18%',
+        // height: '16%',
         alignItems: 'flex-start',
         justifyContent: 'space-between',
         flexDirection: 'row',
     },
 
     questionPoint: {
-        width: '90%',
-        height: '12%',
+        width: '100%',
+        height: '90%',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-around',
         backgroundColor: '#E0DEF9',
         borderRadius: 20,
-        // marginBottom: 20,
-        // marginTop: 20,
     },
 
     questionPointItem: {

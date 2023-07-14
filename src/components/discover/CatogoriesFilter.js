@@ -6,6 +6,7 @@ import {
     View,
     FlatList,
     TouchableOpacity,
+    Image,
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { useIsFocused } from '@react-navigation/native';
@@ -29,6 +30,7 @@ const CatogoriesFilter = ({ navigation }) => {
 
     const searchQuery = useSelector((state) => state.searchs.searchQuery);
     const [result, setResults] = useState([]);
+    const [searchs, setSearchs] = useState(false);
     const [showQuiz, setShowQuiz] = useState(false);
     const [listQuiz, setListQuiz] = useState([]);
     const isFocused = useIsFocused();
@@ -51,6 +53,7 @@ const CatogoriesFilter = ({ navigation }) => {
                 return contains(category, fotmatQuery);
             });
             setResults(filterData);
+            setSearchs(true);
         }
     }, [searchQuery, isFocused]);
 
@@ -67,15 +70,30 @@ const CatogoriesFilter = ({ navigation }) => {
                 </View>
             )} */}
             <View style={styles.categoryContain}>
-                {result.map((category) => (
-                    <CategoryCard
-                        width="46%"
-                        key={category.name}
-                        category={category}
-                        activeCategory={true}
-                        showQuiz={(quizCate) => showListQuiz(quizCate)}
-                    />
-                ))}
+                {result?.length
+                    ? result.map((category) => (
+                          <CategoryCard
+                              width="46%"
+                              key={category.name}
+                              category={category}
+                              activeCategory={true}
+                              showQuiz={(quizCate) => showListQuiz(quizCate)}
+                          />
+                      ))
+                    : searchs && (
+                          <View style={{ alignItems: 'center' }}>
+                              <Image
+                                  source={{
+                                      uri: 'https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg//assets/a60759ad1dabe909c46a817ecbf71878.png',
+                                  }}
+                                  resizeMode="cover"
+                                  style={{ width: 100, height: 100 }}
+                              />
+                              <Text style={{ color: '#333' }}>
+                                  No results found
+                              </Text>
+                          </View>
+                      )}
             </View>
         </ScrollView>
     ) : (

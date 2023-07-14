@@ -217,35 +217,37 @@ export default function PlayerSolo({ navigation, ...props }) {
     };
 
     const cancelGame = () => {
-        navigation.navigate('DetailQuiz', {
-            quizData: quiz,
-            mylibrary: false,
-            community,
-            quizList,
-            title,
-        });
+        // navigation.navigate('DetailQuiz', {
+        //     quizData: quiz,
+        //     mylibrary: false,
+        //     community,
+        //     quizList,
+        //     title,
+        // });
+        navigation.goBack();
     };
 
     const handleFinish = () => {
-        if (quizList && title) {
-            navigation.navigate('CommunityDetais', {
-                quizList,
-                title,
-                community,
-            });
-        } else {
-            // if (student) {
-            //     navigation.navigate('Home');
-            // } else {
-            //     navigation.navigate('Discover');
-            // }
-            navigation.navigate('DetailQuiz', {
-                quizData: quiz,
-                mylibrary: false,
-                userType,
-                community,
-            });
-        }
+        // if (quizList && title) {
+        //     navigation.navigate('CommunityDetais', {
+        //         quizList,
+        //         title,
+        //         community,
+        //     });
+        // } else {
+        //     // if (student) {
+        //     //     navigation.navigate('Home');
+        //     // } else {
+        //     //     navigation.navigate('Discover');
+        //     // }
+        //     navigation.navigate('DetailQuiz', {
+        //         quizData: quiz,
+        //         mylibrary: false,
+        //         userType,
+        //         community,
+        //     });
+        // }
+        navigation.goBack();
     };
 
     const handleAnswer = (key) => {
