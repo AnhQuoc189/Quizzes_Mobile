@@ -11,6 +11,7 @@ import { RequirePassword } from 'src/validate/auth/Resgister';
 //Component
 import Button from 'src/components/auth/Button';
 import Header from 'src/components/auth/Header';
+import HeaderBack from 'src/components/auth/HeaderBack';
 import FormTextInput from 'src/components/auth/Input';
 
 //icons
@@ -73,10 +74,9 @@ export default function Newpass({ navigation, ...props }) {
     return (
         <SafeAreaView style={styles.safeAreaView}>
             <View style={styles.viewAll}>
-                <Header
+                <HeaderBack
                     title="Reset Password"
-                    direct="Login"
-                    navigation={navigation}
+                    handleBack={() => navigation.navigate('Reset')}
                 />
 
                 <View style={styles.textNode}>

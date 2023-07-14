@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     },
 
     optionSign: {
-        backgroundColor: 'white',
+        backgroundColor: '#fff',
         width: '90%',
         height: '30%',
         borderRadius: 15,

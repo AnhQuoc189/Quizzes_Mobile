@@ -17,6 +17,9 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import { updateQuiz } from 'src/slices/quizSlice';
 
+//Toast
+import { Toast } from 'react-native-toast-message/lib/src/Toast';
+
 //icons
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 const screenWidth = Dimensions.get('screen').width;
@@ -209,10 +212,19 @@ export default function Item({
         });
 
         if (data) {
-            ToastAndroid.show(
-                'Question save successfully !',
-                ToastAndroid.SHORT,
-            );
+            // if (Platform.OS === 'android') {
+            //     ToastAndroid.show(
+            //         'Question save successfully !',
+            //         ToastAndroid.SHORT,
+            //     );
+            // }
+            Toast.show({
+                type: 'success',
+                text1: 'Save',
+                text2: 'Question save successfully !',
+                visibilityTime: 2500,
+                topOffset: 60,
+            });
             dispatch(updateQuiz(data));
         }
     };
@@ -608,6 +620,7 @@ export default function Item({
                     </View>
                 </ScrollView>
             </View>
+            <Toast />
         </View>
     );
 }

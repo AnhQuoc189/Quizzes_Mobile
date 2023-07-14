@@ -151,7 +151,7 @@ export function ModalNote({
                 <Text
                     style={{
                         width: '100%',
-                        textAlign: 'left',
+                        textAlign: 'center',
                         marginTop: 10,
                         fontSize: 18,
                     }}
@@ -164,14 +164,14 @@ export function ModalNote({
                         flexDirection: 'row',
                         width: '50%',
                         gap: 20,
-                        justifyContent: 'flex-start',
-                        right: 60,
+                        justifyContent: 'center',
+                        // right: 60,
                     }}
                 >
                     {creator && !importQuiz ? (
                         <Button
                             title="Import File"
-                            width="90%"
+                            width="80%"
                             backgroundColor={colors.pink}
                             handlePress={handleImportQuiz}
                         />

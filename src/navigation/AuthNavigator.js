@@ -1,3 +1,4 @@
+//Library
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -14,7 +15,7 @@ import LetterScreen from 'src/screens/auth/LetterScreen';
 
 const AuthStack = createStackNavigator();
 
-export default function AuthNavigator(props) {
+export default function AuthNavigator() {
     return (
         <AuthStack.Navigator
             initialRouteName="Onboard"

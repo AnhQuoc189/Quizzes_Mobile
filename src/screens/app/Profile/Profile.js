@@ -95,6 +95,7 @@ export default function Profile({ navigation, ...props }) {
     const [rank, setRank] = useState();
 
     const quizes = useSelector((state) => state.quizs.quizes);
+
     const { data, isLoading } = useGetTeacherQuizzesQuery({
         accessToken,
         teacherId,
@@ -124,20 +125,21 @@ export default function Profile({ navigation, ...props }) {
         //         setQuality(arr);
         //     })
         //     .catch((error) => console(error));
-        if (data) {
+        if (focus && data) {
             const arr = [];
             nameCate.map((name) => {
                 let lc = 0;
-                data.map((quiz) => {
+                data?.map((quiz) => {
                     if (quiz.tags.includes(name)) {
                         lc++;
                     }
                 });
                 arr.push(lc);
             });
+
             setQuality(arr);
         }
-    }, [focus]);
+    }, [focus, data]);
 
     useFocusEffect(
         useCallback(() => {
@@ -155,7 +157,7 @@ export default function Profile({ navigation, ...props }) {
         }),
     );
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <ScrollView
                 style={{ width: '100%' }}
                 contentContainerStyle={{ flexGrow: 1 }}
@@ -165,9 +167,10 @@ export default function Profile({ navigation, ...props }) {
                 <View style={styles.header}>
                     <TouchableOpacity
                         onPress={() => {
-                            navigation.navigate(
-                                !profileAnother ? 'Home' : 'LeaderBoard',
-                            );
+                            // navigation.navigate(
+                            //     !profileAnother ? 'Home' : 'LeaderBoard',
+                            // );
+                            navigation.goBack();
                         }}
                     >
                         <Ionicons name="arrow-back" size={28} color="white" />
@@ -289,7 +292,7 @@ export default function Profile({ navigation, ...props }) {
                     </View>
                 </View>
             </ScrollView>
-        </SafeAreaView>
+        </View>
     );
 }
 

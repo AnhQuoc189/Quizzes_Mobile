@@ -6,16 +6,21 @@ import {
     Modal,
     Pressable,
     Alert,
+    TouchableOpacity,
 } from 'react-native';
 import React, { useState } from 'react';
 
 //component
 import Header from 'src/components/auth/Header';
+import HeaderBack from 'src/components/auth/HeaderBack';
 import EditOrDelete from './EditOrDelete';
 import { QuizInfo } from 'src/components';
 
 //color
 import { bgColors, colors } from 'src/styles/color';
+
+//icons
+import { SimpleLineIcons } from '@expo/vector-icons';
 
 const DetailQuiz = ({ navigation, ...props }) => {
     const {
@@ -37,7 +42,7 @@ const DetailQuiz = ({ navigation, ...props }) => {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -71,8 +76,8 @@ const DetailQuiz = ({ navigation, ...props }) => {
                     />
                 </Pressable>
             </Modal>
-            <View style={{ width: '100%', flex: 1 }}>
-                <Header
+            <View style={styles.viewMain}>
+                {/* <Header
                     title="Question"
                     direct={
                         mylibrary
@@ -89,7 +94,22 @@ const DetailQuiz = ({ navigation, ...props }) => {
                     navigation={navigation}
                     option={true}
                     handleOption={handleOption}
-                />
+                /> */}
+                <View style={styles.viewHeader}>
+                    <HeaderBack
+                        title="Question"
+                        handleBack={() => navigation.goBack()}
+                        option={
+                            <TouchableOpacity onPress={handleOption}>
+                                <SimpleLineIcons
+                                    name="options"
+                                    size={25}
+                                    color="#333"
+                                />
+                            </TouchableOpacity>
+                        }
+                    />
+                </View>
                 <QuizInfo
                     isMine={false}
                     category="TECH"
@@ -103,7 +123,7 @@ const DetailQuiz = ({ navigation, ...props }) => {
                     mylibrary={mylibrary}
                 />
             </View>
-        </SafeAreaView>
+        </View>
     );
 };
 
@@ -115,5 +135,16 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: colors.primary,
+    },
+    viewHeader: {
+        width: '90%',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    viewMain: {
+        width: '100%',
+        flex: 1,
+        alignItems: 'center',
+        gap: 20,
     },
 });

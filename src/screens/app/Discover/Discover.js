@@ -11,6 +11,7 @@ import { searchQuery } from 'src/slices/searchSlice';
 
 //component
 import Header from 'src/components/auth/Header';
+import HeaderBack from 'src/components/auth/HeaderBack';
 import { API } from 'src/constants/api';
 
 //styles
@@ -72,14 +73,22 @@ export default function Discover({ navigation }) {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <View style={styles.fisrtSection}>
-                <Header
+                {/* <Header
                     title="Discover"
                     direct={isFocus ? 'Discover' : 'Home'}
                     color="white"
                     navigation={navigation}
                     setFocus={() => setIsFocus(false)}
+                /> */}
+                <HeaderBack
+                    title="Discover"
+                    handleBack={() => {
+                        setIsFocus(false);
+                        navigation.goBack();
+                    }}
+                    color="#fff"
                 />
                 <View style={styles.searchBar}>
                     <SimpleLineIcons name="magnifier" size={24} color="white" />
@@ -97,7 +106,7 @@ export default function Discover({ navigation }) {
             </View>
 
             {isFocus ? <FilterSearchNavigation /> : <DisplayDiscover />}
-        </SafeAreaView>
+        </View>
     );
 }
 

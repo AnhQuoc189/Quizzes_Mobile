@@ -18,6 +18,7 @@ import {
 
 //component
 import Header from 'src/components/auth/Header';
+import HeaderBack from 'src/components/auth/HeaderBack';
 import Button from 'src/components/auth/Button';
 import ResendOTP from 'src/components/auth/ResendOTP';
 
@@ -91,103 +92,97 @@ export default function SendOTP({ navigation, ...props }) {
 
     return (
         <SafeAreaView style={styles.safeAreaView}>
-            <View styles={(width = '90%')}>
-                <View style={styles.viewAll}>
-                    <Header
+            <View style={styles.viewAll}>
+                <View style={{ alignItems: 'center', width: '90%' }}>
+                    <HeaderBack
                         title="OTP Vertification"
-                        direct="Reset"
-                        navigation={navigation}
-                    />
-
-                    <View style={styles.viewText}>
-                        <Text>
-                            We will send you a one time password on this
-                        </Text>
-                        <Text style={{ fontWeight: 700 }}>Email Address</Text>
-                    </View>
-
-                    <View style={styles.otpContainer}>
-                        <View style={styles.otpBox}>
-                            <TextInput
-                                style={styles.otpText}
-                                keyboardType="number-pad"
-                                maxLength={1}
-                                ref={firstInput}
-                                onChangeText={(text) => {
-                                    setOTP({ ...OTP, 1: text });
-                                    // setOTP([...OTP  ,OTP[0]:text])
-                                    setOtpvalid(false);
-                                    text && secondInput.current.focus();
-                                }}
-                            />
-                        </View>
-                        <View style={styles.otpBox}>
-                            <TextInput
-                                style={styles.otpText}
-                                keyboardType="number-pad"
-                                maxLength={1}
-                                ref={secondInput}
-                                onChangeText={(text) => {
-                                    setOTP({ ...OTP, 2: text });
-                                    setOtpvalid(false);
-                                    text && thirdInput.current.focus();
-                                }}
-                            />
-                        </View>
-                        <View style={styles.otpBox}>
-                            <TextInput
-                                style={styles.otpText}
-                                keyboardType="number-pad"
-                                maxLength={1}
-                                ref={thirdInput}
-                                onChangeText={(text) => {
-                                    setOTP({ ...OTP, 3: text });
-                                    setOtpvalid(false);
-                                    text && fourthInput.current.focus();
-                                }}
-                            />
-                        </View>
-                        <View style={styles.otpBox}>
-                            <TextInput
-                                style={styles.otpText}
-                                keyboardType="number-pad"
-                                maxLength={1}
-                                ref={fourthInput}
-                                onChangeText={(text) => {
-                                    setOTP({ ...OTP, 4: text });
-                                    setOtpvalid(false);
-                                }}
-                            />
-                        </View>
-                    </View>
-
-                    <Text style={{ marginTop: -20 }}>
-                        {time === 60
-                            ? '1:00'
-                            : time >= 10
-                            ? `0:${time}`
-                            : `0:0${time}`}
-                    </Text>
-                    <ResendOTP
-                        navigation={navigation}
-                        userEmail={mail}
-                        userName={username}
-                        setTime={setTimeStart}
-                    />
-
-                    {optValid && (
-                        <Text style={{ color: 'red' }}>OTP Invalid</Text>
-                    )}
-
-                    <Button
-                        title="Submit"
-                        navigation={navigation}
-                        onPress={handelSubmitOTP}
-                        click={noClick}
-                        loading={isLoading}
+                        handleBack={() => navigation.goBack()}
                     />
                 </View>
+
+                <View style={styles.viewText}>
+                    <Text>We will send you a one time password on this</Text>
+                    <Text style={{ fontWeight: 700 }}>Email Address</Text>
+                </View>
+
+                <View style={styles.otpContainer}>
+                    <View style={styles.otpBox}>
+                        <TextInput
+                            style={styles.otpText}
+                            keyboardType="number-pad"
+                            maxLength={1}
+                            ref={firstInput}
+                            onChangeText={(text) => {
+                                setOTP({ ...OTP, 1: text });
+                                // setOTP([...OTP  ,OTP[0]:text])
+                                setOtpvalid(false);
+                                text && secondInput.current.focus();
+                            }}
+                        />
+                    </View>
+                    <View style={styles.otpBox}>
+                        <TextInput
+                            style={styles.otpText}
+                            keyboardType="number-pad"
+                            maxLength={1}
+                            ref={secondInput}
+                            onChangeText={(text) => {
+                                setOTP({ ...OTP, 2: text });
+                                setOtpvalid(false);
+                                text && thirdInput.current.focus();
+                            }}
+                        />
+                    </View>
+                    <View style={styles.otpBox}>
+                        <TextInput
+                            style={styles.otpText}
+                            keyboardType="number-pad"
+                            maxLength={1}
+                            ref={thirdInput}
+                            onChangeText={(text) => {
+                                setOTP({ ...OTP, 3: text });
+                                setOtpvalid(false);
+                                text && fourthInput.current.focus();
+                            }}
+                        />
+                    </View>
+                    <View style={styles.otpBox}>
+                        <TextInput
+                            style={styles.otpText}
+                            keyboardType="number-pad"
+                            maxLength={1}
+                            ref={fourthInput}
+                            onChangeText={(text) => {
+                                setOTP({ ...OTP, 4: text });
+                                setOtpvalid(false);
+                            }}
+                        />
+                    </View>
+                </View>
+
+                <Text style={{ marginTop: -20 }}>
+                    {time === 60
+                        ? '1:00'
+                        : time >= 10
+                        ? `0:${time}`
+                        : `0:0${time}`}
+                </Text>
+                <ResendOTP
+                    navigation={navigation}
+                    userEmail={mail}
+                    userName={username}
+                    setTime={setTimeStart}
+                />
+
+                {optValid && <Text style={{ color: 'red' }}>OTP Invalid</Text>}
             </View>
+            <Button
+                title="Submit"
+                navigation={navigation}
+                onPress={handelSubmitOTP}
+                click={noClick}
+                loading={isLoading}
+            />
         </SafeAreaView>
     );
 }
@@ -247,11 +242,6 @@ const styles = StyleSheet.create({
         fontWeight: 700,
     },
 
-    viewSubmit: {
-        width: 100,
-        backgroundColor: '#865DFF',
-        height: 50,
-    },
     viewTouchButton: {
         width: '100%',
         justifyContent: 'center',

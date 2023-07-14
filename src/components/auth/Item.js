@@ -29,7 +29,7 @@ export default function Item({ navigation, ...props }) {
 const styles = StyleSheet.create({
     viewItem: {
         width: '100%',
-        height: 70,
+        height: 80,
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',

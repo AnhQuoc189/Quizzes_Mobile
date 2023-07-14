@@ -16,7 +16,7 @@ import { EmailReset } from 'src/validate/auth/Resgister';
 
 //components
 import Button from 'src/components/auth/Button';
-import Header from 'src/components/auth/Header';
+import HeaderBack from 'src/components/auth/HeaderBack';
 import FormTextInput from 'src/components/auth/Input';
 
 export default function ChangeEmail({ navigation }) {
@@ -81,16 +81,17 @@ export default function ChangeEmail({ navigation }) {
     };
 
     return (
-        <SafeAreaView style={styles.safeAreaView}>
+        <View style={styles.safeAreaView}>
             <View style={styles.viewContainer}>
-                <Header
-                    title="Change Email"
-                    direct="Settings"
-                    navigation={navigation}
-                />
+                <View style={styles.viewHeader}>
+                    <HeaderBack
+                        title="Change Email"
+                        handleBack={() => navigation.goBack()}
+                    />
+                </View>
 
                 <View style={styles.viewTextInput}>
-                    <Text style={{ fontSize: 16 }}>
+                    <Text style={{ fontSize: 16, textAlign: 'center' }}>
                         Enter your email and we will send you a link to change
                         your email.
                     </Text>
@@ -130,7 +131,7 @@ export default function ChangeEmail({ navigation }) {
                     loading={isLoading}
                 />
             </View>
-        </SafeAreaView>
+        </View>
     );
 }
 
@@ -152,7 +153,11 @@ const styles = StyleSheet.create({
     },
 
     viewTextInput: {
-        alignSelf: 'center',
+        alignItems: 'center',
         justifyContent: 'center',
+    },
+    viewHeader: {
+        width: '100%',
+        alignSelf: 'center',
     },
 });

@@ -8,7 +8,11 @@ import {
     ScrollView,
     ToastAndroid,
     SafeAreaView,
+    TouchableOpacity,
 } from 'react-native';
+
+//icons
+import { AntDesign } from '@expo/vector-icons';
 
 //redux
 import { useSelector, useDispatch } from 'react-redux';
@@ -16,6 +20,7 @@ import { updateQuiz } from 'src/slices/quizSlice';
 
 // Component
 import { Header } from 'src/components/creator';
+import HeaderBack from 'src/components/auth/HeaderBack';
 import Item from './Item';
 
 //color
@@ -78,8 +83,6 @@ const AddQuestion = ({ navigation, ...props }) => {
                     'Add question successfully!',
                     ToastAndroid.SHORT,
                 );
-            } else {
-                AlertIOS.alert('Add question successfully!');
             }
             const { Question, quiz } = data;
             dispatch(updateQuiz(quiz));
@@ -99,8 +102,6 @@ const AddQuestion = ({ navigation, ...props }) => {
                     'Delete question successfully!',
                     ToastAndroid.SHORT,
                 );
-            } else {
-                AlertIOS.alert('Delete question successfully!');
             }
             dispatch(updateQuiz(data));
             setQuestionList(data.questionList);
@@ -108,8 +109,8 @@ const AddQuestion = ({ navigation, ...props }) => {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
-            <View style={styles.headers}>
+        <View style={styles.container}>
+            {/* <View style={styles.headers}>
                 <Header
                     add={true}
                     title="Add Question"
@@ -120,6 +121,27 @@ const AddQuestion = ({ navigation, ...props }) => {
                     quiz={quiz}
                     addQuestion={handleAddQuestion}
                     importQuiz={importQuiz}
+                />
+            </View> */}
+            <View style={styles.viewHeader}>
+                <HeaderBack
+                    title="Add Question"
+                    handleBack={() => {
+                        navigation.navigate('Creator', {
+                            quiz,
+                            creator: false,
+                        });
+                    }}
+                    option={
+                        <TouchableOpacity onPress={handleAddQuestion}>
+                            <AntDesign
+                                name="plussquareo"
+                                size={25}
+                                color="#fff"
+                            />
+                        </TouchableOpacity>
+                    }
+                    color="#fff"
                 />
             </View>
             <View style={styles.mainContent}>
@@ -158,7 +180,7 @@ const AddQuestion = ({ navigation, ...props }) => {
                     )}
                 </ScrollView>
             </View>
-        </SafeAreaView>
+        </View>
     );
 };
 
@@ -168,8 +190,13 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: colors.primary,
-        paddingTop: 16,
+        // paddingTop: 16,
         alignItems: 'center',
+    },
+    viewHeader: {
+        width: '90%',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     headers: {
         marginTop: 25,

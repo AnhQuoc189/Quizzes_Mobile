@@ -34,10 +34,10 @@ export default function QuizCommunity({ navigation }) {
         <View style={styles.viewCommunity}>
             {isLoading && <ActivityIndicator color="#333" size="large" />}
             {communities &&
-                communities.map((item, index) => {
+                communities.map((item) => {
                     if (item?.quizList?.length) {
                         return (
-                            <View style={{ gap: 10 }} key={index}>
+                            <View style={{ gap: 10 }} key={item._id}>
                                 <Text>{item.tags}</Text>
                                 <QuizLizst
                                     quizList={item.quizList}
@@ -57,9 +57,11 @@ const QuizLizst = ({ quizList, navigation }) => {
             data={quizList}
             horizontal
             renderItem={({ item }) => (
-                <QuizItem key={item} quiz={item} navigation={navigation} />
+                <View key={item.id}>
+                    <QuizItem quiz={item} navigation={navigation} />
+                </View>
             )}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item._id}
             ItemSeparatorComponent={() => <View style={{ width: 20 }} />}
             showsHorizontalScrollIndicator={false}
         />

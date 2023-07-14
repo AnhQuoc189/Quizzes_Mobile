@@ -7,15 +7,13 @@ import { Toast } from 'react-native-toast-message/lib/src/Toast';
 import { useDispatch } from 'react-redux';
 import { upDated } from 'src/slices/authSlice';
 
-//component
-import { useResetPassMutation } from 'src/services/authApi';
-
 //validate
 import { RequirePassword } from 'src/validate/auth/Resgister';
 
 //component
 import Button from 'src/components/auth/Button';
-import Header from 'src/components/auth/Header';
+import { useResetPassMutation } from 'src/services/authApi';
+import HeaderBack from 'src/components/auth/HeaderBack';
 import FormTextInput from 'src/components/auth/Input';
 
 //icons
@@ -83,16 +81,22 @@ export default function ChangePass({ navigation, ...props }) {
     };
 
     return (
-        <SafeAreaView style={styles.safeAreaView}>
+        <View style={styles.safeAreaView}>
             <View style={styles.viewAll}>
-                <Header
+                {/* <Header
                     title="Change Password"
                     direct="Settings"
                     navigation={navigation}
-                />
+                /> */}
+                <View style={styles.viewHeader}>
+                    <HeaderBack
+                        title="Change Password"
+                        handleBack={() => navigation.goBack()}
+                    />
+                </View>
 
                 <View style={styles.textNode}>
-                    <Text style={{ fontSize: 16, color: 'gray' }}>
+                    <Text style={styles.text}>
                         Your new password must be different from previous used
                         password
                     </Text>
@@ -146,7 +150,7 @@ export default function ChangePass({ navigation, ...props }) {
                 />
             </View>
             <Toast />
-        </SafeAreaView>
+        </View>
     );
 }
 
@@ -159,6 +163,10 @@ const styles = StyleSheet.create({
         height: '100%',
         alignItems: 'center',
     },
+    viewHeader: {
+        width: '100%',
+        alignSelf: 'center',
+    },
 
     viewAll: {
         width: '90%',
@@ -170,5 +178,10 @@ const styles = StyleSheet.create({
     textNode: {
         alignSelf: 'center',
         justifyContent: 'center',
+    },
+    text: {
+        fontSize: 16,
+        color: 'gray',
+        textAlign: 'center',
     },
 });

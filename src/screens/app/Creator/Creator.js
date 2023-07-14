@@ -39,6 +39,7 @@ import { createQuiz, updateQuiz } from 'src/slices/quizSlice';
 //Icon
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { MaterialIcons } from '@expo/vector-icons';
+import { SimpleLineIcons } from '@expo/vector-icons';
 
 //constant Modal
 import { typeQuiz } from 'src/constants/public.constant';
@@ -55,6 +56,7 @@ import { Toast } from 'react-native-toast-message/lib/src/Toast';
 //Call api
 import { useCreateQuizMutation } from 'src/services/quizApi';
 import { useUpdateQuizMutation } from 'src/services/quizApi';
+import HeaderBack from 'src/components/auth/HeaderBack';
 
 const categorieArary = categories.map((item) => item.name);
 const InitQuizData = {
@@ -199,9 +201,10 @@ export default Creator = ({ navigation, ...props }) => {
                 setCoverImage(null);
                 setSaveQuizModal(!saveQuizModal);
                 setImportQuiz(true);
-                ToastAndroid.show(
-                    'Creat Quiz successfully',
-                    ToastAndroid.SHORT,
+                showToasts(
+                    'success',
+                    'Successfully !',
+                    'Save quiz successfully!',
                 );
                 dispatch(createQuiz(data));
                 setQuizData({
@@ -235,7 +238,7 @@ export default Creator = ({ navigation, ...props }) => {
     };
 
     const handleImportQuiz = async () => {
-        setSaveQuizModal(!saveQuizModal);
+        // setSaveQuizModal(!saveQuizModal);
         let result = await DocumentPicker.getDocumentAsync({
             copyToCacheDirectory: false,
             type: 'application/json',
@@ -251,6 +254,7 @@ export default Creator = ({ navigation, ...props }) => {
             encoding: 'utf8',
         });
         const quiz = JSON.parse(content);
+
         setQuizData({
             ...quiz,
             creatorId,
@@ -273,11 +277,11 @@ export default Creator = ({ navigation, ...props }) => {
     };
 
     return (
-        <SafeAreaView
+        <View
             style={styles.container}
             // behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
-            <View style={styles.headers}>
+            {/* <View style={styles.headers}>
                 <Header
                     title={creator ? 'Quiz Creator' : 'Quiz Edit'}
                     style={styles.header}
@@ -288,6 +292,26 @@ export default Creator = ({ navigation, ...props }) => {
                     }}
                     creator={creator}
                     quiz={quiz}
+                />
+            </View> */}
+            <View style={styles.viewHeader}>
+                <HeaderBack
+                    title={creator ? 'Quiz Creator' : 'Quiz Edit'}
+                    handleBack={() => navigation.goBack()}
+                    option={
+                        <TouchableOpacity
+                            onPress={() => {
+                                setSaveQuizModal(!saveQuizModal);
+                            }}
+                        >
+                            <SimpleLineIcons
+                                name="options"
+                                size={25}
+                                color="#fff"
+                            />
+                        </TouchableOpacity>
+                    }
+                    color="#fff"
                 />
             </View>
             <View style={styles.mainContent}>
@@ -529,7 +553,7 @@ export default Creator = ({ navigation, ...props }) => {
                 </ScrollView>
             </View>
             <Toast />
-        </SafeAreaView>
+        </View>
     );
 };
 
@@ -537,8 +561,13 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: colors.primary,
-        paddingTop: 16,
+        // paddingTop: 16,
         alignItems: 'center',
+    },
+    viewHeader: {
+        width: '90%',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     headers: {
         marginTop: 25,

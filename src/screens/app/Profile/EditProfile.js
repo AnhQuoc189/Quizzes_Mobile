@@ -14,6 +14,7 @@ import { Toast } from 'react-native-toast-message/lib/src/Toast';
 
 //component
 import Header from 'src/components/auth/Header';
+import HeaderBack from 'src/components/auth/HeaderBack';
 
 //redux
 import { useDispatch, useSelector } from 'react-redux';
@@ -150,11 +151,19 @@ export default function EditProfile({ navigation }) {
             showsVerticalScrollIndicator={false}
         >
             <View style={styles.viewSafe}>
-                <Header
+                {/* <Header
                     title="EditProfile"
                     direct="Settings"
                     navigation={navigation}
-                />
+                /> */}
+
+                <View style={styles.viewHeader}>
+                    <HeaderBack
+                        title="Edit Profile"
+                        handleBack={() => navigation.goBack()}
+                    />
+                </View>
+
                 <TouchableOpacity
                     style={styles.viewAvatar}
                     onPress={chooseImage}
@@ -168,9 +177,9 @@ export default function EditProfile({ navigation }) {
                         }}
                     />
                 </TouchableOpacity>
-                <View style={{ ...styles.viewInfo, gap: 20 }}>
+                <View style={{ ...styles.viewInfo, gap: 10 }}>
                     <View style={styles.viewInfoLabelSmall}>
-                        <Text style={styles.textInfoLabel}>firstName</Text>
+                        <Text style={styles.textInfoLabel}>FirstName</Text>
                         <TextInput
                             style={styles.inputSmall}
                             value={firstName}
@@ -180,7 +189,7 @@ export default function EditProfile({ navigation }) {
                         />
                     </View>
                     <View style={styles.viewInfoLabelSmall}>
-                        <Text style={styles.textInfoLabel}>lastName</Text>
+                        <Text style={styles.textInfoLabel}>LastName</Text>
                         <TextInput
                             style={styles.inputSmall}
                             value={lastName}
@@ -242,6 +251,10 @@ const styles = StyleSheet.create({
         width: '100%',
         backgroundColor: '#E3DFFD',
         flex: 1,
+    },
+    viewHeader: {
+        width: '90%',
+        alignSelf: 'center',
     },
     viewSafe: {
         flex: 1,

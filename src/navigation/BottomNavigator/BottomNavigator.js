@@ -14,15 +14,20 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 
-//Screen
-import Home from 'src/screens/app/Home/Home';
+//Stack
+import HomeNavigator from './HomeNavigator/HomeNavigator';
 import Discover from 'src/screens/app/Discover/Discover';
-import LeaderBoard from 'src/screens/app/LeaderBoard/LeaderBoard';
-import Profile from 'src/screens/app/Profile/Profile';
-import Community from 'src/screens/app/Community/Community';
-import CommunityDetais from 'src/screens/app/Community/CommunityDetais';
-import ShareQuiz from 'src/screens/app/Community/ShareQuiz';
+import CreatorNavigator from './CreatorNavigator';
+import JoinGameNavigator from './JoinGameNavigator';
+import LeaderBoardNavigator from './LeaderBoardNavigator';
+import CommunityNavigator from './CommunityNavigator';
+import ProfileNavigator from './HomeNavigator/ProfileNavigator';
+import QuizNavigator from './HomeNavigator/QuizNavigator';
 import JoinGame from 'src/screens/app/PlayQuiz/JoinGame';
+import { DetailQuiz } from 'src/screens/app/DetailQuiz';
+import HostScreen from 'src/screens/app/PlayQuiz/HostScreen';
+import PlayerScreen from 'src/screens/app/PlayQuiz/PlayerScreen';
+import PlayerSolo from 'src/screens/app/PlayQuiz/PlayerSolo';
 import AddQuestion from 'src/screens/app/Creator/AddQuestion';
 import Creator from 'src/screens/app/Creator/Creator';
 
@@ -32,13 +37,13 @@ export default function BottomNavigator({ navigation }) {
     const userInfo = useSelector((state) => state.auths?.user);
     return (
         <Tab.Navigator
-            initialRouteName="Home"
+            initialRouteName="HomeNavigator"
             screenOptions={({ route }) => ({
                 headerShown: false,
                 tabBarShowLabel: false,
                 tabBarIcon: ({ focused }) => {
                     switch (route.name) {
-                        case 'Home':
+                        case 'HomeNavigator':
                             return (
                                 <View>
                                     <Entypo
@@ -84,7 +89,7 @@ export default function BottomNavigator({ navigation }) {
                                     </View>
                                 </TouchableOpacity>
                             );
-                        case 'JoinGame':
+                        case 'JoinGameNavigator':
                             return (
                                 <View style={styles.viewCreator}>
                                     <FontAwesome
@@ -95,7 +100,7 @@ export default function BottomNavigator({ navigation }) {
                                 </View>
                             );
 
-                        case 'LeaderBoard':
+                        case 'LeaderBoardNavigator':
                             return (
                                 <View>
                                     <MaterialIcons
@@ -106,7 +111,7 @@ export default function BottomNavigator({ navigation }) {
                                 </View>
                             );
 
-                        case 'Community':
+                        case 'CommunityNavigator':
                             return (
                                 <View>
                                     <Ionicons
@@ -129,7 +134,7 @@ export default function BottomNavigator({ navigation }) {
                 },
             })}
         >
-            <Tab.Screen name="Home" component={Home} />
+            <Tab.Screen name="HomeNavigator" component={HomeNavigator} />
             <Tab.Screen name="Discover" component={Discover} />
             {userInfo?.userType === 'Teacher' ? (
                 <Tab.Screen
@@ -139,54 +144,32 @@ export default function BottomNavigator({ navigation }) {
                 />
             ) : (
                 <Tab.Screen
-                    name="JoinGame"
-                    component={JoinGame}
+                    name="JoinGameNavigator"
+                    component={JoinGameNavigator}
                     options={{ tabBarStyle: { display: 'none' } }}
                 />
             )}
             <Tab.Screen
-                name="LeaderBoard"
-                component={LeaderBoard}
+                name="LeaderBoardNavigator"
+                component={LeaderBoardNavigator}
                 options={{ tabBarStyle: { display: 'none' } }}
             />
             <Tab.Screen
-                name="Community"
-                component={Community}
+                name="CommunityNavigator"
+                component={CommunityNavigator}
                 options={{ tabBarStyle: { display: 'none' } }}
             />
             <Tab.Screen
-                name="Profile"
-                component={Profile}
-                options={() => ({
-                    tabBarStyle: {
-                        display: 'none',
-                    },
+                name="ProfileNavigator"
+                component={ProfileNavigator}
+                options={{
+                    tabBarStyle: { display: 'none' },
                     tabBarButton: () => null,
-                })}
+                }}
             />
             <Tab.Screen
                 name="AddQuestion"
                 component={AddQuestion}
-                options={() => ({
-                    tabBarStyle: {
-                        display: 'none',
-                    },
-                    tabBarButton: () => null,
-                })}
-            />
-            <Tab.Screen
-                name="ShareQuiz"
-                component={ShareQuiz}
-                options={() => ({
-                    tabBarStyle: {
-                        display: 'none',
-                    },
-                    tabBarButton: () => null,
-                })}
-            />
-            <Tab.Screen
-                name="CommunityDetais"
-                component={CommunityDetais}
                 options={() => ({
                     tabBarStyle: {
                         display: 'none',

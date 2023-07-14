@@ -14,6 +14,9 @@ import {
 import { useDispatch } from 'react-redux';
 import { loGin, upDated } from 'src/slices/authSlice';
 
+//Toast
+import { Toast } from 'react-native-toast-message/lib/src/Toast';
+
 //icons
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
@@ -23,7 +26,7 @@ import google from 'src/assets/images/google.png';
 import Divider from 'react-native-divider';
 
 //component
-import Header from 'src/components/auth/Header';
+import HeaderBack from 'src/components/auth/HeaderBack';
 import Button from 'src/components/auth/Button';
 import FormTextInput from 'src/components/auth/Input';
 
@@ -78,13 +81,20 @@ export default function Login({ navigation }) {
                     });
                     break;
                 case 'Not Verify':
-                    const letter = {
-                        title: 'SignIn Falure!',
-                        text: ' Please check your mail to verify-account',
-                    };
-                    setTimeout(() => {
-                        navigation.navigate('LetterScreen', letter);
-                    }, 1500);
+                    // const letter = {
+                    //     title: 'SignIn Falure!',
+                    //     text: ' Please check your mail to verify-account',
+                    // };
+                    // setTimeout(() => {
+                    //     navigation.navigate('LetterScreen', letter);
+                    // }, 1500);
+                    Toast.show({
+                        type: 'error',
+                        text1: 'SignIn Falure',
+                        text2: 'Please check mail to verify account',
+                        visibilityTime: 2500,
+                        topOffset: 60,
+                    });
                     break;
                 default:
                     break;
@@ -117,16 +127,20 @@ export default function Login({ navigation }) {
     };
 
     return (
-        <SafeAreaView style={styles.safeAreaView}>
+        <View style={styles.safeAreaView}>
             <ScrollView
                 style={{ width: '92%' }}
                 showsVerticalScrollIndicator={false}
             >
                 <View style={styles.viewAll}>
-                    <Header
+                    {/* <Header
                         title="Login"
                         direct="Onboard"
                         navigation={navigation}
+                    /> */}
+                    <HeaderBack
+                        title="Login"
+                        handleBack={() => navigation.navigate('Onboard')}
                     />
                     <View style={styles.formSignUp}>
                         <FormTextInput
@@ -187,12 +201,7 @@ export default function Login({ navigation }) {
                             </View>
 
                             <View style={styles.viewNote}>
-                                <View
-                                    style={{
-                                        flexDirection: 'row',
-                                        width: '100%',
-                                    }}
-                                >
+                                <View style={styles.viewNoteContainer}>
                                     <Text style={styles.textNoteGray}>
                                         By continuing, you agree to the
                                     </Text>
@@ -246,7 +255,8 @@ export default function Login({ navigation }) {
                     </View>
                 </View>
             </ScrollView>
-        </SafeAreaView>
+            <Toast />
+        </View>
     );
 }
 
@@ -262,6 +272,7 @@ const styles = StyleSheet.create({
 
     viewAll: {
         width: '100%',
+        height: '100%',
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -291,6 +302,13 @@ const styles = StyleSheet.create({
     viewNote: {
         width: '100%',
         flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+
+    viewNoteContainer: {
+        flexDirection: 'row',
+        width: '100%',
         alignItems: 'center',
         justifyContent: 'center',
     },

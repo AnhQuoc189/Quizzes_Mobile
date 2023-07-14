@@ -1,6 +1,6 @@
 // Library
 import React, { useEffect, useState, useCallback } from 'react';
-import { SafeAreaView } from 'react-native';
+import { SafeAreaView, View } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
 // Components, colors, constants
@@ -18,6 +18,8 @@ import AllTime from 'src/components/leaderboard/content/alltime/AllTime';
 import { colors } from 'src/styles/color';
 import { API } from 'src/constants/api';
 import { fetchAllUsers } from 'src/slices/usersSlice';
+import HeaderBack from 'src/components/auth/HeaderBack';
+import { StyleSheet } from 'react-native';
 
 // 2 button Tab thời gian
 const durationTabs = ['Weekly', 'All Time'];
@@ -112,16 +114,15 @@ export default function LeaderBoard({ navigation }) {
     };
 
     return (
-        <SafeAreaView
-            style={{
-                flex: 1,
-                backgroundColor: colors.primary,
-                paddingTop: 16,
-                paddingHorizontal: 8,
-                justifyContent: 'space-around',
-            }}
-        >
-            <Header title="Leaderboard" navigation={navigation} direct="Home" />
+        <View style={styles.viewSafeArea}>
+            {/* <Header title="Leaderboard" navigation={navigation} direct="Home" /> */}
+            <View style={styles.viewHeader}>
+                <HeaderBack
+                    title="Leaderboard"
+                    handleBack={() => navigation.goBack()}
+                    color="#fff"
+                />
+            </View>
 
             <DurationTabs
                 durationTabs={durationTabs}
@@ -130,6 +131,22 @@ export default function LeaderBoard({ navigation }) {
             />
 
             {displayTabContent()}
-        </SafeAreaView>
+        </View>
     );
 }
+
+const styles = StyleSheet.create({
+    viewSafeArea: {
+        flex: 1,
+        backgroundColor: colors.primary,
+        // paddingTop: 16,
+        paddingHorizontal: 8,
+        justifyContent: 'space-around',
+        width: '100%',
+        gap: 20,
+    },
+    viewHeader: {
+        width: '90%',
+        alignSelf: 'center',
+    },
+});

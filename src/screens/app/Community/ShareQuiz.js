@@ -13,6 +13,7 @@ import {
     AlertIOS,
 } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
+import { Toast } from 'react-native-toast-message/lib/src/Toast';
 
 //redux
 import { useSelector, useDispatch } from 'react-redux';
@@ -33,6 +34,7 @@ import filter from 'lodash.filter';
 
 //RTKQuery
 import { useAddQuizCommunityMutation } from 'src/services/communityApi';
+import HeaderBack from 'src/components/auth/HeaderBack';
 
 export default function ShareQuiz({ navigation, ...props }) {
     const dispatch = useDispatch();
@@ -59,14 +61,13 @@ export default function ShareQuiz({ navigation, ...props }) {
         if (data) {
             setlListId([...listId, quizId]);
             dispatch(addQuiz({ id, quiz: data }));
-            if (Platform.OS === 'android') {
-                ToastAndroid.show(
-                    'Share Quiz successfully!',
-                    ToastAndroid.SHORT,
-                );
-            } else {
-                AlertIOS.alert('Share Quiz successfully!');
-            }
+            Toast.show({
+                type: 'success',
+                text1: 'Successfully !',
+                text2: 'Share quiz successfully!',
+                visibilityTime: 2500,
+                topOffset: 60,
+            });
         }
     };
 
@@ -96,12 +97,18 @@ export default function ShareQuiz({ navigation, ...props }) {
     const length = result?.length;
 
     return (
-        <SafeAreaView style={styles.viewSafeArea}>
-            <Header
+        <View style={styles.viewSafeArea}>
+            {/* <Header
                 title="Share Quiz"
                 direct="Community"
                 navigation={navigation}
-            />
+            /> */}
+            <View style={styles.viewHeader}>
+                <HeaderBack
+                    title="Share Quiz"
+                    handleBack={() => navigation.goBack()}
+                />
+            </View>
             <View style={styles.searchBar}>
                 <SimpleLineIcons name="magnifier" size={24} color="white" />
                 <TextInput
@@ -117,10 +124,10 @@ export default function ShareQuiz({ navigation, ...props }) {
                     {quizes && length !== 0 && (
                         <FlatList
                             data={result ? result : quizes}
-                            keyExtractor={(item) => item.id}
+                            keyExtractor={(item) => item._id}
                             renderItem={({ item, index }) => (
                                 <BoxQuiz
-                                    key={item}
+                                    key={item._id}
                                     quiz={item}
                                     index={index}
                                     share={listId?.includes(item._id)}
@@ -149,7 +156,8 @@ export default function ShareQuiz({ navigation, ...props }) {
                     )}
                 </View>
             </View>
-        </SafeAreaView>
+            <Toast />
+        </View>
     );
 }
 
@@ -196,6 +204,12 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         alignItems: 'center',
         gap: 20,
+    },
+
+    viewHeader: {
+        width: '90%',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
 
     viewMain: {

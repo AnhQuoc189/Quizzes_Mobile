@@ -160,7 +160,7 @@ const QuizInfo = ({
                     <Text style={styles.noquestion}>No question here</Text>
                 )}
 
-                <View style={{ height: '70%' }}>
+                <View style={{ height: mylibrary ? '70%' : '90%' }}>
                     <FlatList
                         showsVerticalScrollIndicator={false}
                         keyExtractor={(item) => item._id}
@@ -182,19 +182,15 @@ const QuizInfo = ({
                     />
                 </View>
 
-                <View style={{ marginTop: 20 }}>
-                    {isCreator ? (
-                        <Button title="Save" />
-                    ) : (
-                        mylibrary && (
-                            <Button
-                                title="Start a Game"
-                                handlePress={StartGame}
-                                loading={isLoading}
-                            />
-                        )
-                    )}
-                </View>
+                {mylibrary && (
+                    <View style={{ marginTop: 20 }}>
+                        <Button
+                            title="Start a Game"
+                            handlePress={StartGame}
+                            loading={isLoading}
+                        />
+                    </View>
+                )}
             </View>
         </View>
     );
@@ -221,7 +217,6 @@ const styles = StyleSheet.create({
 
     secondSection: {
         height: '70%',
-
         // flex: 1,
         width: '100%',
         backgroundColor: 'white',

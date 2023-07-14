@@ -4,6 +4,9 @@ import {
     StyleSheet,
     FlatList,
     ActivityIndicator,
+    Image,
+    View,
+    Text,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { useIsFocused } from '@react-navigation/native';
@@ -59,11 +62,18 @@ const UsersFilter = () => {
     return (
         <SafeAreaView style={styles.container}>
             {!data && <ActivityIndicator size="large" color="#333" />}
-            {/* {!result.length && !data && (
-                <Text style={{ fontSize: 20, textAlign: 'center' }}>
-                    No users here
-                </Text>
-            )} */}
+            {result.length === 0 && !showData && (
+                <View style={{ alignItems: 'center' }}>
+                    <Image
+                        source={{
+                            uri: 'https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg//assets/a60759ad1dabe909c46a817ecbf71878.png',
+                        }}
+                        resizeMode="cover"
+                        style={{ width: 100, height: 100 }}
+                    />
+                    <Text style={{ color: '#333' }}>No results found</Text>
+                </View>
+            )}
             <FlatList
                 showsVerticalScrollIndicator={false}
                 // data={result ? result : data}

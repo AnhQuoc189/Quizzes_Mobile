@@ -71,22 +71,22 @@ export default function ResultScreen({
     useEffect(() => {
         if (data) {
             const arangeLeader =
-                data.currentLeaderboard[data.currentLeaderboard.length - 1];
+                data.currentLeaderboard[data.currentLeaderboard?.length - 1];
             // const arangeLeader = data.currentLeaderboard[
             //     data.currentLeaderboard.length - 1
             // ].sort(function (a, b) {
             //     return b.point - a.point;
             // });
-            if (arangeLeader.length > 1) {
+            if (arangeLeader?.length > 1) {
                 arangeLeader.sort(function (a, b) {
                     return b.point - a.point;
                 });
             }
-
             handleSeenLeaderBoard(
                 // data.currentLeaderboard[data.currentLeaderboard.length - 1],
                 arangeLeader,
             );
+            console.log(data);
         }
     }, [data]);
 
@@ -193,7 +193,7 @@ export default function ResultScreen({
                             {listIndexQuestion &&
                                 Math.floor(
                                     ((correctAnswer + incorrectAnswer) * 100) /
-                                        listIndexQuestion.length,
+                                        listIndexQuestion?.length,
                                 )}
                             %
                         </Text>
@@ -343,7 +343,7 @@ const styles = StyleSheet.create({
     viewExitSolo: {
         height: '7%',
         backgroundColor: '#695AE0',
-        width: '80%',
+        width: '90%',
         borderRadius: 20,
         justifyContent: 'center',
         alignItems: 'center',
